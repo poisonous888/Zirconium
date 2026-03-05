@@ -19,7 +19,7 @@ import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.render.textDim
 import org.lwjgl.glfw.GLFW
 
-object TestModule : Module(
+object ExampleModule : Module(
     name = "Test Module",
     description = "This is a test module's description."
 ) {

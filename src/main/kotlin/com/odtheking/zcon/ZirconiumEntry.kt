@@ -4,7 +4,8 @@ import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.features.ModuleManager
 import com.odtheking.zcon.commands.testcommand
-import com.odtheking.zcon.features.impl.skyblock.TestModule
+import com.odtheking.zcon.features.impl.skyblock.PestCooldown
+import com.odtheking.zcon.features.impl.skyblock.ExampleModule
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 
@@ -22,6 +23,6 @@ object ZirconiumEntry : ClientModInitializer {
         listOf(this).forEach { EventBus.subscribe(it) }
 
         // Register modules by adding to the list
-        ModuleManager.registerModules(ModuleConfig("OdinAddon.json"), TestModule)
+        ModuleManager.registerModules(ModuleConfig("OdinAddon.json"), PestCooldown)
     }
 }
