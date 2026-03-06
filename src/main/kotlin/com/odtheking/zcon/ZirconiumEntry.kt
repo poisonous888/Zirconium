@@ -7,6 +7,7 @@ import com.odtheking.zcon.commands.maxwell
 import com.odtheking.zcon.commands.stashItem
 import com.odtheking.zcon.commands.stashMaterial
 import com.odtheking.zcon.commands.testcommand
+import com.odtheking.zcon.features.impl.skyblock.DropStack
 import com.odtheking.zcon.features.impl.skyblock.PestCooldown
 import com.odtheking.zcon.features.impl.skyblock.ExampleModule
 import net.fabricmc.api.ClientModInitializer
@@ -26,6 +27,6 @@ object ZirconiumEntry : ClientModInitializer {
         listOf(this).forEach { EventBus.subscribe(it) }
 
         // Register modules by adding to the list
-        ModuleManager.registerModules(ModuleConfig("OdinAddon.json"), PestCooldown)
+        ModuleManager.registerModules(ModuleConfig("OdinAddon.json"), PestCooldown, DropStack)
     }
 }
