@@ -12,7 +12,7 @@
     "requireAnnotations": true
   },
   "client": [
-    "MinecraftMixin",
+    "TextFieldMixin",
     "OdinModuleManagerMixin"
   ]
 }
