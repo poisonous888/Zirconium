@@ -1,13 +1,15 @@
-package com.odtheking.zcon.features.impl.skyblock
+package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.features.Module
+import psn.zirconium.ZconCategory
 
 object OneEightNine : Module(
     name = "Misc 1.8.9 Stuff",
-    description = "random small stuff from 1.8.9. Props to animatium for some of the code"
+    description = "random small stuff from 1.8.9. Props to animatium for some of the code",
+    category = ZconCategory.ZCON
 ) {
     @JvmStatic val diagonalWalk by BooleanSetting("Diagonal Backwards Walk",false,"1.8.9 backwards walking")
     @JvmStatic val CustomCapePhysics by BooleanSetting("Custom Cape Physics",false,"1.8.9 cape physics")

@@ -1,4 +1,4 @@
-package com.odtheking.zcon.features.impl.skyblock
+package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
@@ -13,10 +13,12 @@ import com.odtheking.odin.utils.loreString
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import psn.zirconium.ZconCategory
 
 object GuiHighlight : Module(
     name = "GUI Highlight",
-    description = "Highlights Certain GUI Slots"
+    description = "Highlights Certain GUI Slots",
+    category = ZconCategory.ZCON
 ) {
     private val highlightPet by BooleanSetting("Highlight Active Pet", false, desc = "displays a colored background behind your active pet")
     private val petColor by ColorSetting("Active Pet Color",Colors.MINECRAFT_RED,false,"the highlight color").withDependency { highlightPet }

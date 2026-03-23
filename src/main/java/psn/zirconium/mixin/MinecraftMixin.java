@@ -1,4 +1,4 @@
-package com.odtheking.odinaddon.mixin;
+package psn.zirconium.mixin;
 
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;

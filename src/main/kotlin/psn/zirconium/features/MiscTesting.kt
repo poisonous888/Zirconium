@@ -1,14 +1,16 @@
-package com.odtheking.zcon.features.impl.skyblock
+package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.modMessage
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
+import psn.zirconium.ZconCategory
 
 object MiscTesting : Module(
     name = "Misc Testing",
-    description = ""
+    description = "",
+    category = ZconCategory.ZCON
 ) {
     private val sendTabChanges by BooleanSetting("Send Tab Changes", true, desc = "")
     init {

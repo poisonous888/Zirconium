@@ -1,4 +1,4 @@
-package com.odtheking.zcon.features.impl.skyblock
+package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.clickgui.settings.impl.StringSetting
@@ -10,10 +10,12 @@ import com.odtheking.odin.utils.render.textDim
 import com.odtheking.odin.utils.skyblock.Island
 import com.odtheking.odin.utils.skyblock.LocationUtils
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
+import psn.zirconium.ZconCategory
 
 object PestCooldown : Module(
     name = "Pest Cooldown",
-    description = "displays pest cooldown while on the garden"
+    description = "displays pest cooldown while on the garden",
+    category = ZconCategory.ZCON
 ) {
     private val notifyTime by NumberSetting("Notify On Time", 120, 0, 500, desc = "")
     private val notifyMessage by StringSetting("Message", "Pests Off Cooldown!", desc = "Message to display")

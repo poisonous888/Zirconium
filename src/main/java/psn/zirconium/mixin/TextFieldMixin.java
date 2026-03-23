@@ -1,7 +1,6 @@
-package com.odtheking.odinaddon.mixin;
+package psn.zirconium.mixin;
 
-import com.odtheking.odin.utils.ChatUtilsKt;
-import com.odtheking.zcon.features.impl.skyblock.MiscFeatures;
+import psn.zirconium.features.MiscFeatures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;

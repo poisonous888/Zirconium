@@ -1,6 +1,6 @@
-package com.odtheking.odinaddon.mixin;
+package psn.zirconium.mixin;
 
-import com.odtheking.zcon.features.impl.skyblock.OneEightNine;
+import psn.zirconium.features.OneEightNine;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;

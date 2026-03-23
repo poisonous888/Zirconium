@@ -13,7 +13,7 @@
     "client": [
       {
         "adapter": "kotlin",
-        "value": "com.odtheking.zcon.ZirconiumEntry"
+        "value": "psn.zirconium.ZirconiumEntry"
       }
     ]
   },

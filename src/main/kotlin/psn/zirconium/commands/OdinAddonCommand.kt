@@ -1,4 +1,4 @@
-package com.odtheking.zcon.commands
+package psn.zirconium.commands
 
 import com.github.stivais.commodore.Commodore
 import com.github.stivais.commodore.utils.GreedyString

@@ -1,13 +1,15 @@
-package com.odtheking.zcon.features.impl.skyblock
+package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.features.Module
 import org.lwjgl.glfw.GLFW
+import psn.zirconium.ZconCategory
 
 object MiscFeatures : Module(
     name = "Misc Features",
-    description = "Random small stuff that dosent need a dedicated module"
+    description = "Random small stuff that dosent need a dedicated module",
+    category = ZconCategory.ZCON
 ) {
     private val dropStackKey by KeybindSetting("Drop Stack Key", GLFW.GLFW_KEY_UNKNOWN, desc = "Currently only works outside inventory. ill fix it after 0.1").onPress {
         if (!enabled) return@onPress

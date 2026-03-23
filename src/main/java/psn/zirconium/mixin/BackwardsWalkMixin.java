@@ -1,8 +1,8 @@
-package com.odtheking.odinaddon.mixin;
+package psn.zirconium.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.odtheking.zcon.features.impl.skyblock.OneEightNine;
+import psn.zirconium.features.OneEightNine;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

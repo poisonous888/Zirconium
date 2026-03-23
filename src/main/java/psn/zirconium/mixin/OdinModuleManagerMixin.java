@@ -1,4 +1,4 @@
-package com.odtheking.odinaddon.mixin;
+package psn.zirconium.mixin;
 import com.odtheking.odin.config.ModuleConfig;
 import com.odtheking.odin.features.Module;
 import com.odtheking.odin.features.ModuleManager;

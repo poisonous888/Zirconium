@@ -1,15 +1,15 @@
-package com.odtheking.zcon
+package psn.zirconium
 
 import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.features.ModuleManager
-import com.odtheking.zcon.commands.maxwell
-import com.odtheking.zcon.commands.stashItem
-import com.odtheking.zcon.commands.stashMaterial
-import com.odtheking.zcon.features.impl.skyblock.OneEightNine
-import com.odtheking.zcon.features.impl.skyblock.GuiHighlight
-import com.odtheking.zcon.features.impl.skyblock.PestCooldown
-import com.odtheking.zcon.features.impl.skyblock.MiscFeatures
+import psn.zirconium.commands.maxwell
+import psn.zirconium.commands.stashItem
+import psn.zirconium.commands.stashMaterial
+import psn.zirconium.features.OneEightNine
+import psn.zirconium.features.GuiHighlight
+import psn.zirconium.features.PestCooldown
+import psn.zirconium.features.MiscFeatures
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 
