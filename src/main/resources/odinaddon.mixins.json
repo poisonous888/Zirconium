@@ -13,6 +13,8 @@
   },
   "client": [
     "TextFieldMixin",
-    "OdinModuleManagerMixin"
+    "OdinModuleManagerMixin",
+    "BackwardsWalkMixin",
+    "CapeMixin"
   ]
 }
