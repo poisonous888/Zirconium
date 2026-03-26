@@ -7,29 +7,24 @@ import com.odtheking.odin.utils.sendCommand
 
 // Commands are handled via https://github.com/Stivais/Commodore
 val testcommand = Commodore("oa", "odinaddon") {
-
     runs {
         modMessage("Odin Addon command executed")
     }
-
     runs { greedy: GreedyString ->
         modMessage("Command with parameter executed: ${greedy.string}")
     }
 }
-
-val maxwell = Commodore("ac"){
+val maxwellCmd = Commodore("ac"){
     runs{
         sendCommand("call maxwell")
     }
 }
-
-val stashItem = Commodore("stash"){
+val stashItemCmd = Commodore("stash"){
     runs{
         sendCommand("viewstash item")
     }
 }
-
-val stashMaterial = Commodore("mstash"){
+val stashMaterialCmd = Commodore("mstash"){
     runs{
         sendCommand("viewstash material")
     }

@@ -3,15 +3,17 @@ package psn.zirconium
 import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.features.ModuleManager
-import psn.zirconium.commands.maxwell
-import psn.zirconium.commands.stashItem
-import psn.zirconium.commands.stashMaterial
+import psn.zirconium.commands.maxwellCmd
+import psn.zirconium.commands.stashItemCmd
+import psn.zirconium.commands.stashMaterialCmd
 import psn.zirconium.features.OneEightNine
 import psn.zirconium.features.GuiHighlight
 import psn.zirconium.features.PestCooldown
 import psn.zirconium.features.MiscFeatures
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
+import psn.zirconium.commands.staticWaypointCmd
+import psn.zirconium.features.StaticWaypoints
 
 object ZirconiumEntry : ClientModInitializer {
 
@@ -20,10 +22,10 @@ object ZirconiumEntry : ClientModInitializer {
 
         // Register commands by adding to the array
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            arrayOf(maxwell, stashItem, stashMaterial).forEach { commodore -> commodore.register(dispatcher) }
+            arrayOf(maxwellCmd, stashItemCmd, stashMaterialCmd, staticWaypointCmd).forEach { commodore -> commodore.register(dispatcher) }
         }
 
-        // Register objects to event bus by adding to the list
+        // Register objects to the event bus by adding to the list
         listOf(this).forEach { EventBus.subscribe(it) }
 
         // Register modules by adding to the list
@@ -31,7 +33,8 @@ object ZirconiumEntry : ClientModInitializer {
             PestCooldown,
             MiscFeatures,
             GuiHighlight,
-            OneEightNine
+            OneEightNine,
+            StaticWaypoints,
         )
     }
 }

@@ -1,9 +1,7 @@
 package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
-import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.features.Module
-import org.lwjgl.glfw.GLFW
 import psn.zirconium.ZconCategory
 
 object MiscFeatures : Module(
@@ -11,35 +9,14 @@ object MiscFeatures : Module(
     description = "Random small stuff that dosent need a dedicated module",
     category = ZconCategory.ZCON
 ) {
-    private val dropStackKey by KeybindSetting("Drop Stack Key", GLFW.GLFW_KEY_UNKNOWN, desc = "Currently only works outside inventory. ill fix it after 0.1").onPress {
-        if (!enabled) return@onPress
-        mc.player?.drop(true)
-    }
-    @JvmStatic val closeSign by BooleanSetting(
-        "Close Sign On Enter",
-        false,
-        desc = "Closes Sign GUI's When The Enter Key Is Pressed"
-    )
-//        .onPress {
+//    private val dropStackKey by KeybindSetting("Drop Stack Key", GLFW.GLFW_KEY_UNKNOWN, desc = "Currently only works outside inventory. ill fix it after 0.1").onPress {
 //        if (!enabled) return@onPress
-//        modMessage(mc.screen?.javaClass.toString())
-//        //mc.player?.closeContainer()
-//        if(mc.screen is AbstractSignEditScreen){
-//            modMessage("test")
-//            mc.player?.closeContainer()
-//        }
+//        mc.player?.drop(true)
 //    }
-//    init{
-//        on<GuiEvent.KeyPress>{
-//            modMessage("got key event")
-//            //if(!closeSign){return@on}
-//            if(input.key==GLFW.GLFW_KEY_ENTER){
-//                modMessage("key is enter")
-//                if(mc.screen is SignEditScreen){
-//                    screen.onClose()
-//                    modMessage("closed")
-//                }
-//            }
-//        }
-//    }
+//@JvmStatic fun message(s: String){
+//    modMessage(s);
+//}
+    @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"Closes Sign GUI's When The Enter Key Is Pressed")
+    //@JvmStatic val noWorldLoad by BooleanSetting("No World Loading Screen",false,"cancels the world loading screen. props to nofrills")
+    //@JvmStatic val noResourceLoad by BooleanSetting("No Reloading Screen",false,"cancels the resource reloading screen. props to rrls")
 }
