@@ -5,12 +5,13 @@ import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.events.GuiEvent
 import com.odtheking.odin.events.core.on
+import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.Colors
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.customData
 import com.odtheking.odin.utils.loreString
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import psn.zirconium.ZconCategory
@@ -32,28 +33,23 @@ object GuiHighlight : Module(
     private var curBook=""
     private var curLvl=0
     init {
-        on<GuiEvent.Open>{
-            if(screen !is AbstractContainerScreen<*>) {
-                switch=0
-                return@on
-            }
-            val title=screen.title.string
+        onReceive<ClientboundOpenScreenPacket>{
+            val title=title.string
             if(petRegex.containsMatchIn(title)){
-                //modMessage("correct title")
                 switch=1
-                return@on
+                return@onReceive
             }
-            if(title.equals("Commissions")){
+            if(title == "Commissions"){
                 switch=2
-                return@on
+                return@onReceive
             }
-            if(title.equals("Anvil")){
+            if(title == "Anvil"){
                 switch=3
-                return@on
+                return@onReceive
             }
             switch=0
         }
-        on<GuiEvent.DrawSlot>{
+        on<GuiEvent.RenderSlot>{
             if(switch==0)return@on
             val lore=slot.item.loreString
             if(switch==1){
@@ -81,7 +77,7 @@ object GuiHighlight : Module(
                 guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
             }
             if(slot.index==29){
-                if(!slot.item.item.equals(Items.ENCHANTED_BOOK)){
+                if(slot.item.item != Items.ENCHANTED_BOOK){
                     curLvl=-1
                     return@on
                 }

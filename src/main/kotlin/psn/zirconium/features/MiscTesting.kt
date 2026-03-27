@@ -15,7 +15,7 @@ object MiscTesting : Module(
     private val sendTabChanges by BooleanSetting("Send Tab Changes", true, desc = "")
     init {
         onReceive<ClientboundPlayerInfoUpdatePacket> {
-            val tabListEntries=entries()?.mapNotNull { it.displayName?.string }?.ifEmpty { return@onReceive } ?: return@onReceive
+            val tabListEntries=entries().mapNotNull { it.displayName?.string }.ifEmpty { return@onReceive }
             for (entry in tabListEntries){
                 if(sendTabChanges){modMessage(entry)}
             }
