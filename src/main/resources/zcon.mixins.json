@@ -14,7 +14,6 @@
   "client": [
     "BackwardsWalkMixin",
     "CapeMixin",
-    "NoPotionEffects",
     "OdinModuleManagerMixin",
     "RecipeBookMixin",
     "TextFieldMixin"
