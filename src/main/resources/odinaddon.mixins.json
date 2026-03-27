@@ -12,9 +12,10 @@
     "requireAnnotations": true
   },
   "client": [
-    "TextFieldMixin",
-    "OdinModuleManagerMixin",
     "BackwardsWalkMixin",
-    "CapeMixin"
+    "CapeMixin",
+    "OdinModuleManagerMixin",
+    "RecipeBookMixin",
+    "TextFieldMixin"
   ]
 }

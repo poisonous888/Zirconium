@@ -17,6 +17,7 @@ object MiscFeatures : Module(
 //    modMessage(s);
 //}
     @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"Closes Sign GUI's When The Enter Key Is Pressed")
-    //@JvmStatic val noWorldLoad by BooleanSetting("No World Loading Screen",false,"cancels the world loading screen. props to nofrills")
+    @JvmStatic val noRecipeBook by BooleanSetting("No Recipe Book",false,"removes recipe book from inv")
+//@JvmStatic val noWorldLoad by BooleanSetting("No World Loading Screen",false,"cancels the world loading screen. props to nofrills")
     //@JvmStatic val noResourceLoad by BooleanSetting("No Reloading Screen",false,"cancels the resource reloading screen. props to rrls")
 }
