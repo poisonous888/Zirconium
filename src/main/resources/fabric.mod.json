@@ -18,7 +18,7 @@
     ]
   },
   "mixins": [
-    "odinaddon.mixins.json"
+    "zcon.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
