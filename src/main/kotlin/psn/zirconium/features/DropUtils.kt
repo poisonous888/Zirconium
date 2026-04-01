@@ -30,7 +30,7 @@ object DropUtils : Module(
     val doMuseum by BooleanSetting("Protect Museum Donated",true,"")
     val permHotbar by BooleanSetting("Always Prevent Hotbar",true,"when enabled you have to be in your inventory to drop items")
     val disableDungeons by BooleanSetting("Disable in Dungeons",true,"dungeons use drop as use ultimate so its not needed")
-    val highlightProtected by BooleanSetting("Highlight Protected",true,"tooltips are too hard rn")
+    val highlightProtected by BooleanSetting("Highlight Protected",false,"tooltips are too hard rn")
 
     val uidList by ListSetting("uuidList",mutableListOf(""))
     val sbidList by ListSetting("sbidList",mutableListOf(""))
