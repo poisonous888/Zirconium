@@ -13,16 +13,22 @@ import psn.zirconium.features.MiscFeatures
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import psn.zirconium.commands.staticWaypointCmd
+import psn.zirconium.features.DropUtils
 import psn.zirconium.features.StaticWaypoints
 
 object ZirconiumEntry : ClientModInitializer {
 
     override fun onInitializeClient() {
-        println("Odin Addon initialized!")
+        println("Zirconium has entered the chat")
 
-        // Register commands by adding to the array
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            arrayOf(maxwellCmd, stashItemCmd, stashMaterialCmd, staticWaypointCmd).forEach { commodore -> commodore.register(dispatcher) }
+            val cmd=mutableListOf(maxwellCmd, stashItemCmd, stashMaterialCmd, staticWaypointCmd)
+//            if(AutoComplete.enabled){
+//                if(AutoComplete.autocompleteWarps){
+//                    cmd.add(warpsComplete)
+//                }
+//            }
+            cmd.forEach { commodore -> commodore.register(dispatcher) }
         }
 
         // Register objects to the event bus by adding to the list
@@ -35,6 +41,8 @@ object ZirconiumEntry : ClientModInitializer {
             GuiHighlight,
             OneEightNine,
             StaticWaypoints,
+            //AutoComplete,
+            DropUtils,
         )
     }
 }

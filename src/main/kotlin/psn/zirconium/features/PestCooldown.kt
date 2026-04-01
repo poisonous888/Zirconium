@@ -31,7 +31,7 @@ object PestCooldown : Module(
     init {
         onReceive<ClientboundPlayerInfoUpdatePacket> {
             if(!LocationUtils.isCurrentArea(Island.Garden)){return@onReceive}
-            val tabListEntries=entries()?.mapNotNull { it.displayName?.string }?.ifEmpty { return@onReceive } ?: return@onReceive
+            val tabListEntries=entries().mapNotNull { it.displayName?.string }.ifEmpty { return@onReceive }
             for (entry in tabListEntries){
                 timerRegex.find(entry)?.destructured?.let { (_,mins,secs) ->
                     val curMins = mins.substringBefore("m").toIntOrNull() ?: 0
