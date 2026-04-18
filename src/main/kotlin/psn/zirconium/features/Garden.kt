@@ -12,9 +12,9 @@ import com.odtheking.odin.utils.skyblock.LocationUtils
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import psn.zirconium.ZconCategory
 
-object PestCooldown : Module(
-    name = "Pest Cooldown",
-    description = "displays pest cooldown while on the garden",
+object Garden : Module(
+    name = "Garden",
+    description = "various garden stuff",
     category = ZconCategory.ZCON
 ) {
     private val notifyTime by NumberSetting("Notify On Time", 120, 0, 500, desc = "")
@@ -28,7 +28,7 @@ object PestCooldown : Module(
     }
     var curString=""
     var primed=false
-    init {
+    init{
         onReceive<ClientboundPlayerInfoUpdatePacket> {
             if(!LocationUtils.isCurrentArea(Island.Garden)){return@onReceive}
             val tabListEntries=entries().mapNotNull { it.displayName?.string }.ifEmpty { return@onReceive }

@@ -12,11 +12,14 @@
     "requireAnnotations": true
   },
   "client": [
-    "BackwardsWalkMixin",
-    "CapeMixin",
     "DropHotbarMixin",
     "DropInvMixin",
+    "MouseLockMixin",
     "OdinModuleManagerMixin",
+    "R_AvatarRendererMixin",
+    "R_LivingEntityMixin",
+    "R_RenderItemMixin",
+    "R_SwingUsingMixin",
     "RecipeBookMixin",
     "TextFieldMixin"
   ]

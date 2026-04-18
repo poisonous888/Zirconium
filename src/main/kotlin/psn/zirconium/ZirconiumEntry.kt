@@ -6,15 +6,18 @@ import com.odtheking.odin.features.ModuleManager
 import psn.zirconium.commands.maxwellCmd
 import psn.zirconium.commands.stashItemCmd
 import psn.zirconium.commands.stashMaterialCmd
-import psn.zirconium.features.OneEightNine
+import psn.zirconium.features.Visuals
 import psn.zirconium.features.GuiHighlight
-import psn.zirconium.features.PestCooldown
+import psn.zirconium.features.Garden
 import psn.zirconium.features.MiscFeatures
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import psn.zirconium.commands.staticWaypointCmd
 import psn.zirconium.features.DropUtils
+import psn.zirconium.features.ItemPos
+import psn.zirconium.features.MouseLock
 import psn.zirconium.features.StaticWaypoints
+import psn.zirconium.features.TeleportLine
 
 object ZirconiumEntry : ClientModInitializer {
 
@@ -23,11 +26,6 @@ object ZirconiumEntry : ClientModInitializer {
 
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
             val cmd=mutableListOf(maxwellCmd, stashItemCmd, stashMaterialCmd, staticWaypointCmd)
-//            if(AutoComplete.enabled){
-//                if(AutoComplete.autocompleteWarps){
-//                    cmd.add(warpsComplete)
-//                }
-//            }
             cmd.forEach { commodore -> commodore.register(dispatcher) }
         }
 
@@ -36,13 +34,16 @@ object ZirconiumEntry : ClientModInitializer {
 
         // Register modules by adding to the list
         ModuleManager.registerModules(ModuleConfig("Zirconium.json"),
-            PestCooldown,
+            Garden,
             MiscFeatures,
             GuiHighlight,
-            OneEightNine,
+            Visuals,
             StaticWaypoints,
             //AutoComplete,
             DropUtils,
+            //ItemPos,
+            //TeleportLine,
+            MouseLock,
         )
     }
 }
