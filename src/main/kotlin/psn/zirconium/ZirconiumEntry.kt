@@ -17,7 +17,6 @@ import psn.zirconium.features.DropUtils
 import psn.zirconium.features.ItemPos
 import psn.zirconium.features.MouseLock
 import psn.zirconium.features.StaticWaypoints
-import psn.zirconium.features.TeleportLine
 
 object ZirconiumEntry : ClientModInitializer {
 
@@ -41,7 +40,7 @@ object ZirconiumEntry : ClientModInitializer {
             StaticWaypoints,
             //AutoComplete,
             DropUtils,
-            //ItemPos,
+            ItemPos,
             //TeleportLine,
             MouseLock,
         )
