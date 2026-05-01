@@ -37,6 +37,7 @@ dependencies {
 }
 
 loom {
+    accessWidenerPath = rootProject.file("src/main/resources/zcon.accesswidener")
     runConfigs.named("client") {
         isIdeConfigGenerated = true
         vmArgs.addAll(

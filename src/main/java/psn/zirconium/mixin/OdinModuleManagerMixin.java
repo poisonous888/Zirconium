@@ -28,7 +28,7 @@ public abstract class OdinModuleManagerMixin {
 
 @Mixin(value = ModuleManager.class, remap = false)
 public class OdinModuleManagerMixin{
-    @ModifyVariable(method = "registerModules", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    @ModifyVariable(method = "registerModules", at = @At("HEAD"), argsOnly = true, name = "modules")
     private static Module[] separateDevModules(Module[] modules, ModuleConfig config) {
         if(modules.length<2){return modules;}
         Stream<Module> dev=Arrays.stream(modules).filter(Module::isDevModule);

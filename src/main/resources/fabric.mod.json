@@ -20,6 +20,7 @@
   "mixins": [
     "zcon.mixins.json"
   ],
+  "accessWidener": "zcon.accesswidener",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": ">=${fabric_api_version}",

@@ -18,7 +18,6 @@ public abstract class DropHotbarMixin extends AbstractClientPlayer{
 
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void cancelDropHotbar(boolean entireStack, CallbackInfoReturnable<Boolean> ci) {
-        //DropUtils.isProtected()
         if(DropUtils.doDropHotbar(getInventory().getSelectedItem())){
             ci.cancel();
         }

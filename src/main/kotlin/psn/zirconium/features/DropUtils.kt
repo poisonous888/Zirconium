@@ -1,17 +1,24 @@
 package psn.zirconium.features
 
+import com.odtheking.mixin.accessors.AbstractContainerScreenAccessor
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
+import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.clickgui.settings.impl.ListSetting
 import com.odtheking.odin.events.GuiEvent
+import com.odtheking.odin.events.InputEvent
+import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
-import com.odtheking.odin.utils.Colors
+import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.customData
 import com.odtheking.odin.utils.equalsOneOf
+import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.item.ItemStack
 import org.lwjgl.glfw.GLFW
 import psn.zirconium.ZconCategory
@@ -21,51 +28,45 @@ object DropUtils : Module(
     description = "protect items and drop stack modifier",
     category = ZconCategory.ZCON
 ) {
-    val doSBID by BooleanSetting("Protect Skyblock ID",true,"")
-    @JvmStatic val sbidKey by KeybindSetting("Skyblock ID Key", GLFW.GLFW_KEY_UNKNOWN).withDependency { doSBID }
-    val doUUID by BooleanSetting("Protect UUID",true,"")
-    @JvmStatic val uuidKey by KeybindSetting("UUID Key",GLFW.GLFW_KEY_UNKNOWN).withDependency { doUUID }
-    val doRecombed by BooleanSetting("Protect Recombed",true,"")
-    val doStarred by BooleanSetting("Protect Starred",true,"")
-    val doMuseum by BooleanSetting("Protect Museum Donated",true,"")
+    private val protections by DropdownSetting("Protections")
+    val doSBID by BooleanSetting("Protect Skyblock ID",true,"").withDependency { protections }
+    val doUUID by BooleanSetting("Protect UUID",true,"").withDependency { protections }
+    val doRecombed by BooleanSetting("Protect Recombed",true,"").withDependency { protections }
+    val doStarred by BooleanSetting("Protect Starred",true,"").withDependency { protections }
+    val doMuseum by BooleanSetting("Protect Museum Donated",true,"").withDependency { protections }
+
+    val doSound by BooleanSetting("Sound On Drop",true,"")
     val permHotbar by BooleanSetting("Always Prevent Hotbar",true,"when enabled you have to be in your inventory to drop items")
     val disableDungeons by BooleanSetting("Disable in Dungeons",true,"dungeons use drop as use ultimate so its not needed")
     val highlightProtected by BooleanSetting("Highlight Protected",false,"tooltips are too hard rn")
 
+    val dropStackKey by KeybindSetting("Drop Stack Key", GLFW.GLFW_KEY_UNKNOWN, desc = "Set to unknown to disable,\nCtrl+drop still works,\nCurrently only works outside container/inventory")
+    val sbidKey by KeybindSetting("Skyblock ID Key", GLFW.GLFW_KEY_UNKNOWN).withDependency { doSBID }
+    val uuidKey by KeybindSetting("UUID Key",GLFW.GLFW_KEY_UNKNOWN).withDependency { doUUID }
+
     val uidList by ListSetting("uuidList",mutableListOf(""))
     val sbidList by ListSetting("sbidList",mutableListOf(""))
 
-    //private val dropStackKey by KeybindSetting("Custom Drop Stack Modifier", GLFW.GLFW_KEY_UNKNOWN, desc = "set to unknown to disable")
+    val protectAll by BooleanSetting("protect all",false,"")
 
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
-    fun isProtected(item: ItemStack,message: Boolean): Boolean{
+    var noClickScreen=false
+    fun isProtected(item: ItemStack): String?{
+        if(protectAll)return "All"
         val customData = item.customData
-        if(doUUID && customData.contains("uuid")){
-            if(uidList.contains(customData.get("uuid").toString())){
-                if(message)modMessage("Prevented Your ${item.hoverName.string} From Being Dropped (Skyblock ID)")
-                return true
-            }
-        }
-        if(doSBID && customData.contains("id")){
-            if(sbidList.contains(customData.get("id").toString())){
-                if(message)modMessage("Prevented Your ${item.hoverName.string} From Being Dropped (UUID)")
-                return true
-            }
-        }
-        if(doStarred && customData.contains("upgrade_level")){
-            if(message)modMessage("Prevented Your ${item.hoverName.string} From Being Dropped (starred)")
-            return true
-        }
-        if(doRecombed && customData.contains("rarity_upgrades")){
-            if(message)modMessage("Prevented Your ${item.hoverName.string} From Being Dropped (recombed)")
-            return true
-        }
-        if(doMuseum && customData.contains("donated_museum")){
-            if(message)modMessage("Prevented Your ${item.hoverName.string} From Being Dropped (museum)")
-            return true
-        }
-        return false
+        if(doUUID &&
+            customData.contains("uuid") &&
+            uidList.contains(customData.get("uuid").toString())
+            ) return "Skyblock ID"
+        if(doSBID &&
+            customData.contains("id") &&
+            sbidList.contains(customData.get("id").toString())
+            ) return "UUID"
+        if(doStarred && customData.contains("upgrade_level")) return "Starred"
+        if(doRecombed && customData.contains("rarity_upgrades")) return "Recombed"
+        if(doMuseum && customData.contains("donated_museum")) return "Museum"
+        return null
     }
     @JvmStatic fun doDropHotbar(item: ItemStack): Boolean{
         if(disableDungeons && DungeonUtils.inDungeons){
@@ -73,13 +74,24 @@ object DropUtils : Module(
             if(!room.equalsOneOf("Entrance","Unknown")){
                 return false
             }
+            modMessage("Cannot Drop Items Until The DungeonHas Started!")
         }
-        return isProtected(item,true) || permHotbar
+        if(permHotbar)return true
+        return dropWithMsg(item)
     }
-    @JvmStatic fun doDropContainer(item: ItemStack): Boolean{
-        return isProtected(item,true)
+    @JvmStatic fun doDropContainer(item: ItemStack,clickType: ClickType): Boolean{
+        if(noClickScreen||clickType == ClickType.THROW)return dropWithMsg(item)
+        (mc.screen as? AbstractContainerScreen<*>)?.hoveredSlot?:return dropWithMsg(item)
+        return false
     }
-    @JvmStatic fun uuidNew(item: ItemStack){
+    fun dropWithMsg(item: ItemStack): Boolean{
+        val prot=isProtected(item)
+        prot?:return false
+        modMessage("Prevented Your ${item.hoverName.string} From Being Dropped ($prot)")
+        if (doSound) alert("")
+        return true
+    }
+    fun uuidNew(item: ItemStack){
         if(!item.customData.contains("uuid")){
             modMessage("Item ${item.hoverName.string} Does Not Have A UUID, Use Skyblock ID Instead")
             return
@@ -93,9 +105,9 @@ object DropUtils : Module(
         uidList.add(id)
         modMessage("§2Added ${item.hoverName.string} To UUID Protection")
     }
-    @JvmStatic fun sbidNew(item: ItemStack){
+    fun sbidNew(item: ItemStack){
         if(!item.customData.contains("id")){
-            modMessage("Item ${item.hoverName.string} Does Not Have A Skublock ID, Use UUID Instead")
+            modMessage("Item ${item.hoverName.string} Does Not Have A Skyblock ID, Use UUID Instead")
             return
         }
         val id = item.customData.get("id").toString()
@@ -107,16 +119,69 @@ object DropUtils : Module(
         sbidList.add(id)
         modMessage("§2Added ${item.hoverName.string} To Skyblock ID Protection")
     }
+    fun getHoveredInv(): ItemStack?{
+        if(mc.screen !is AbstractContainerScreen<*>)return null
+        return (mc.screen as? AbstractContainerScreenAccessor)?.hoveredSlot?.item
+    }
+    fun getHeldHotbar(): ItemStack?{
+        return mc.player?.inventory?.selectedItem
+    }
     init {
         on<GuiEvent.RenderSlot>{
             if(!highlightProtected)return@on
-            if(isProtected(slot.item,false)){
-                guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
-                guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
+            var prot=isProtected(slot.item)
+            prot?:return@on
+            //guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
+            guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
+        }
+        on<ScreenEvent.KeyPress>{
+            //modMessage("key pressed: $input")
+            if(key==sbidKey.value){
+                sbidNew(getHoveredInv()?:return@on)
+            }
+            if(key==uuidKey.value){
+                uuidNew(getHoveredInv()?:return@on)
+            }
+            if(key==dropStackKey.value){
+                val screenAccess= mc.screen as? AbstractContainerScreenAccessor ?:return@on
+                val slot=screenAccess.hoveredSlot?:return@on
+                if(dropWithMsg(slot.item))return@on
+                (mc.screen as? AbstractContainerScreen<*>)?.slotClicked(slot,slot.index , 1, ClickType.THROW)
             }
         }
+        on<InputEvent>{
+            if(key!=dropStackKey)return@on
+            if(doDropHotbar(getHeldHotbar()?:return@on))return@on
+            mc.player?.drop(true)
+        }
+        on<ScreenEvent.Open>{
+            modMessage(screen.showsActiveEffects())
+            noClickScreen=true
+            schedule(1,true) { doOpen() }
+        }
+        on<ScreenEvent.Close>{
+            noClickScreen=false
+        }
     }
-//    @JvmStatic fun getTooltip(item: ItemStack): Component {
-//        modMessage(item.getTooltipLines())
-//    }
+    fun doOpen(){
+        val sc=mc.screen as? AbstractContainerScreen<*> ?:return
+        if(sc.title.string=="Salvage Items"){
+            noClickScreen=true
+            modMessage("Salvage")
+            return
+        }
+        if(sc.menu.isValidSlotIndex(49)){
+            val sellSlot=sc.menu.getSlot(49)
+            if(sellSlot.item.hoverName.string=="Sell Item"){
+                noClickScreen=true
+                modMessage("Sell, ")
+                return
+            }
+            //if(sellSlot.item.lore.)
+
+
+        }
+        modMessage("no restriction")
+        noClickScreen=false
+    }
 }
