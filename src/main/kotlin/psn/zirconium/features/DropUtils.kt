@@ -2,6 +2,7 @@ package psn.zirconium.features
 
 import com.odtheking.mixin.accessors.AbstractContainerScreenAccessor
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
+import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
@@ -18,8 +19,10 @@ import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.world.inventory.ClickType
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
 import psn.zirconium.ZconCategory
 
@@ -29,40 +32,41 @@ object DropUtils : Module(
     category = ZconCategory.ZCON
 ) {
     private val protections by DropdownSetting("Protections")
-    val doSBID by BooleanSetting("Protect Skyblock ID",true,"").withDependency { protections }
-    val doUUID by BooleanSetting("Protect UUID",true,"").withDependency { protections }
-    val doRecombed by BooleanSetting("Protect Recombed",true,"").withDependency { protections }
-    val doStarred by BooleanSetting("Protect Starred",true,"").withDependency { protections }
-    val doMuseum by BooleanSetting("Protect Museum Donated",true,"").withDependency { protections }
+    private val doSBID by BooleanSetting("Protect Skyblock ID",true,"").withDependency { protections }
+    private val doUUID by BooleanSetting("Protect UUID",true,"").withDependency { protections }
+    private val doRecombed by BooleanSetting("Protect Recombed",true,"").withDependency { protections }
+    private val doStarred by BooleanSetting("Protect Starred",true,"").withDependency { protections }
+    private val doMuseum by BooleanSetting("Protect Museum Donated",true,"").withDependency { protections }
+    private val protectAll by BooleanSetting("Protect All",false,"")
 
-    val doSound by BooleanSetting("Sound On Drop",true,"")
-    val permHotbar by BooleanSetting("Always Prevent Hotbar",true,"when enabled you have to be in your inventory to drop items")
-    val disableDungeons by BooleanSetting("Disable in Dungeons",true,"dungeons use drop as use ultimate so its not needed")
-    val highlightProtected by BooleanSetting("Highlight Protected",false,"tooltips are too hard rn")
+    private val doSound by BooleanSetting("Sound On Drop",true,"")
+    private val permHotbar by BooleanSetting("Always Prevent Hotbar",true,"when enabled you have to be in your inventory to drop items")
+    private val disableDungeons by BooleanSetting("Disable in Dungeons",true,"dungeons use drop as use ultimate so its not needed")
+    private val highlightProtected by BooleanSetting("Highlight Protected",false,"tooltips are too hard rn")
 
-    val dropStackKey by KeybindSetting("Drop Stack Key", GLFW.GLFW_KEY_UNKNOWN, desc = "Set to unknown to disable,\nCtrl+drop still works,\nCurrently only works outside container/inventory")
-    val sbidKey by KeybindSetting("Skyblock ID Key", GLFW.GLFW_KEY_UNKNOWN).withDependency { doSBID }
-    val uuidKey by KeybindSetting("UUID Key",GLFW.GLFW_KEY_UNKNOWN).withDependency { doUUID }
+    private val dropStackKey by KeybindSetting("Drop Stack Key", GLFW.GLFW_KEY_UNKNOWN, desc = "Set to unknown to disable,\nCtrl+drop still works,\nCurrently only works outside container/inventory")
+    private val sbidKey by KeybindSetting("Skyblock ID Key", GLFW.GLFW_KEY_UNKNOWN).withDependency { doSBID }
+    private val uuidKey by KeybindSetting("UUID Key",GLFW.GLFW_KEY_UNKNOWN).withDependency { doUUID }
 
-    val uidList by ListSetting("uuidList",mutableListOf(""))
-    val sbidList by ListSetting("sbidList",mutableListOf(""))
+    private val uidList by ListSetting("uuidList",mutableListOf(""))
+    private val sbidList by ListSetting("sbidList",mutableListOf(""))
 
-    val protectAll by BooleanSetting("protect all",false,"")
+    val reset by ActionSetting("Reset",""){ noClickScreen=false }
 
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
-    var noClickScreen=false
+    private var noClickScreen=false
     fun isProtected(item: ItemStack): String?{
         if(protectAll)return "All"
         val customData = item.customData
         if(doUUID &&
             customData.contains("uuid") &&
             uidList.contains(customData.get("uuid").toString())
-            ) return "Skyblock ID"
+            ) return "UUID"
         if(doSBID &&
             customData.contains("id") &&
             sbidList.contains(customData.get("id").toString())
-            ) return "UUID"
+            ) return "Skyblock ID"
         if(doStarred && customData.contains("upgrade_level")) return "Starred"
         if(doRecombed && customData.contains("rarity_upgrades")) return "Recombed"
         if(doMuseum && customData.contains("donated_museum")) return "Museum"
@@ -121,7 +125,9 @@ object DropUtils : Module(
     }
     fun getHoveredInv(): ItemStack?{
         if(mc.screen !is AbstractContainerScreen<*>)return null
-        return (mc.screen as? AbstractContainerScreenAccessor)?.hoveredSlot?.item
+        val item=(mc.screen as? AbstractContainerScreenAccessor)?.hoveredSlot?.item
+        if(item?.item==Items.AIR)return null
+        return item
     }
     fun getHeldHotbar(): ItemStack?{
         return mc.player?.inventory?.selectedItem
@@ -135,8 +141,20 @@ object DropUtils : Module(
             guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
         }
         on<ScreenEvent.KeyPress>{
-            //modMessage("key pressed: $input")
-            if(key==sbidKey.value){
+            when(input.key){
+                sbidKey.value -> sbidNew(getHoveredInv()?:return@on)
+                uuidKey.value -> uuidNew(getHoveredInv()?:return@on)
+                dropStackKey.value -> {
+                    val screenAccess= mc.screen as? AbstractContainerScreenAccessor ?:return@on
+                    val slot=screenAccess.hoveredSlot?:return@on
+                    if(dropWithMsg(slot.item))return@on
+                    (mc.screen as? AbstractContainerScreen<*>)?.slotClicked(slot,slot.index , 1, ClickType.THROW)
+                }
+            }
+            return@on
+
+
+            if(input.key==sbidKey.value){
                 sbidNew(getHoveredInv()?:return@on)
             }
             if(key==uuidKey.value){
@@ -155,9 +173,9 @@ object DropUtils : Module(
             mc.player?.drop(true)
         }
         on<ScreenEvent.Open>{
-            modMessage(screen.showsActiveEffects())
-            noClickScreen=true
-            schedule(1,true) { doOpen() }
+            noClickScreen=screen !is InventoryScreen
+            if(noClickScreen) schedule(1,true) { doOpen() }
+            modMessage(noClickScreen)
         }
         on<ScreenEvent.Close>{
             noClickScreen=false
