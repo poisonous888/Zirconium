@@ -21,6 +21,7 @@ import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
 import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
@@ -73,6 +74,7 @@ object DropUtils : Module(
         return null
     }
     @JvmStatic fun doDropHotbar(item: ItemStack): Boolean{
+        modMessage("hotbar")
         if(disableDungeons && DungeonUtils.inDungeons){
             val room = DungeonUtils.currentRoomName
             if(!room.equalsOneOf("Entrance","Unknown")){
@@ -83,9 +85,13 @@ object DropUtils : Module(
         if(permHotbar)return true
         return dropWithMsg(item)
     }
-    @JvmStatic fun doDropContainer(item: ItemStack,clickType: ClickType): Boolean{
-        if(noClickScreen||clickType == ClickType.THROW)return dropWithMsg(item)
-        (mc.screen as? AbstractContainerScreen<*>)?.hoveredSlot?:return dropWithMsg(item)
+    @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ClickType): Boolean{
+        if(slot==null){
+            modMessage("protected your something from being dropped (idfk)")
+            if(doSound)alert("")
+            return true
+        }
+        if(noClickScreen||clickType==ClickType.THROW||slotId<0)return dropWithMsg(slot.item)
         return false
     }
     fun dropWithMsg(item: ItemStack): Boolean{
@@ -135,39 +141,25 @@ object DropUtils : Module(
     init {
         on<GuiEvent.RenderSlot>{
             if(!highlightProtected)return@on
-            var prot=isProtected(slot.item)
-            prot?:return@on
+            var prot: String? = isProtected(slot.item) ?: return@on
             //guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
             guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
         }
         on<ScreenEvent.KeyPress>{
-            when(input.key){
-                sbidKey.value -> sbidNew(getHoveredInv()?:return@on)
-                uuidKey.value -> uuidNew(getHoveredInv()?:return@on)
+            modMessage("on keyPress")
+            when(input.key) {
+                sbidKey.value -> sbidNew(getHoveredInv() ?: return@on)
+                uuidKey.value -> uuidNew(getHoveredInv() ?: return@on)
                 dropStackKey.value -> {
-                    val screenAccess= mc.screen as? AbstractContainerScreenAccessor ?:return@on
-                    val slot=screenAccess.hoveredSlot?:return@on
-                    if(dropWithMsg(slot.item))return@on
-                    (mc.screen as? AbstractContainerScreen<*>)?.slotClicked(slot,slot.index , 1, ClickType.THROW)
+                    val screenAccess = mc.screen as? AbstractContainerScreenAccessor ?: return@on
+                    val slot = screenAccess.hoveredSlot ?: return@on
+                    if (dropWithMsg(slot.item)) return@on
+                    (mc.screen as? AbstractContainerScreen<*>)?.slotClicked(slot, slot.index, 1, ClickType.THROW)
                 }
-            }
-            return@on
-
-
-            if(input.key==sbidKey.value){
-                sbidNew(getHoveredInv()?:return@on)
-            }
-            if(key==uuidKey.value){
-                uuidNew(getHoveredInv()?:return@on)
-            }
-            if(key==dropStackKey.value){
-                val screenAccess= mc.screen as? AbstractContainerScreenAccessor ?:return@on
-                val slot=screenAccess.hoveredSlot?:return@on
-                if(dropWithMsg(slot.item))return@on
-                (mc.screen as? AbstractContainerScreen<*>)?.slotClicked(slot,slot.index , 1, ClickType.THROW)
             }
         }
         on<InputEvent>{
+            modMessage("inputevent")
             if(key!=dropStackKey)return@on
             if(doDropHotbar(getHeldHotbar()?:return@on))return@on
             mc.player?.drop(true)
@@ -175,10 +167,11 @@ object DropUtils : Module(
         on<ScreenEvent.Open>{
             noClickScreen=screen !is InventoryScreen
             if(noClickScreen) schedule(1,true) { doOpen() }
-            modMessage(noClickScreen)
+            modMessage("noclickscreen: $noClickScreen")
         }
         on<ScreenEvent.Close>{
             noClickScreen=false
+            modMessage("noclickscreen: $noClickScreen")
         }
     }
     fun doOpen(){
@@ -201,5 +194,10 @@ object DropUtils : Module(
         }
         modMessage("no restriction")
         noClickScreen=false
+    }
+    override fun onDisable() {
+        noClickScreen=false
+        modMessage("Disabling Drop Utils Prevents ")
+        super.onDisable()
     }
 }

@@ -29,12 +29,8 @@ public abstract class DropInvMixin{
 //    }
 
     @Inject(method = "slotClicked",at = @At("HEAD"), cancellable = true)
-    private void cancelDropInv(Slot slot, int i, int j, ClickType clickType, CallbackInfo ci){
-//        DropUtils.msg(clickType.name());
-//        if(clickType==ClickType.THROW)ci.cancel();
-
-        if(slot==null) return;
-        if(DropUtils.doDropContainer(slot.getItem(),clickType)){
+    private void cancelDropInv(Slot slot, int slotId, int button, ClickType clickType, CallbackInfo ci){
+        if(DropUtils.doDropContainer(slot,slotId,clickType)){
             ci.cancel();
         }
     }
