@@ -110,6 +110,7 @@ object DropUtils : Module(
         if(uidList.contains(id)){
             uidList.remove(id)
             modMessage("§4Removed ${item.hoverName.string} From UUID Protection")
+            alert("")
             return
         }
         uidList.add(id)
@@ -124,15 +125,15 @@ object DropUtils : Module(
         if(sbidList.contains(id)){
             sbidList.remove(id)
             modMessage("§4Removed ${item.hoverName.string} From Skyblock ID Protection")
+            alert("")
             return
         }
         sbidList.add(id)
         modMessage("§2Added ${item.hoverName.string} To Skyblock ID Protection")
     }
     fun getHoveredInv(): ItemStack?{
-        if(mc.screen !is AbstractContainerScreen<*>)return null
-        val item=(mc.screen as? AbstractContainerScreenAccessor)?.hoveredSlot?.item
-        if(item?.item==Items.AIR)return null
+        val item=(mc.screen as? AbstractContainerScreen<*>)?.hoveredSlot?.item?:return null
+        if(item.item==Items.AIR)return null
         return item
     }
     fun getHeldHotbar(): ItemStack?{

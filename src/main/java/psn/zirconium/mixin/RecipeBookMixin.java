@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import psn.zirconium.features.MiscFeatures;
 
-@Mixin(value = AbstractRecipeBookScreen.class)
+@Mixin(AbstractRecipeBookScreen.class)
 public class RecipeBookMixin {
     @Inject(method = "initButton", at = @At("HEAD"), cancellable = true)
     public void noRecipeBook(CallbackInfo ci) {

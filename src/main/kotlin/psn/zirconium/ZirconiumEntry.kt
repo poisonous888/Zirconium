@@ -12,9 +12,8 @@ import psn.zirconium.features.Garden
 import psn.zirconium.features.MiscFeatures
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
-import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.client.Minecraft
 import psn.zirconium.commands.staticWaypointCmd
+import psn.zirconium.features.DVD
 import psn.zirconium.features.DropUtils
 import psn.zirconium.features.ItemPos
 import psn.zirconium.features.MouseLock
@@ -27,7 +26,9 @@ object ZirconiumEntry : ClientModInitializer {
             val cmd=mutableListOf(maxwellCmd, stashItemCmd, stashMaterialCmd, staticWaypointCmd)
             cmd.forEach { commodore -> commodore.register(dispatcher) }
         }
+
         listOf(this).forEach { EventBus.subscribe(it) }
+
         ModuleManager.registerModules(ModuleConfig("Zirconium.json"),
             Garden,
             MiscFeatures,
@@ -39,6 +40,7 @@ object ZirconiumEntry : ClientModInitializer {
             ItemPos,
             //TeleportLine,
             MouseLock,
+            DVD,
         )
     }
 }
