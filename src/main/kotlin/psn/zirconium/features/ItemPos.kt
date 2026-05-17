@@ -82,7 +82,7 @@ object ItemPos : Module(
     @JvmStatic fun doSwing(): Boolean {return enabled&&customSwing}
     @JvmStatic fun doSwingWhileUsing():Boolean{return enabled&&customSwing&&swingWhileUsing}
     @JvmStatic fun executeSwing(poseStack: PoseStack,arm: Int,f: Float){
-        val pi = 3.0
+        val pi = 3.1415
         val sqf = Mth.sqrt(f) * pi
 
         if(translateSwing){

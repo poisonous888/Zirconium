@@ -20,6 +20,7 @@ import psn.zirconium.features.MouseLock
 import psn.zirconium.features.StaticWaypoints
 
 object ZirconiumEntry : ClientModInitializer {
+    @JvmStatic val zcConfig = ModuleConfig("Zirconium.json")
     override fun onInitializeClient() {
         println("Zirconium has entered the chat")
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
@@ -29,7 +30,7 @@ object ZirconiumEntry : ClientModInitializer {
 
         listOf(this).forEach { EventBus.subscribe(it) }
 
-        ModuleManager.registerModules(ModuleConfig("Zirconium.json"),
+        ModuleManager.registerModules(zcConfig,
             Garden,
             MiscFeatures,
             GuiHighlight,

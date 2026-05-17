@@ -1,7 +1,6 @@
 package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
-import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
@@ -27,6 +26,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
 import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry.zcConfig
 
 object DropUtils : Module(
     name = "Drop Utils",
@@ -53,8 +53,6 @@ object DropUtils : Module(
     private val uidList by ListSetting("uuidList",mutableListOf(""))
     private val sbidList by ListSetting("sbidList",mutableListOf(""))
 
-    val reset by ActionSetting("Reset",""){ noClickScreen=false }
-
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
     private var noClickScreen=false
@@ -76,7 +74,6 @@ object DropUtils : Module(
         return null
     }
     @JvmStatic fun doDropHotbar(item: ItemStack): Boolean{
-        //modMessage("hotbar")
         if(disableDungeons && DungeonUtils.inDungeons){
             if(!DungeonUtils.currentRoomName.equalsOneOf("Entrance","Unknown")){
                 return false
@@ -90,7 +87,6 @@ object DropUtils : Module(
     @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ClickType): Boolean{
         if(slot==null){
             if(clickType== ClickType.QUICK_CRAFT){
-                //modMessage("slot drag")
                 return false
             }
             return dropWithMsg((mc.screen as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
@@ -114,10 +110,13 @@ object DropUtils : Module(
             uidList.remove(id)
             modMessage("§4Removed ${item.hoverName.string} From UUID Protection")
             alert("")
+            zcConfig.save()
             return
         }
         uidList.add(id)
         modMessage("§2Added ${item.hoverName.string} To UUID Protection")
+        alert("")
+        zcConfig.save()
     }
     fun sbidNew(item: ItemStack){
         if(!item.customData.contains("id")){
@@ -129,10 +128,13 @@ object DropUtils : Module(
             sbidList.remove(id)
             modMessage("§4Removed ${item.hoverName.string} From Skyblock ID Protection")
             alert("")
+            zcConfig.save()
             return
         }
         sbidList.add(id)
         modMessage("§2Added ${item.hoverName.string} To Skyblock ID Protection")
+        alert("")
+        zcConfig.save()
     }
     fun getHoveredInv():ItemStack?{
         val item=(mc.screen as? AbstractContainerScreen<*>)?.hoveredSlot?.item?:return null
@@ -149,7 +151,6 @@ object DropUtils : Module(
             guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
         }
         on<ScreenEvent.KeyPress>{
-            modMessage("on keyPress")
             when(input.key) {
                 sbidKey.value -> sbidNew(getHoveredInv() ?: return@on)
                 uuidKey.value -> uuidNew(getHoveredInv() ?: return@on)
@@ -178,25 +179,21 @@ object DropUtils : Module(
         val sc=mc.screen as? AbstractContainerScreen<*> ?:return
         if(sc.title.string=="Salvage Items"){
             noClickScreen=true
-            modMessage("Salvage")
             return
         }
         if(sc.menu.isValidSlotIndex(49)){
             val sellSlot=sc.menu.getSlot(49)
             if(sellSlot.item.hoverName.string=="Sell Item"){
                 noClickScreen=true
-                modMessage("Sell, normal")
                 return
             }
             sellSlot.item.lore.forEach{
                 t->if(t.string=="Click to buyback!"){
                     noClickScreen=true
-                    modMessage("Sell, buyback")
                     return
                 }
             }
         }
-        modMessage("no restriction")
         noClickScreen=false
     }
     override fun onDisable() {
