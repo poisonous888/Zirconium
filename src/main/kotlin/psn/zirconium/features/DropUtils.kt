@@ -1,6 +1,5 @@
 package psn.zirconium.features
 
-import com.odtheking.mixin.accessors.AbstractContainerScreenAccessor
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
@@ -40,7 +39,7 @@ object DropUtils : Module(
     private val doRecombed by BooleanSetting("Protect Recombed",true,"").withDependency { protections }
     private val doStarred by BooleanSetting("Protect Starred",true,"").withDependency { protections }
     private val doMuseum by BooleanSetting("Protect Museum Donated",true,"").withDependency { protections }
-    private val protectAll by BooleanSetting("Protect All",false,"")
+    private val protectAll by BooleanSetting("Protect All",false,"").withDependency { protections }
 
     private val doSound by BooleanSetting("Sound On Drop",true,"")
     private val permHotbar by BooleanSetting("Always Prevent Hotbar",true,"when enabled you have to be in your inventory to drop items")
@@ -77,13 +76,13 @@ object DropUtils : Module(
         return null
     }
     @JvmStatic fun doDropHotbar(item: ItemStack): Boolean{
-        modMessage("hotbar")
+        //modMessage("hotbar")
         if(disableDungeons && DungeonUtils.inDungeons){
-            val room = DungeonUtils.currentRoomName
-            if(!room.equalsOneOf("Entrance","Unknown")){
+            if(!DungeonUtils.currentRoomName.equalsOneOf("Entrance","Unknown")){
                 return false
             }
-            modMessage("Cannot Drop Items Until The DungeonHas Started!")
+            modMessage("Cannot Drop Items Until The Dungeon Has Started!")
+            return true
         }
         if(permHotbar)return true
         return dropWithMsg(item)
@@ -91,23 +90,18 @@ object DropUtils : Module(
     @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ClickType): Boolean{
         if(slot==null){
             if(clickType== ClickType.QUICK_CRAFT){
-                modMessage("slot drag")
+                //modMessage("slot drag")
                 return false
             }
             return dropWithMsg((mc.screen as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
-//            modMessage("protected your something from being dropped (idfk)")
-//            modMessage((mc.screen as? AbstractContainerScreen<*>)?.menu?.carried?.hoverName?.string)
-//            if(doSound)alert("")
-//            return true
         }
         if(noClickScreen||clickType==ClickType.THROW||slotId<0)return dropWithMsg(slot.item)
         return false
     }
     fun dropWithMsg(item: ItemStack): Boolean{
-        val prot=isProtected(item)
-        prot?:return false
+        val prot=isProtected(item)?:return false
         modMessage("Prevented Your ${item.hoverName.string} From Being Dropped ($prot)")
-        if (doSound) alert("")
+        if(doSound)alert("")
         return true
     }
     fun uuidNew(item: ItemStack){
@@ -140,7 +134,7 @@ object DropUtils : Module(
         sbidList.add(id)
         modMessage("§2Added ${item.hoverName.string} To Skyblock ID Protection")
     }
-    fun getHoveredInv(): ItemStack?{
+    fun getHoveredInv():ItemStack?{
         val item=(mc.screen as? AbstractContainerScreen<*>)?.hoveredSlot?.item?:return null
         if(item.item==Items.AIR)return null
         return item
@@ -151,9 +145,8 @@ object DropUtils : Module(
     init {
         on<GuiEvent.RenderSlot>{
             if(!highlightProtected)return@on
-            var prot: String = isProtected(slot.item) ?: return@on
+            isProtected(slot.item)?:return@on
             guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
-            //guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
         }
         on<ScreenEvent.KeyPress>{
             modMessage("on keyPress")
@@ -161,10 +154,10 @@ object DropUtils : Module(
                 sbidKey.value -> sbidNew(getHoveredInv() ?: return@on)
                 uuidKey.value -> uuidNew(getHoveredInv() ?: return@on)
                 dropStackKey.value -> {
-                    val screenAccess = mc.screen as? AbstractContainerScreenAccessor ?: return@on
+                    val screenAccess = mc.screen as? AbstractContainerScreen<*> ?: return@on
                     val slot = screenAccess.hoveredSlot ?: return@on
                     if (dropWithMsg(slot.item)) return@on
-                    (mc.screen as? AbstractContainerScreen<*>)?.slotClicked(slot, slot.index, 1, ClickType.THROW)
+                    screenAccess.slotClicked(slot, slot.index, 1, ClickType.THROW)
                 }
             }
         }
@@ -196,7 +189,7 @@ object DropUtils : Module(
                 return
             }
             sellSlot.item.lore.forEach{
-                t->if(t.string==""){
+                t->if(t.string=="Click to buyback!"){
                     noClickScreen=true
                     modMessage("Sell, buyback")
                     return
@@ -208,7 +201,7 @@ object DropUtils : Module(
     }
     override fun onDisable() {
         noClickScreen=false
-        modMessage("Disabling Drop Utils Prevents ")
+        //modMessage("Disabling Drop Utils Prevents Using Keybinds To Modify Protected List, But Due To It Relying On A Mixin, It Will Still Function")
         super.onDisable()
     }
 }

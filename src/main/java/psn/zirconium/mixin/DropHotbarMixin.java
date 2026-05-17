@@ -22,9 +22,4 @@ public abstract class DropHotbarMixin extends AbstractClientPlayer{
             ci.cancel();
         }
     }
-
-//    @ModifyVariable(method = "drop", at = @At("HEAD"), ordinal = 0, argsOnly = true)
-//    private boolean dropStack(boolean bl){
-//        return bl || DropUtils.isDropHeld();
-//    }
 }
