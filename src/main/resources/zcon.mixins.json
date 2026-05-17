@@ -14,9 +14,9 @@
   "client": [
     "DropHotbarMixin",
     "DropInvMixin",
-    "HudMixin",
+    "PotionRenderHud",
     "MouseLockMixin",
-    "NoPotionEffects",
+    "PotionRenderGui",
     "OdinModuleManagerMixin",
     "R_AvatarRendererMixin",
     "R_LivingEntityMixin",
