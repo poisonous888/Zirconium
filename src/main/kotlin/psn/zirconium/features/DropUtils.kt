@@ -12,10 +12,12 @@ import com.odtheking.odin.events.InputEvent
 import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
+import com.odtheking.odin.utils.Colors
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.customData
 import com.odtheking.odin.utils.equalsOneOf
 import com.odtheking.odin.utils.handlers.schedule
+import com.odtheking.odin.utils.lore
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
@@ -58,6 +60,7 @@ object DropUtils : Module(
 
     private var noClickScreen=false
     fun isProtected(item: ItemStack): String?{
+        if(item.item==Items.AIR)return null
         if(protectAll)return "All"
         val customData = item.customData
         if(doUUID &&
@@ -87,9 +90,15 @@ object DropUtils : Module(
     }
     @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ClickType): Boolean{
         if(slot==null){
-            modMessage("protected your something from being dropped (idfk)")
-            if(doSound)alert("")
-            return true
+            if(clickType== ClickType.QUICK_CRAFT){
+                modMessage("slot drag")
+                return false
+            }
+            return dropWithMsg((mc.screen as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
+//            modMessage("protected your something from being dropped (idfk)")
+//            modMessage((mc.screen as? AbstractContainerScreen<*>)?.menu?.carried?.hoverName?.string)
+//            if(doSound)alert("")
+//            return true
         }
         if(noClickScreen||clickType==ClickType.THROW||slotId<0)return dropWithMsg(slot.item)
         return false
@@ -142,9 +151,9 @@ object DropUtils : Module(
     init {
         on<GuiEvent.RenderSlot>{
             if(!highlightProtected)return@on
-            var prot: String? = isProtected(slot.item) ?: return@on
-            //guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
-            guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
+            var prot: String = isProtected(slot.item) ?: return@on
+            guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
+            //guiGraphics.renderFakeItem(slot.item,slot.x, slot.y)
         }
         on<ScreenEvent.KeyPress>{
             modMessage("on keyPress")
@@ -160,7 +169,6 @@ object DropUtils : Module(
             }
         }
         on<InputEvent>{
-            modMessage("inputevent")
             if(key!=dropStackKey)return@on
             if(doDropHotbar(getHeldHotbar()?:return@on))return@on
             mc.player?.drop(true)
@@ -168,11 +176,9 @@ object DropUtils : Module(
         on<ScreenEvent.Open>{
             noClickScreen=screen !is InventoryScreen
             if(noClickScreen) schedule(1,true) { doOpen() }
-            modMessage("noclickscreen: $noClickScreen")
         }
         on<ScreenEvent.Close>{
             noClickScreen=false
-            modMessage("noclickscreen: $noClickScreen")
         }
     }
     fun doOpen(){
@@ -186,12 +192,16 @@ object DropUtils : Module(
             val sellSlot=sc.menu.getSlot(49)
             if(sellSlot.item.hoverName.string=="Sell Item"){
                 noClickScreen=true
-                modMessage("Sell, ")
+                modMessage("Sell, normal")
                 return
             }
-            //if(sellSlot.item.lore.)
-
-
+            sellSlot.item.lore.forEach{
+                t->if(t.string==""){
+                    noClickScreen=true
+                    modMessage("Sell, buyback")
+                    return
+                }
+            }
         }
         modMessage("no restriction")
         noClickScreen=false
