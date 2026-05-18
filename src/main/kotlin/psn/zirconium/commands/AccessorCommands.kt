@@ -18,6 +18,9 @@ val maxwellCmd = Commodore("ac"){
     runs{
         sendCommand("call maxwell")
     }
+    runs { greedy: GreedyString ->
+        sendCommand("achat ${greedy.string}")
+    }
 }
 val stashItemCmd = Commodore("stash"){
     runs{
