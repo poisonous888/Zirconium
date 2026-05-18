@@ -13,7 +13,6 @@ import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.Colors
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.customData
-import com.odtheking.odin.utils.equalsOneOf
 import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.lore
 import com.odtheking.odin.utils.modMessage
@@ -75,11 +74,12 @@ object DropUtils : Module(
     }
     @JvmStatic fun doDropHotbar(item: ItemStack): Boolean{
         if(disableDungeons && DungeonUtils.inDungeons){
-            if(!DungeonUtils.currentRoomName.equalsOneOf("Entrance","Unknown")){
-                return false
+            val room=DungeonUtils.currentRoomName
+            if(room=="Entrance"||room=="Unknown"&&DungeonUtils.inClear){
+                modMessage("Cannot Drop Items Until The Dungeon Has Started!")
+                return true
             }
-            modMessage("Cannot Drop Items Until The Dungeon Has Started!")
-            return true
+            return false
         }
         if(permHotbar)return true
         return dropWithMsg(item)
