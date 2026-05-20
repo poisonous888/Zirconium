@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import psn.zirconium.features.CustomCommands
 import psn.zirconium.features.DVD
 import psn.zirconium.features.DropUtils
+import psn.zirconium.features.HideArmor
 import psn.zirconium.features.ItemPos
 import psn.zirconium.features.Lag
 import psn.zirconium.features.MouseLock
@@ -29,12 +30,12 @@ object ZirconiumEntry : ClientModInitializer {
             Visuals,
             StaticWaypoints,
             //AutoComplete,
-            DropUtils,
             ItemPos,
             //TeleportLine,
             MouseLock,
             DVD,
             Lag,
+            HideArmor,
         )
         println("Zirconium has entered the chat")
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
@@ -44,6 +45,7 @@ object ZirconiumEntry : ClientModInitializer {
         }
         listOf(this).forEach{EventBus.subscribe(it)}
         ModuleManager.registerModules(zcConfig,*modules)
+        ModuleManager.registerModules(ModuleConfig("Protections.json"), DropUtils)
     }
 }
 interface HasCommands{fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>)}

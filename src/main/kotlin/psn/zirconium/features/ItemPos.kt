@@ -192,7 +192,7 @@ object ItemPos : Module(
         val swing:List<Float>,
         val doSwingDur:Boolean,
         val swingDur:Int,
-        val haste:Boolean?=false,
+        val haste:Boolean,
         val swap:Boolean,
         val nohand:Boolean,
         val sync:Boolean,
@@ -223,6 +223,7 @@ object ItemPos : Module(
         (settings["Disable Hand"] as BooleanSetting).value = p.nohand
         (settings["Sync Hand With Item"] as BooleanSetting).value = p.sync
         (settings["Swing While Using"] as BooleanSetting).value = p.using
+        (settings["Ignore Haste"] as BooleanSetting).value = p.haste
         (settings["Custom Swing"] as BooleanSetting).value = true
     }
 }
