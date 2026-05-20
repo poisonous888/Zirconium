@@ -1,36 +1,28 @@
 package psn.zirconium
 
+import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.features.ModuleManager
-import psn.zirconium.commands.maxwellCmd
-import psn.zirconium.commands.stashItemCmd
-import psn.zirconium.commands.stashMaterialCmd
 import psn.zirconium.features.Visuals
 import psn.zirconium.features.GuiHighlight
 import psn.zirconium.features.Garden
 import psn.zirconium.features.MiscFeatures
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
-import psn.zirconium.commands.staticWaypointCmd
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import psn.zirconium.features.CustomCommands
 import psn.zirconium.features.DVD
 import psn.zirconium.features.DropUtils
 import psn.zirconium.features.ItemPos
+import psn.zirconium.features.Lag
 import psn.zirconium.features.MouseLock
 import psn.zirconium.features.StaticWaypoints
 
 object ZirconiumEntry : ClientModInitializer {
-    @JvmStatic val zcConfig = ModuleConfig("Zirconium.json")
     override fun onInitializeClient() {
-        println("Zirconium has entered the chat")
-        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
-            val cmd=mutableListOf(maxwellCmd, stashItemCmd, stashMaterialCmd, staticWaypointCmd)
-            cmd.forEach { commodore -> commodore.register(dispatcher) }
-        }
-
-        listOf(this).forEach { EventBus.subscribe(it) }
-
-        ModuleManager.registerModules(zcConfig,
+        val modules=arrayOf(
+            CustomCommands,
             Garden,
             MiscFeatures,
             GuiHighlight,
@@ -42,6 +34,18 @@ object ZirconiumEntry : ClientModInitializer {
             //TeleportLine,
             MouseLock,
             DVD,
+            Lag,
         )
+        println("Zirconium has entered the chat")
+        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
+            modules.forEach{ module ->
+                if(module is HasCommands) module.buildCommands(dispatcher)
+            }
+        }
+        listOf(this).forEach{EventBus.subscribe(it)}
+        ModuleManager.registerModules(zcConfig,*modules)
     }
 }
+interface HasCommands{fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>)}
+val zcConfig = ModuleConfig("Zirconium.json")
+const val zcon="§4Zcon §8»§r "

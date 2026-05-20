@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
 import psn.zirconium.ZconCategory
-import psn.zirconium.ZirconiumEntry.zcConfig
+import psn.zirconium.zcConfig
 
 object DropUtils : Module(
     name = "Drop Utils",

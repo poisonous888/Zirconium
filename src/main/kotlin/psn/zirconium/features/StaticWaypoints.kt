@@ -1,5 +1,6 @@
 package psn.zirconium.features
 
+import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
@@ -12,12 +13,16 @@ import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.render.drawCustomBeacon
 import com.odtheking.odin.utils.skyblock.Island
 import com.odtheking.odin.utils.skyblock.LocationUtils
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
+import psn.zirconium.HasCommands
 import psn.zirconium.ZconCategory
+import psn.zirconium.commands.staticWaypointCmd
+import psn.zirconium.zcConfig
 
-object StaticWaypoints : Module(
+object StaticWaypoints : HasCommands,Module(
     name = "Static Waypoints",
     description = "static island based waypoints",
     category = ZconCategory.ZCON
@@ -56,7 +61,10 @@ object StaticWaypoints : Module(
     fun addWaypoint(name: String, x: Int, y: Int, z: Int, color: Color, island: Island){
         storage[island] ?: storage.set(island, mutableListOf())
         val confirm = storage[island]?.add(Waypoint(name, BlockPos(x,y,z),color)) ?: false
-        if(confirm){ modMessage("Added Waypoint $name at x:$x y:$y z:$z") }
+        if(confirm){
+            modMessage("Added Waypoint $name at x:$x y:$y z:$z")
+            zcConfig.save()
+        }
         else{ modMessage("Failed To Add Waypoint") }
     }
     fun removeWaypoint(name: String){ removeWaypoint(name,LocationUtils.currentArea) }
@@ -64,15 +72,18 @@ object StaticWaypoints : Module(
         storage[island]?.removeIf { it.name==name }
         if(storage[island]?.isEmpty() ?: false) storage.remove(island)
         modMessage("Removed Waypoint $name")
+        zcConfig.save()
     }
     fun clearIsland(){ clearIsland(LocationUtils.currentArea) }
     fun clearIsland(island: Island){
         storage.remove(island)
         modMessage("Cleared Waypoints on Island $island")
+        zcConfig.save()
     }
     fun clearAll(){
         storage.clear()
         modMessage("Cleared All Waypoints")
+        zcConfig.save()
     }
     fun list(){ list(LocationUtils.currentArea) }
     fun list(island: Island){
@@ -85,5 +96,10 @@ object StaticWaypoints : Module(
     }
     fun listAll(){
         storage.keys.forEach{ list(it) }
+    }
+    
+    override fun buildCommands(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
+        staticWaypointCmd.register(dispatcher)
+        //TODO redo static waypoints better
     }
 }
