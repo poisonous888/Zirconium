@@ -33,7 +33,7 @@ object CustomCommands : HasCommands,Module(
         addAlias(aliasCmd,aliasExec)
     }
     private val keybindKey by KeybindSetting("Key", GLFW.GLFW_KEY_UNKNOWN)
-    private val keybindExec by StringSetting("Executes","",desc="")
+    private val keybindExec by StringSetting("Runs","",desc="")
     private val keybindAdd by ActionSetting("Add Keybind",""){
         addKeybind(keybindKey,keybindExec)
     }
