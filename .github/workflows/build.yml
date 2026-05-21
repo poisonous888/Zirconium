@@ -27,8 +27,9 @@ jobs:
         run: ./gradlew build
 
       - name: capture build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
-          name: Artifacts
-          path: build/libs/
-          archieve: false
+          path: |
+            build/libs/zirconium-*.jar
+            !build/libs/zirconium-*-sources.jar
+          archive: false
