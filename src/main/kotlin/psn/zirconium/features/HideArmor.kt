@@ -3,12 +3,12 @@ package psn.zirconium.features
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.features.Module
 import net.minecraft.world.entity.EquipmentSlot
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 
 object HideArmor : Module(
     name = "Hide Armor",
     description = "Hides certain armor pieces",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     private val skull by BooleanSetting("Skull",false,"")
     private val helm by BooleanSetting("Helmet",false,"")

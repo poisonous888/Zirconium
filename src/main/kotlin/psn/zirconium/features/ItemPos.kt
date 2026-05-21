@@ -3,16 +3,19 @@ package psn.zirconium.features
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
-import com.odtheking.odin.clickgui.settings.impl.*
+import com.odtheking.odin.clickgui.settings.impl.ActionSetting
+import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
+import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
+import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.features.Module
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.HumanoidArm
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 
 object ItemPos : Module(
     name = "Held Item Render",
     description = "changes the held item position",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ){
     private val translation by DropdownSetting("Translation")
     private val itemX by NumberSetting("x",0.0,-0.5,0.5,0.05,"").withDependency { translation }

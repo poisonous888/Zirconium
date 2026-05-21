@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
+import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.RenderEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
@@ -17,15 +18,15 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
+import psn.zirconium.AsyncSave
 import psn.zirconium.HasCommands
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 import psn.zirconium.commands.staticWaypointCmd
-import psn.zirconium.zcConfig
 
-object StaticWaypoints : HasCommands,Module(
+object StaticWaypoints: AsyncSave, HasCommands, Module(
     name = "Static Waypoints",
     description = "static island based waypoints",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     val defaultColor by ColorSetting("Default Color",Colors.MINECRAFT_AQUA,true,"default color for waypoints without a specified color")
     val add3x3 by ActionSetting("Add 3x3","readds the 3x3 waypoint for f7/m7 in case you clear it"){
@@ -63,7 +64,7 @@ object StaticWaypoints : HasCommands,Module(
         val confirm = storage[island]?.add(Waypoint(name, BlockPos(x,y,z),color)) ?: false
         if(confirm){
             modMessage("Added Waypoint $name at x:$x y:$y z:$z")
-            zcConfig.save()
+            config.save()
         }
         else{ modMessage("Failed To Add Waypoint") }
     }
@@ -72,18 +73,18 @@ object StaticWaypoints : HasCommands,Module(
         storage[island]?.removeIf { it.name==name }
         if(storage[island]?.isEmpty() ?: false) storage.remove(island)
         modMessage("Removed Waypoint $name")
-        zcConfig.save()
+        config.save()
     }
     fun clearIsland(){ clearIsland(LocationUtils.currentArea) }
     fun clearIsland(island: Island){
         storage.remove(island)
         modMessage("Cleared Waypoints on Island $island")
-        zcConfig.save()
+        config.save()
     }
     fun clearAll(){
         storage.clear()
         modMessage("Cleared All Waypoints")
-        zcConfig.save()
+        config.save()
     }
     fun list(){ list(LocationUtils.currentArea) }
     fun list(island: Island){
@@ -101,5 +102,9 @@ object StaticWaypoints : HasCommands,Module(
     override fun buildCommands(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
         staticWaypointCmd.register(dispatcher)
         //TODO redo static waypoints better
+    }
+    private val config=ModuleConfig("StaticWaypoints.json")
+    override fun getConfig(): ModuleConfig {
+        return config
     }
 }

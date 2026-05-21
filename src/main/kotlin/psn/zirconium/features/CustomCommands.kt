@@ -8,6 +8,7 @@ import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
 import com.odtheking.odin.clickgui.settings.impl.StringSetting
+import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.InputEvent
 import com.odtheking.odin.events.WorldEvent
 import com.odtheking.odin.events.core.on
@@ -17,15 +18,15 @@ import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.sendCommand
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import org.lwjgl.glfw.GLFW
+import psn.zirconium.AsyncSave
 import psn.zirconium.HasCommands
-import psn.zirconium.ZconCategory
-import psn.zirconium.zcConfig
+import psn.zirconium.ZirconiumEntry
 import psn.zirconium.zcon
 
-object CustomCommands : HasCommands,Module(
+object CustomCommands: AsyncSave, HasCommands, Module(
     name = "Custom Commands",
     description = "Command Alias's and Command Keybinds",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     private val aliasCmd by StringSetting("Command","",desc="")
     private val aliasExec by StringSetting("Executes","",desc="")
@@ -87,65 +88,78 @@ object CustomCommands : HasCommands,Module(
     }
     fun saveAliasChanges(){
         modMessage("Commands will be reloaded when you swap lobbies",zcon)
-        zcConfig.save()
+        config.save()
         //TODO reregister commands
     }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
-    private val savedKeybinds by MapSetting("Saved Keybinds",mutableMapOf<InputConstants.Key,String>())
+    private val savedKeybinds by MapSetting("Saved Keybinds",mutableMapOf<String,String>())
+    private val loadedKeybinds=mutableMapOf<InputConstants.Key,String>()
     fun parseKeybind(str:String): InputConstants.Key?{
-        try {
-            return InputConstants.getKey("key.keyboard.$str")
-        }
-        catch(_: Exception){
-            modMessage("Failed to parse key $str",zcon)
-            return null
+        try { return InputConstants.getKey("key.keyboard.$str") } catch(_: Exception){}
+        try { return InputConstants.getKey("key.keyboard.left.$str") } catch(_: Exception){}
+        modMessage("Failed to parse key $str",zcon)
+        return null
+    }
+    fun saveLoadKeybinds(){
+        config.save()
+        loadKeybinds()
+    }
+    fun loadKeybinds(){
+        loadedKeybinds.clear()
+        for(bind in savedKeybinds){
+            loadedKeybinds[InputConstants.getKey(bind.key)]=bind.value
         }
     }
     fun addKeybind(keyNew:InputConstants.Key, execNew:String){
-        if(savedKeybinds[keyNew]!=null){
-            modMessage("§cKeybind ${keyNew.name} is already bound to ${savedKeybinds[keyNew]}!",zcon)
+        if(savedKeybinds[keyNew.name]!=null){
+            modMessage("§cKeybind ${keyNew.name} is already bound to ${savedKeybinds[keyNew.name]}!",zcon)
             return
         }
-        savedKeybinds[keyNew]=execNew
+        savedKeybinds[keyNew.name]=execNew
         modMessage("Added keybind ${keyNew.name} for command $execNew",zcon)
-        zcConfig.save()
+        saveLoadKeybinds()
+        unabled()
     }
-    fun removeKeybind(keyRem:InputConstants.Key){
-        val execRem=savedKeybinds.remove(keyRem)
+    fun removeKeybind(key:InputConstants.Key){
+        val execRem=savedKeybinds.remove(key.name)
         if(execRem==null){
-            modMessage("§cNo keybind Found For $key",zcon)
+            modMessage("§cNo keybind Found For ${key.name}",zcon)
             return
         }
-        modMessage("Removed keybind '$key' for command $execRem",zcon)
-        zcConfig.save()
+        modMessage("Removed keybind '${key.name}' for command $execRem",zcon)
+        saveLoadKeybinds()
+        unabled()
     }
     fun rekeyKeybind(key:InputConstants.Key,newName:InputConstants.Key){
-        val execRem=savedKeybinds.remove(key)
+        val execRem=savedKeybinds.remove(key.name)
         if(execRem==null){
             modMessage("§cNo keybind Found For $key",zcon)
             return
         }
-        savedKeybinds[newName]=execRem
-        modMessage("Changed key '$key' to '$newName' for command ${savedKeybinds[newName]}",zcon)
-        zcConfig.save()
+        savedKeybinds[newName.name]=execRem
+        modMessage("Changed key '$key' to '$newName' for command ${savedKeybinds[newName.name]}",zcon)
+        saveLoadKeybinds()
+        unabled()
     }
     fun rebindKeybind(keyNew:InputConstants.Key, execNew:String){
-        if(savedKeybinds[keyNew]!=null){modMessage("Rebound keybind ${keyNew.name} to /$execNew",zcon)}
+        if(savedKeybinds[keyNew.name]!=null){modMessage("Rebound keybind ${keyNew.name} to /$execNew",zcon)}
         else{modMessage("Added keybind ${keyNew.name} for command $execNew",zcon)}
-        savedKeybinds[keyNew]=execNew
-        zcConfig.save()
+        savedKeybinds[keyNew.name]=execNew
+        saveLoadKeybinds()
+        unabled()
     }
     fun printKeybinds(){
         modMessage("Current Keybinds:",zcon)
-        for(bind in savedKeybinds){
+        for(bind in loadedKeybinds){
             modMessage(" | '${bind.key.name}' : /${bind.value}","")
         }
+        unabled()
     }
     fun clearKeybinds(){
         savedKeybinds.clear()
-        zcConfig.save()
+        saveLoadKeybinds()
     }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -154,7 +168,7 @@ object CustomCommands : HasCommands,Module(
     init{
         on<InputEvent>{
             if(timeout)return@on
-            for(bind in savedKeybinds){
+            for(bind in loadedKeybinds){
                 if(bind.key.value==key.value){
                     timeout=true
                     sendCommand(bind.value)
@@ -165,7 +179,13 @@ object CustomCommands : HasCommands,Module(
         }
         on<WorldEvent.Load>{
             timeout=false
+            loadKeybinds()
         }
+    }
+    
+    private val config=ModuleConfig("CustomCommands.json")
+    override fun getConfig(): ModuleConfig {
+        return config
     }
     override fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>){
         for(pair in savedAliases){
@@ -218,7 +238,7 @@ object CustomCommands : HasCommands,Module(
         Commodore("keybind"){
             runs{
                 modMessage("Custom Commands Module: Keybinds","")
-                if(!enabled)modMessage("§cCustom Commands Module is disabled, custom keybinds will not function but can be modified","")
+                unabled()
                 modMessage(" | /keybind add <key> <command> : Adds a new keybind for the specified command","")
                 modMessage(" | /keybind remove <key> : Removes the specified keybind","")
                 modMessage(" | /keybind clear : Removes all keybinds","")
@@ -255,5 +275,8 @@ object CustomCommands : HasCommands,Module(
                 }
             }
         }.register(dispatcher)
+    }
+    fun unabled() {
+        if(!enabled) modMessage("§cCustom Commands Module is disabled, custom keybinds will not function but can be modified","")
     }
 }

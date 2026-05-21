@@ -2,12 +2,12 @@ package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.features.Module
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 
 object MiscFeatures : Module(
     name = "Misc Features",
     description = "Random small stuff that dosent need a dedicated module",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
 
     @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"Closes Sign GUI's When The Enter Key Is Pressed")

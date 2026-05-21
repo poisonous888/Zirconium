@@ -7,13 +7,13 @@ import com.odtheking.odin.utils.Color
 import com.odtheking.odin.utils.Colors
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.render.text
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 import java.awt.Color.getHSBColor
 
 object DVD : Module(
     name = "DVD",
     description = "No further explanation.",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     private val boxWidth by NumberSetting("Box Width", 50, 0, 150, 1, desc = "Width of the DVD box.")
     private val boxHeight by NumberSetting("Box Height", 50, 0, 150, 1, desc = "Height of the DVD box.")

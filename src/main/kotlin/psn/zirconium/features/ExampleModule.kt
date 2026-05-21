@@ -1,16 +1,7 @@
 package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
-import com.odtheking.odin.clickgui.settings.impl.ActionSetting
-import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
-import com.odtheking.odin.clickgui.settings.impl.ColorSetting
-import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
-import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
-import com.odtheking.odin.clickgui.settings.impl.ListSetting
-import com.odtheking.odin.clickgui.settings.impl.MapSetting
-import com.odtheking.odin.clickgui.settings.impl.NumberSetting
-import com.odtheking.odin.clickgui.settings.impl.SelectorSetting
-import com.odtheking.odin.clickgui.settings.impl.StringSetting
+import com.odtheking.odin.clickgui.settings.impl.*
 import com.odtheking.odin.events.TickEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
@@ -18,12 +9,12 @@ import com.odtheking.odin.utils.Colors
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.render.textDim
 import org.lwjgl.glfw.GLFW
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 
 object ExampleModule : Module(
     name = "Test Module",
     description = "This is a test module's description.",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     // These are visible settings that will render under this module in the GUI
     private val boolean by BooleanSetting("Example Boolean Setting", true, desc = "Description.")

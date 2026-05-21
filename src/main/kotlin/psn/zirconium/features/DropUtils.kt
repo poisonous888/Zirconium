@@ -5,17 +5,14 @@ import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.clickgui.settings.impl.ListSetting
+import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.GuiEvent
 import com.odtheking.odin.events.InputEvent
 import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
-import com.odtheking.odin.utils.Colors
-import com.odtheking.odin.utils.alert
-import com.odtheking.odin.utils.customData
+import com.odtheking.odin.utils.*
 import com.odtheking.odin.utils.handlers.schedule
-import com.odtheking.odin.utils.lore
-import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
@@ -24,13 +21,14 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import org.lwjgl.glfw.GLFW
-import psn.zirconium.ZconCategory
-import psn.zirconium.zcConfig
+import psn.zirconium.AsyncSave
+import psn.zirconium.ZirconiumEntry
+import psn.zirconium.zcon
 
-object DropUtils : Module(
+object DropUtils: AsyncSave, Module(
     name = "Drop Utils",
     description = "protect items and drop stack modifier",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     private val protections by DropdownSetting("Protections")
     private val doSBID by BooleanSetting("Protect Skyblock ID",true,"").withDependency { protections }
@@ -76,7 +74,7 @@ object DropUtils : Module(
         if(disableDungeons && DungeonUtils.inDungeons){
             val room=DungeonUtils.currentRoomName
             if(room=="Entrance"||room=="Unknown"&&DungeonUtils.inClear){
-                modMessage("Cannot Drop Items Until The Dungeon Has Started!")
+                modMessage("Cannot Drop Items Until The Dungeon Has Started!", zcon)
                 return true
             }
             return false
@@ -96,45 +94,45 @@ object DropUtils : Module(
     }
     fun dropWithMsg(item: ItemStack): Boolean{
         val prot=isProtected(item)?:return false
-        modMessage("Prevented Your ${item.hoverName.string} From Being Dropped ($prot)")
+        modMessage("Prevented Your ${item.hoverName.string} From Being Dropped ($prot)", zcon)
         if(doSound)alert("")
         return true
     }
     fun uuidNew(item: ItemStack){
         if(!item.customData.contains("uuid")){
-            modMessage("Item ${item.hoverName.string} Does Not Have A UUID, Use Skyblock ID Instead")
+            modMessage("Item ${item.hoverName.string} Does Not Have A UUID, Use Skyblock ID Instead", zcon)
             return
         }
         val id = item.customData.get("uuid").toString()
         if(uidList.contains(id)){
             uidList.remove(id)
-            modMessage("§4Removed ${item.hoverName.string} From UUID Protection")
+            modMessage("§4Removed ${item.hoverName.string} From UUID Protection", zcon)
             alert("")
-            zcConfig.save()
+            config.save()
             return
         }
         uidList.add(id)
-        modMessage("§2Added ${item.hoverName.string} To UUID Protection")
+        modMessage("§2Added ${item.hoverName.string} To UUID Protection", zcon)
         alert("")
-        zcConfig.save()
+        config.save()
     }
     fun sbidNew(item: ItemStack){
         if(!item.customData.contains("id")){
-            modMessage("Item ${item.hoverName.string} Does Not Have A Skyblock ID, Use UUID Instead")
+            modMessage("Item ${item.hoverName.string} Does Not Have A Skyblock ID, Use UUID Instead", zcon)
             return
         }
         val id = item.customData.get("id").toString()
         if(sbidList.contains(id)){
             sbidList.remove(id)
-            modMessage("§4Removed ${item.hoverName.string} From Skyblock ID Protection")
+            modMessage("§4Removed ${item.hoverName.string} From Skyblock ID Protection", zcon)
             alert("")
-            zcConfig.save()
+            config.save()
             return
         }
         sbidList.add(id)
-        modMessage("§2Added ${item.hoverName.string} To Skyblock ID Protection")
+        modMessage("§2Added ${item.hoverName.string} To Skyblock ID Protection", zcon)
         alert("")
-        zcConfig.save()
+        config.save()
     }
     fun getHoveredInv():ItemStack?{
         val item=(mc.screen as? AbstractContainerScreen<*>)?.hoveredSlot?.item?:return null
@@ -200,5 +198,9 @@ object DropUtils : Module(
         noClickScreen=false
         //modMessage("Disabling Drop Utils Prevents Using Keybinds To Modify Protected List, But Due To It Relying On A Mixin, It Will Still Function")
         super.onDisable()
+    }
+    private val config=ModuleConfig("DropUtils.json")
+    override fun getConfig(): ModuleConfig {
+        return config
     }
 }

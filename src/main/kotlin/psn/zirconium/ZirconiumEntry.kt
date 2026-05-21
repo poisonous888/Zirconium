@@ -2,7 +2,7 @@ package psn.zirconium
 
 import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.config.ModuleConfig
-import com.odtheking.odin.events.core.EventBus
+import com.odtheking.odin.features.Category
 import com.odtheking.odin.features.ModuleManager
 import psn.zirconium.features.Visuals
 import psn.zirconium.features.GuiHighlight
@@ -22,7 +22,7 @@ import psn.zirconium.features.StaticWaypoints
 
 object ZirconiumEntry : ClientModInitializer {
     override fun onInitializeClient() {
-        val modules=arrayOf(
+        val modules=listOf(
             CustomCommands,
             Garden,
             MiscFeatures,
@@ -36,6 +36,7 @@ object ZirconiumEntry : ClientModInitializer {
             DVD,
             Lag,
             HideArmor,
+            DropUtils,
         )
         println("Zirconium has entered the chat")
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
@@ -43,11 +44,19 @@ object ZirconiumEntry : ClientModInitializer {
                 if(module is HasCommands) module.buildCommands(dispatcher)
             }
         }
-        listOf(this).forEach{EventBus.subscribe(it)}
-        ModuleManager.registerModules(zcConfig,*modules)
-        ModuleManager.registerModules(ModuleConfig("Protections.json"), DropUtils)
+        ModuleManager.registerModules(ModuleConfig("Zirconium.json"),*modules.filter{module->module !is AsyncSave}.toTypedArray())
+        for(module in modules.filter{module->module is AsyncSave}){
+            println(module.name)
+            ModuleManager.registerModules((module as AsyncSave).getConfig(),module)
+        }
+//        for(module in modules.filter{module->module is AsyncSave}){
+//            val config=ModuleConfig("${module.name}.json")
+//            ModuleManager.registerModules(config,module)
+//            (module as AsyncSave).getConfig(config)
+//        }
     }
+    @JvmStatic val ZCON = Category.custom("Zirconium")
 }
 interface HasCommands{fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>)}
-val zcConfig = ModuleConfig("Zirconium.json")
+interface AsyncSave{fun getConfig():ModuleConfig}
 const val zcon="§4Zcon §8»§r "

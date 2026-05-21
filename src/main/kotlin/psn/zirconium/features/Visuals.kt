@@ -3,12 +3,12 @@ package psn.zirconium.features
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.features.Module
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 
 object Visuals : Module(
     name = "Visuals",
     description = "props to animatium for some of the mixins",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     private val diagonalWalk by BooleanSetting("Diagonal Backwards Walk",false,"1.8.9 backwards walking")
     private val customCapePhysics by BooleanSetting("Custom Cape Physics",false,"1.8.9 cape physics")

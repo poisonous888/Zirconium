@@ -14,12 +14,12 @@ import com.odtheking.odin.utils.loreString
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import psn.zirconium.ZconCategory
+import psn.zirconium.ZirconiumEntry
 
 object GuiHighlight : Module(
     name = "GUI Highlight",
     description = "Highlights Certain GUI Slots",
-    category = ZconCategory.ZCON
+    category=ZirconiumEntry.ZCON
 ) {
     private val highlightPet by BooleanSetting("Highlight Active Pet", false, desc = "displays a colored background behind your active pet")
     private val petColor by ColorSetting("Active Pet Color",Colors.MINECRAFT_RED,false,"the highlight color").withDependency { highlightPet }
