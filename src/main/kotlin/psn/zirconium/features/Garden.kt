@@ -20,9 +20,9 @@ object Garden : Module(
     private val notifyTime by NumberSetting("Notify On Time", 120, 0, 500, desc = "")
     private val notifyMessage by StringSetting("Message", "Pests Off Cooldown!", desc = "Message to display")
     private val timerRegex = Regex("(Cooldown: )([0-9]+m)? ?([0-9]+s)?")
-    private val pestHud by HUD("Example HUD", desc = "This is a hud.") {
-        example -> when{
-            LocationUtils.isCurrentArea(Island.Garden)||example -> textDim(curString, 0, 0)
+    private val pestHud by HUD("Pest HUD", desc = "Displays ") {
+        editing -> when{
+            LocationUtils.isCurrentArea(Island.Garden)||editing -> textDim(curString, 0, 0)
             else -> 0 to 0
         }
     }

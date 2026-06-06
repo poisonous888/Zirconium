@@ -4,21 +4,10 @@ import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.features.Category
 import com.odtheking.odin.features.ModuleManager
-import psn.zirconium.features.Visuals
-import psn.zirconium.features.GuiHighlight
-import psn.zirconium.features.Garden
-import psn.zirconium.features.MiscFeatures
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import psn.zirconium.features.CustomCommands
-import psn.zirconium.features.DVD
-import psn.zirconium.features.DropUtils
-import psn.zirconium.features.HideArmor
-import psn.zirconium.features.ItemPos
-import psn.zirconium.features.Lag
-import psn.zirconium.features.MouseLock
-import psn.zirconium.features.StaticWaypoints
+import psn.zirconium.features.*
 
 object ZirconiumEntry : ClientModInitializer {
     override fun onInitializeClient() {
@@ -37,6 +26,8 @@ object ZirconiumEntry : ClientModInitializer {
             Lag,
             HideArmor,
             DropUtils,
+            ChatUtils,
+            CPSDisplay,
         )
         println("Zirconium has entered the chat")
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
@@ -49,11 +40,6 @@ object ZirconiumEntry : ClientModInitializer {
             println(module.name)
             ModuleManager.registerModules((module as AsyncSave).getConfig(),module)
         }
-//        for(module in modules.filter{module->module is AsyncSave}){
-//            val config=ModuleConfig("${module.name}.json")
-//            ModuleManager.registerModules(config,module)
-//            (module as AsyncSave).getConfig(config)
-//        }
     }
     @JvmStatic val ZCON = Category.custom("Zirconium")
 }
