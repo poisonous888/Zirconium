@@ -17,6 +17,10 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntity.class)
 public abstract class R_LivingEntityMixin extends Entity {
+    
+    //from animatium
+    //https://modrinth.com/mod/animatium
+    
     @Shadow public float yBodyRot;
     public R_LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);

@@ -209,7 +209,7 @@ object CustomCommands: AsyncSave, HasCommands, Module(
         }
         Commodore("alias"){
             runs{
-                modMessage("Custom Commands: Aliases","")
+                modMessage("Custom Commands: Aliases",zcon)
                 modMessage(" | /alias add <alias> <command> : Adds a new alias for the specified command","")
                 modMessage(" | /alias rename <alias> <new name> : Changes the alias of the specified alias","")
                 modMessage(" | /alias command <alias> <new command> : Changes the command for the specified alias","")
@@ -257,7 +257,7 @@ object CustomCommands: AsyncSave, HasCommands, Module(
         }.register(dispatcher)
         Commodore("keybind"){
             runs{
-                modMessage("Custom Commands: Keybinds","")
+                modMessage("Custom Commands: Keybinds",zcon)
                 unabled()
                 modMessage(" | /keybind add <key> <command> : Adds a new keybind for the specified command","")
                 modMessage(" | /keybind bind <key> <new key> : Changes the key of the specified keybind","")

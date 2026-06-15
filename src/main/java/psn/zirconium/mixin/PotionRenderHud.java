@@ -17,9 +17,4 @@ public abstract class PotionRenderHud{
             ci.cancel();
         }
     }
-
-//    @WrapWithCondition(method = "clear", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;clear(Z)V"))
-//    private boolean shouldClearChat(ChatHud instance, boolean clearHistory) {
-//        return !(ChatTweaks.instance.isActive() && ChatTweaks.keepHistory.value());
-//    }
 }

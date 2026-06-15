@@ -28,6 +28,7 @@ object ZirconiumEntry : ClientModInitializer {
             DropUtils,
             ChatUtils,
             CPSDisplay,
+            //Dailies,
         )
         println("Zirconium has entered the chat")
         ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->

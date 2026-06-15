@@ -23,8 +23,9 @@
     "R_AvatarRendererMixin",
     "R_LivingEntityMixin",
     "R_RenderItemMixin",
-    "R_SwingUsingMixin",
+    "LoadingScreenMixin",
     "RecipeBookMixin",
+    "ResourcePackMixin",
     "TextFieldMixin"
   ]
 }

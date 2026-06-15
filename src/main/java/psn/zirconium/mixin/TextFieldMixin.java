@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-// example mixin
 @Mixin(AbstractSignEditScreen.class)
 public abstract class TextFieldMixin{
     @Inject(method = "keyPressed", at = @At("HEAD"))

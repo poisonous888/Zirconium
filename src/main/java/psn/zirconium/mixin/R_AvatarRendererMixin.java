@@ -14,6 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AvatarRenderer.class)
 public abstract class R_AvatarRendererMixin<AvatarlikeEntity extends Avatar & ClientAvatarEntity>{
+    
+    //from animatium
+    //https://modrinth.com/mod/animatium
+    
     @Redirect(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
     private float removeOldClamp(float f, float g, float h){
         if(Visuals.doCustomCape()) return f;

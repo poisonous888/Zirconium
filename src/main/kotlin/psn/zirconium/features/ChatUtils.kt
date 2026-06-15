@@ -22,6 +22,8 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import psn.zirconium.AsyncSave
 import psn.zirconium.HasCommands
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.utils.RegexMutable
+import psn.zirconium.utils.RegexType
 import psn.zirconium.zcon
 
 object ChatUtils: AsyncSave, HasCommands, Module(
@@ -36,9 +38,9 @@ object ChatUtils: AsyncSave, HasCommands, Module(
     private val addType by SelectorSetting("Type", "",listOf("Contains","Matches","Regex"),"")
     private val ruleAdd by ActionSetting("Add Rule", "") {
         val type=when(addType) {
-            0 -> TriggerType.CONTAINS
-            1 -> TriggerType.MATCHES
-            2 -> TriggerType.REGEX
+            0 -> RegexType.CONTAINS
+            1 -> RegexType.MATCHES
+            2 -> RegexType.REGEX
             else -> {
                 modMessage("§cSomething VERY bad has gone wrong! Tell poison about this!", zcon)
                 return@ActionSetting
@@ -62,18 +64,12 @@ object ChatUtils: AsyncSave, HasCommands, Module(
     private val savedRules by ListSetting("Saved Rules",mutableListOf<Rule>())
     data class Rule(
         var name:String,
-        var trigger:String,
-        var message:String?,
-        var type:TriggerType,
+        var trigger:RegexMutable,
+        var message:String,
         var hide:Boolean,
         var enabled:Boolean=true,
     )
-    enum class TriggerType{
-        REGEX,
-        MATCHES,
-        CONTAINS,
-    }
-    fun addRule(name:String, trigger:String, type:TriggerType, message:String?, hide: Boolean){
+    fun addRule(name:String, trigger:String, type: RegexType, message:String, hide: Boolean){
         if(name==""){
             modMessage("§cName cannot be blank",zcon)
             return
@@ -83,13 +79,13 @@ object ChatUtils: AsyncSave, HasCommands, Module(
                 modMessage("§cChat rule $name is already taken. Use a different name or rename/remove the existing one",zcon)
                 return
             }
-            if(rule.trigger==trigger){
+            if(rule.trigger.regexString==trigger){
                 modMessage("§cA rule for $trigger already exists (${rule.name})",zcon)
                 return
             }
         }
-        savedRules.add(Rule(name,trigger,message,type,hide))
-        modMessage("Added rule $name for trigger $trigger${if(message==null)"" else " with message $message"}${if(hide)" that hides messages" else ""}",zcon)
+        savedRules.add(Rule(name,RegexMutable(trigger,type),message,hide))
+        modMessage("Added rule $name for trigger $trigger${if(message=="")"" else " with message $message"}${if(hide)" that hides messages" else ""}",zcon)
         modMessage("Use /rule message to add/chance an alert message or /rule hide to hide/unhide the message","")
         saveLoad()
         unabled()
@@ -162,13 +158,13 @@ object ChatUtils: AsyncSave, HasCommands, Module(
         saveLoad()
         unabled()
     }
-    fun rebindRule(name:String, newType: TriggerType, newTrigger:String){
+    fun rebindRule(name:String, newType: RegexType, newTrigger:String){
         var found:Rule?=null
         for(alrt in savedRules){
             if(alrt.name==name){
                 found=alrt
             }
-            if(alrt.trigger==newTrigger){
+            if(alrt.trigger.regexString==newTrigger){
                 modMessage("§cAn alert for $newTrigger already exists (${alrt.name})",zcon)
                 return
             }
@@ -177,8 +173,8 @@ object ChatUtils: AsyncSave, HasCommands, Module(
             modMessage("§cNo alert found For $name",zcon)
             return
         }
-        found.type=newType
-        found.trigger=newTrigger
+        found.trigger.regexType=newType
+        found.trigger.regexString=newTrigger
         modMessage("Rebound $name to $newTrigger",zcon)
         saveLoad()
         unabled()
@@ -206,7 +202,7 @@ object ChatUtils: AsyncSave, HasCommands, Module(
         }
         modMessage("Current Rules:",zcon)
         for(rule in savedRules){
-            modMessage(" | '${rule.name}' : ${rule.trigger} -> ${if(rule.message==null) "no alert" else "alert \"${rule.message}\""}${if(rule.hide) ", hide message" else ""}","")
+            modMessage(" | '${rule.name}' : ${rule.trigger} -> ${if(rule.message=="") "no alert" else "alert \"${rule.message}\""}${if(rule.hide) ", hide message" else ""}","")
         }
         CustomCommands.unabled()
     }
@@ -218,12 +214,7 @@ object ChatUtils: AsyncSave, HasCommands, Module(
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
-    private val loadedManips = mutableListOf<LoadedManip>()
-    data class LoadedManip(
-        val regex: Regex,
-        val cancel: Boolean,
-        val message: String?,
-    )
+    private val loadedManips = mutableListOf<Rule>()
     fun saveLoad(){
         config.save()
         load()
@@ -232,12 +223,8 @@ object ChatUtils: AsyncSave, HasCommands, Module(
         loadedManips.clear()
         for(alrt in savedRules){
             if(!alrt.enabled)continue
-            val regString=when(alrt.type){
-                TriggerType.REGEX -> alrt.trigger
-                TriggerType.CONTAINS -> alrt.trigger.replace("/[#-.]|[[-^]|[?|{}]/g", "\\$&")
-                TriggerType.MATCHES -> "^${alrt.trigger.replace("/[#-.]|[[-^]|[?|{}]/g", "\\$&")}$"
-            }
-            loadedManips.add(LoadedManip(Regex(regString),false,alrt.message))
+            alrt.trigger.load()
+            loadedManips.add(alrt)
         }
     }
     init{
@@ -247,9 +234,9 @@ object ChatUtils: AsyncSave, HasCommands, Module(
             if(grandmaHider&&(grandmaReg.containsMatchIn(value)||grandmaReg2.containsMatchIn(value)))hideMessage()
             if(cooldownHider&&cooldownReg.containsMatchIn(value))hideMessage()
             for(manip in loadedManips){
-                if(manip.regex.containsMatchIn(value)){
-                    if(manip.message!=null)alert(manip.message)
-                    if(manip.cancel)hideMessage()
+                if(manip.trigger.regex.containsMatchIn(value)){
+                    if(manip.message!="")alert(manip.message)
+                    if(manip.hide)hideMessage()
                 }
             }
         }
@@ -263,7 +250,7 @@ object ChatUtils: AsyncSave, HasCommands, Module(
     override fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>){
         Commodore("chatrule","rule"){
             runs{
-                modMessage("Chat Utils: Chat Rule","")
+                modMessage("Chat Utils: Chat Rule",zcon)
                 modMessage(" | /rule add <name> <contains|matches|regex> <trigger> : Creates a new chat rule for the specified regex","")
                 modMessage(" | /rule message <name> <new message> : Changes the alert message for the specified chat rule, leave blank to remove message","")
                 modMessage(" | /rule hide <name> <true|false> : Changes weather the message is hidden","")
@@ -273,7 +260,6 @@ object ChatUtils: AsyncSave, HasCommands, Module(
                 modMessage(" | /rule list : Lists all chat rules","")
                 modMessage(" | /rule remove <name> : Removes the specified chat rule","")
                 modMessage(" | /rule clear : Removes all chat rules","")
-                modMessage("You can also use /alert and /hider to quickly create simple chat rules")
             }
             literal("add").executable{
                 param("name")
@@ -286,9 +272,9 @@ object ChatUtils: AsyncSave, HasCommands, Module(
                 param("trigger")
                 runs{name:String,type:String,regexType: String,trigger:GreedyString ->
                     val trigReg=when(regexType.lowercase()){
-                        "contains" -> TriggerType.CONTAINS
-                        "matches" -> TriggerType.MATCHES
-                        "regex" -> TriggerType.REGEX
+                        "contains" -> RegexType.CONTAINS
+                        "matches" -> RegexType.MATCHES
+                        "regex" -> RegexType.REGEX
                         else -> {
                             modMessage("§cInvalid regex type $regexType",zcon)
                             return@runs
@@ -296,8 +282,8 @@ object ChatUtils: AsyncSave, HasCommands, Module(
                     }
                     when(type.lowercase()){
                         "alert" -> addRule(name,trigger.string,trigReg,name,false)
-                        "hider" -> addRule(name,trigger.string,trigReg,null,true)
-                        "blank" -> addRule(name,trigger.string,trigReg,null,false)
+                        "hider" -> addRule(name,trigger.string,trigReg,"",true)
+                        "blank" -> addRule(name,trigger.string,trigReg,"",false)
                         else -> {
                             modMessage("§cInvalid type $type",zcon)
                             return@runs
@@ -315,9 +301,9 @@ object ChatUtils: AsyncSave, HasCommands, Module(
                 param("trigger")
                 runs{name:String,regexType:String,trigger:GreedyString ->
                     val trigReg=when(regexType.lowercase()){
-                        "contains" -> TriggerType.CONTAINS
-                        "matches" -> TriggerType.MATCHES
-                        "regex" -> TriggerType.REGEX
+                        "contains" -> RegexType.CONTAINS
+                        "matches" -> RegexType.MATCHES
+                        "regex" -> RegexType.REGEX
                         else -> {
                             modMessage("§cInvalid regex type $regexType",zcon)
                             return@runs

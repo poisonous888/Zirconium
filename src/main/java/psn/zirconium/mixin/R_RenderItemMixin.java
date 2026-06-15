@@ -17,6 +17,10 @@ import psn.zirconium.features.ItemPos;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class R_RenderItemMixin {
+    
+    //from nofrills
+    //https://modrinth.com/mod/nofrills
+    
     @Shadow private float mainHandHeight;
     @Shadow private float offHandHeight;
     @Shadow private float oOffHandHeight;
