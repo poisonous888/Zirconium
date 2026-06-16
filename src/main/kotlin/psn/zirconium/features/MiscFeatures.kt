@@ -2,6 +2,7 @@ package psn.zirconium.features
 
 import com.odtheking.odin.OdinMod
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
+import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.events.ChatPacketEvent
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
@@ -29,6 +30,7 @@ object MiscFeatures : Module(
     private val noPackUpdate by BooleanSetting("No Server Packs",false,"disables servers updating your resource pack")
     @JvmStatic val noRequiredPacks by BooleanSetting("No Required Packs",false,"you can move or remove any pack you want, just dont remove the minecraft pack ;}")
     private val trimCommandOnFail by BooleanSetting("Trim commands on fail",false,"when a command fails, removes the last character and tries again until it succeeds or the command is empty")
+    private val trimCmdDelay by NumberSetting("Trim Delay",5,0,20,1,"")
     private val comFailReg=Regex("^Unknown command\\. Type \"/help\" for help\\. \\('([a-zA-Z0-9 ]+)'\\)$")
     init {
         onReceive<ClientboundResourcePackPushPacket>{
@@ -49,7 +51,8 @@ object MiscFeatures : Module(
     private object CmdFailCheck{
         init {
             on<ChatPacketEvent>{
-                sendCommand(comFailReg.find(value)?.groups[1]?.value?.dropLast(1)?:return@on)
+                val cmd=comFailReg.find(value)?.groups[1]?.value?.dropLast(1)?:return@on
+                schedule(trimCmdDelay,true){sendCommand(cmd)}
             }
         }
     }
