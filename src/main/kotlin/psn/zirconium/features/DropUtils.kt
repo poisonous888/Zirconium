@@ -153,11 +153,10 @@ object DropUtils: AsyncSave, Module(
                 sbidKey.value -> sbidNew(getHoveredInv() ?: return@on)
                 uuidKey.value -> uuidNew(getHoveredInv() ?: return@on)
                 dropStackKey.value -> {
-//                    val screenAccess = mc.screen as? AbstractContainerScreen<*> ?: return@on
-//                    val slot = screenAccess.hoveredSlot ?: return@on
-//                    if (dropWithMsg(slot.item)) return@on
-//                    screenAccess.slotClicked(slot, slot.index, 1, ClickType.THROW)
-                    modMessage("DropStack will be avalable shortly",zcon)
+                    val screenAccess = mc.screen as? AbstractContainerScreen<*> ?: return@on.also{modMessage("not abstractcontainerscreen")}
+                    val slot = screenAccess.hoveredSlot ?: return@on.also{modMessage("no hoveredslot")}
+                    if (dropWithMsg(slot.item)) return@on
+                    screenAccess.slotClicked(slot, slot.index, 1, ContainerInput.THROW)
                 }
             }
         }

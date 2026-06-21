@@ -26,8 +26,8 @@ dependencies {
     
     //TODO do an actual implimentation instead of the bootleg jar method
     //implementation("com.github.odtheking:Odin:${property("odin_version")}")
-    implementation(files("libs/Odin-0.2.2.jar"))
-    //implementation("maven.modrinth:odin:${property("odin_version")}")
+    //implementation(files("libs/Odin-0.2.2.jar"))
+    implementation("maven.modrinth:odin:${property("odin_version")}")
     
     implementation("com.github.stivais:Commodore:${property("commodore_version")}")
 
