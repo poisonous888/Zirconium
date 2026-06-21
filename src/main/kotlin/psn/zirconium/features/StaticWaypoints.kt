@@ -1,5 +1,6 @@
 package psn.zirconium.features
 
+import com.github.stivais.commodore.Commodore
 import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
@@ -21,7 +22,7 @@ import net.minecraft.util.Mth
 import psn.zirconium.AsyncSave
 import psn.zirconium.HasCommands
 import psn.zirconium.ZirconiumEntry
-import psn.zirconium.commands.staticWaypointCmd
+import java.util.Locale.getDefault
 
 object StaticWaypoints: AsyncSave, HasCommands, Module(
     name = "Static Waypoints",
@@ -100,11 +101,107 @@ object StaticWaypoints: AsyncSave, HasCommands, Module(
     }
     
     override fun buildCommands(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
-        staticWaypointCmd.register(dispatcher)
+        Commodore("staticwaypoints","sw"){
+            runs { modMessage("Static Waypoints") }
+            literal("add").executable{
+                param("name")
+                runs{
+                    name: String -> addWaypoint(name)
+                }
+            }
+            literal("add").executable{
+                param("name")
+                param("x")
+                param("y")
+                param("z")
+                runs{
+                        name: String, x: Int,y: Int, z: Int -> addWaypoint(name,x,y,z)
+                }
+            }
+            literal("add").executable{
+                param("name")
+                param("color"){
+                    parser{
+                        string: String ->
+                        colorStringMap[string.lowercase(getDefault())]
+                    }
+                    suggests { colorStringMap.keys }
+                }
+                runs{
+                    name: String -> addWaypoint(name)
+                }
+            }
+            literal("add").executable{
+                param("name")
+                param("x")
+                param("y")
+                param("z")
+                param("color"){
+                    parser{
+                            string: String ->
+                        colorStringMap[string.lowercase(getDefault())]
+                    }
+                    suggests { colorStringMap.keys }
+                }
+                runs{
+                        name: String, x: Int,y: Int, z: Int, color: Color ->
+                    addWaypoint(name,x,y,z,color)
+                }
+            }
+            literal("remove").executable{
+                param("name")
+                runs{
+                        name: String ->
+                    removeWaypoint(name)
+                }
+            }
+            literal("clear"){
+                literal("island").executable {
+                    runs{
+                        clearIsland()
+                    }
+                }
+                literal("all").executable {
+                    runs{
+                        clearAll()
+                    }
+                }
+            }
+            literal("list").executable {
+                runs{
+                    list()
+                }
+            }
+            literal("listAll").executable {
+                runs{
+                    listAll()
+                }
+            }
+        }.register(dispatcher)
         //TODO redo static waypoints better
     }
     private val config=ModuleConfig("StaticWaypoints.json")
     override fun getConfig(): ModuleConfig {
         return config
     }
+    private val colorStringMap=mapOf(
+        "white" to Colors.WHITE,
+        "black" to Colors.BLACK,
+        "red" to Colors.MINECRAFT_RED,
+        "darkred" to Colors.MINECRAFT_DARK_RED,
+        "gold" to Colors.MINECRAFT_GOLD,
+        "yellow" to Colors.MINECRAFT_YELLOW,
+        "lime" to Colors.MINECRAFT_GREEN,
+        "green" to Colors.MINECRAFT_GREEN,
+        "darkgreen" to Colors.MINECRAFT_DARK_GREEN,
+        "aqua" to Colors.MINECRAFT_AQUA,
+        "lightblue" to Colors.MINECRAFT_AQUA,
+        "cyan" to Colors.MINECRAFT_DARK_AQUA,
+        "blue" to Colors.MINECRAFT_BLUE,
+        "darkblue" to Colors.MINECRAFT_DARK_BLUE,
+        "purple" to Colors.MINECRAFT_LIGHT_PURPLE,
+        "darkpurple" to Colors.MINECRAFT_DARK_PURPLE,
+        "grey" to Colors.gray26,
+        "darkgrey" to Colors.gray38
+    )
 }
