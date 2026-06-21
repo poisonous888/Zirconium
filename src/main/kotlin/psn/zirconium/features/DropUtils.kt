@@ -16,7 +16,7 @@ import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.InventoryScreen
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -82,14 +82,14 @@ object DropUtils: AsyncSave, Module(
         if(permHotbar)return true
         return dropWithMsg(item)
     }
-    @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ClickType): Boolean{
+    @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ContainerInput): Boolean{
         if(slot==null){
-            if(clickType== ClickType.QUICK_CRAFT){
+            if(clickType==ContainerInput.QUICK_CRAFT){
                 return false
             }
             return dropWithMsg((mc.screen as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
         }
-        if(noClickScreen||clickType==ClickType.THROW||slotId<0)return dropWithMsg(slot.item)
+        if(noClickScreen||clickType==ContainerInput.THROW||slotId<0)return dropWithMsg(slot.item)
         return false
     }
     fun dropWithMsg(item: ItemStack): Boolean{
@@ -153,10 +153,11 @@ object DropUtils: AsyncSave, Module(
                 sbidKey.value -> sbidNew(getHoveredInv() ?: return@on)
                 uuidKey.value -> uuidNew(getHoveredInv() ?: return@on)
                 dropStackKey.value -> {
-                    val screenAccess = mc.screen as? AbstractContainerScreen<*> ?: return@on
-                    val slot = screenAccess.hoveredSlot ?: return@on
-                    if (dropWithMsg(slot.item)) return@on
-                    screenAccess.slotClicked(slot, slot.index, 1, ClickType.THROW)
+//                    val screenAccess = mc.screen as? AbstractContainerScreen<*> ?: return@on
+//                    val slot = screenAccess.hoveredSlot ?: return@on
+//                    if (dropWithMsg(slot.item)) return@on
+//                    screenAccess.slotClicked(slot, slot.index, 1, ClickType.THROW)
+                    modMessage("DropStack will be avalable shortly",zcon)
                 }
             }
         }

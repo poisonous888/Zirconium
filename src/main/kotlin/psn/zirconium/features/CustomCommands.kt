@@ -10,7 +10,7 @@ import com.odtheking.odin.clickgui.settings.impl.MapSetting
 import com.odtheking.odin.clickgui.settings.impl.StringSetting
 import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.InputEvent
-import com.odtheking.odin.events.WorldEvent
+import com.odtheking.odin.events.LevelEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.handlers.schedule
@@ -189,7 +189,7 @@ object CustomCommands: AsyncSave, HasCommands, Module(
                 }
             }
         }
-        on<WorldEvent.Load>{
+        on<LevelEvent.Load>{
             timeout=false
             loadKeybinds()
         }

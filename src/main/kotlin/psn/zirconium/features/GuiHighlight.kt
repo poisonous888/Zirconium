@@ -80,20 +80,20 @@ object GuiHighlight : Module(
                 if(slot.index==33){
                     if(book.isEmpty()){
                         blocked=false
-                        guiGraphics.renderFakeItem(ItemStack(Items.ENCHANTED_BOOK),80, 54)
+                        guiGraphics.item(ItemStack(Items.ENCHANTED_BOOK),80, 54)
                         return@on
                     }
                     if(slot.item.item!=Items.ENCHANTED_BOOK){
                         blocked=false
-                        guiGraphics.renderFakeItem(ItemStack(Items.WRITABLE_BOOK),80, 54)
+                        guiGraphics.item(ItemStack(Items.WRITABLE_BOOK),80, 54)
                         return@on
                     }
                     if(lvl==lvlCur&&book==bookCur){
                         blocked=false
-                        guiGraphics.renderFakeItem(ItemStack(Items.END_PORTAL_FRAME),80, 54)
+                        guiGraphics.item(ItemStack(Items.END_PORTAL_FRAME),80, 54)
                         return@on
                     }
-                    guiGraphics.renderFakeItem(ItemStack(Items.BARRIER),80, 54)
+                    guiGraphics.item(ItemStack(Items.BARRIER),80, 54)
                     //alert("INVALID COMBINE")
                     blocked=true
                 }

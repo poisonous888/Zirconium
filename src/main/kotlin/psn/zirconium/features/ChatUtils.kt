@@ -12,7 +12,7 @@ import com.odtheking.odin.clickgui.settings.impl.SelectorSetting
 import com.odtheking.odin.clickgui.settings.impl.StringSetting
 import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.ChatPacketEvent
-import com.odtheking.odin.events.WorldEvent
+import com.odtheking.odin.events.LevelEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.ChatManager.hideMessage
@@ -240,7 +240,7 @@ object ChatUtils: AsyncSave, HasCommands, Module(
                 }
             }
         }
-        on<WorldEvent.Load>{
+        on<LevelEvent.Load>{
             load()
         }
     }
