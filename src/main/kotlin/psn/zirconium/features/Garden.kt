@@ -1,7 +1,6 @@
 package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
-import com.odtheking.odin.clickgui.settings.impl.StringSetting
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.alert
@@ -17,8 +16,7 @@ object Garden : Module(
     description = "various garden stuff",
     category=ZirconiumEntry.ZCON
 ) {
-    private val notifyTime by NumberSetting("Notify On Time", 120, 0, 500, desc = "")
-    private val notifyMessage by StringSetting("Message", "Pests Off Cooldown!", desc = "Message to display")
+    private val notifyTime by NumberSetting("Notify On Time", 150, 0, 500, desc = "")
     private val timerRegex = Regex("(Cooldown: )([0-9]+m)? ?([0-9]+s)?")
     private val pestHud by HUD("Pest HUD", desc = "Displays ") {
         editing -> when{
@@ -40,8 +38,8 @@ object Garden : Module(
                     //modMessage("$curTimer - $primed")
                     curString=entry
                     if(curTimer<notifyTime&&primed){
-                        modMessage(notifyMessage)
-                        alert(notifyMessage)
+                        modMessage("Pests Off Cooldown!")
+                        alert("Pests Off Cooldown!")
                         primed=false
                     }
                     if(curTimer>notifyTime&&!primed){

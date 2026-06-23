@@ -17,33 +17,31 @@ object ItemPos : Module(
     description = "changes the held item position",
     category=ZirconiumEntry.ZCON
 ){
-    private val translation by DropdownSetting("Translation")
-    private val itemX by NumberSetting("x",0.0,-0.5,0.5,0.05,"").withDependency { translation }
-    private val itemY by NumberSetting("y",0.0,-0.5,0.5,0.05,"").withDependency { translation }
-    private val itemZ by NumberSetting("z",0.0,-0.5,0.5,0.05,"").withDependency { translation }
+    private val position by DropdownSetting("Item Position")
+    private val itemX by NumberSetting("x",0.0,-0.5,0.5,0.05,"").withDependency { position }
+    private val itemY by NumberSetting("y",0.0,-0.5,0.5,0.05,"").withDependency { position }
+    private val itemZ by NumberSetting("z",0.0,-0.5,0.5,0.05,"").withDependency { position }
     private val rsTrans by ActionSetting("Reset Translation",""){
         settings["x"]?.reset()
         settings["y"]?.reset()
         settings["z"]?.reset()
-    }.withDependency { translation }
-    private val rotation by DropdownSetting("Rotation")
-    private val itemXrot by NumberSetting("x rot",0,-180,180,1,"").withDependency { rotation }
-    private val itemYrot by NumberSetting("y rot",0,-180,180,1,"").withDependency { rotation }
-    private val itemZrot by NumberSetting("z rot",0,-180,180,1,"").withDependency { rotation }
+    }.withDependency { position }
+    private val itemXrot by NumberSetting("x rot",0,-180,180,1,"").withDependency { position }
+    private val itemYrot by NumberSetting("y rot",0,-180,180,1,"").withDependency { position }
+    private val itemZrot by NumberSetting("z rot",0,-180,180,1,"").withDependency { position }
     private val rsRot by ActionSetting("Reset Rotation",""){
         settings["x rot"]?.reset()
         settings["y rot"]?.reset()
         settings["z rot"]?.reset()
-    }.withDependency { rotation }
-    private val scale by DropdownSetting("Scale")
-    private val itemWidth by NumberSetting("width",1f,-1,5,0.05,"").withDependency { scale }
-    private val itemHeight by NumberSetting("height",1f,-1,5,0.05,"").withDependency { scale }
-    private val itemLength by NumberSetting("length",1f,-1,5,0.05,"").withDependency { scale }
+    }.withDependency { position }
+    private val itemWidth by NumberSetting("width",1f,-1,5,0.05,"").withDependency { position }
+    private val itemHeight by NumberSetting("height",1f,-1,5,0.05,"").withDependency { position }
+    private val itemLength by NumberSetting("length",1f,-1,5,0.05,"").withDependency { position }
     private val rsScale by ActionSetting("Reset Scale",""){
         settings["width"]?.reset()
         settings["height"]?.reset()
         settings["length"]?.reset()
-    }.withDependency { scale }
+    }.withDependency { position }
 
     @JvmStatic fun executeTranslate(poseStack: PoseStack, humanoidArm: HumanoidArm) {
         if (!enabled)return
@@ -58,8 +56,16 @@ object ItemPos : Module(
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
     private val swingTransform by DropdownSetting("Swing Transform")
+    
+    private val customSwingDuration by BooleanSetting("Custom Swing Duration",false,"").withDependency { swingTransform }
+    @JvmStatic val swingDuration by NumberSetting("Swing Duration",7,2,14,1,"").withDependency { swingTransform && customSwingDuration }
+    private val ignoreHaste by BooleanSetting("Ignore Haste",false,"").withDependency { swingTransform && customSwingDuration }
+    
+    @JvmStatic fun doSwingDur(): Boolean{return enabled&&customSwingDuration}
+    @JvmStatic fun doHaste():Boolean{return enabled&&ignoreHaste&&customSwingDuration}
+    
     private val customSwing by BooleanSetting("Custom Swing",false,"").withDependency { swingTransform }
-    private val swingWhileUsing by BooleanSetting("Swing While Using",false,"left click while drawing a bow").withDependency { swingTransform }
+    private val swingWhileUsing by BooleanSetting("Swing While Using",false,"(NOT CURRENTLY IMPLIMENTED) left click while drawing a bow").withDependency { swingTransform }
 
     private val swingXrot by NumberSetting("Swing X Rot",-80f,-160,0,16,"").withDependency { swingTransform }
     private val swingYrot by NumberSetting("Swing Y Rot",-20f,-40,0,4,"").withDependency { swingTransform }
@@ -106,16 +112,6 @@ object ItemPos : Module(
         poseStack.mulPose(Axis.XP.rotationDegrees(x))
         poseStack.mulPose(Axis.YP.rotationDegrees(r))
     }
-
-    //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
-
-    private val swingLen by DropdownSetting("Swing Settings")
-    private val customSwingDuration by BooleanSetting("Custom Swing Duration",false,"").withDependency { swingLen }
-    @JvmStatic val swingDuration by NumberSetting("Swing Duration",7,2,14,1,"").withDependency { swingLen && customSwingDuration }
-    private val ignoreHaste by BooleanSetting("Ignore Haste",false,"").withDependency { swingLen && customSwingDuration }
-
-    @JvmStatic fun doSwingDur(): Boolean{return enabled&&customSwingDuration}
-    @JvmStatic fun doHaste():Boolean{return enabled&&ignoreHaste&&customSwingDuration}
 
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
