@@ -19,15 +19,15 @@ public abstract class R_AvatarRendererMixin<AvatarlikeEntity extends Avatar & Cl
     //https://modrinth.com/mod/animatium
     
     @Redirect(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
-    private float removeOldClamp(float f, float g, float h){
-        if(Visuals.doCustomCape()) return f;
-        return Mth.clamp(f, g, h);
+    private float removeOldClamp(float value, float min, float max){
+        if(Visuals.doCustomCape()) return value;
+        return Mth.clamp(value, min, max);
     }
     @Inject(method = "extractCapeState",at = @At("TAIL"))
-    private void newClamp(AvatarlikeEntity avatar, AvatarRenderState avatarRenderState, float f, CallbackInfo ci){
+    private void newClamp(AvatarlikeEntity entity, AvatarRenderState state, float partialTicks, CallbackInfo ci){
         if(!Visuals.doCustomCape()) return;
-        avatarRenderState.capeFlap=avatarRenderState.capeFlap * Visuals.getFlapMult();
-        avatarRenderState.capeLean=Mth.clamp(avatarRenderState.capeLean, Visuals.getVerticalLeanNegClamp(), Visuals.getVerticalLeanPosClamp());
-        avatarRenderState.capeLean2=Mth.clamp(avatarRenderState.capeLean2,-Visuals.getSideLeanClamp(), Visuals.getSideLeanClamp());
+        state.capeFlap=state.capeFlap * Visuals.getFlapMult();
+        state.capeLean=Mth.clamp(state.capeLean, Visuals.getVerticalLeanNegClamp(), Visuals.getVerticalLeanPosClamp());
+        state.capeLean2=Mth.clamp(state.capeLean2,-Visuals.getSideLeanClamp(), Visuals.getSideLeanClamp());
     }
 }

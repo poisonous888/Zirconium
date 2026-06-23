@@ -14,6 +14,7 @@ object MiscFeatures : Module(
 ) {
     @JvmStatic val noLoadingScreen by BooleanSetting("No Loading Screen",false,"")
     //@JvmStatic val noResourceLoad by BooleanSetting("No Reloading Screen",false,"cancels the resource reloading screen. props to rrls")
+    val updateNotif by BooleanSetting("Update Notification",true,"")
     @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"Closes Sign GUI's When The Enter Key Is Pressed")
     @JvmStatic val noRecipeBook by BooleanSetting("No Recipe Book",false,"removes recipe book from inv")
     @JvmStatic val noPotionEffects by BooleanSetting("No Potion Effects",false,"removes the potion effect display from the inentory and the main hud")

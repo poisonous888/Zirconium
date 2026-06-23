@@ -13,8 +13,8 @@ import psn.zirconium.features.HideArmor;
 @Mixin(HumanoidMobRenderer.class)
 public abstract class ArmorRenderMixin{
     @Inject(method="getEquipmentIfRenderable",at=@At("HEAD"), cancellable=true)
-    private static void disableLayers(LivingEntity livingEntity, EquipmentSlot equipmentSlot, CallbackInfoReturnable<ItemStack> cir){
-        if(HideArmor.checkIfRenderable(equipmentSlot)){
+    private static void disableLayers(LivingEntity entity, EquipmentSlot slot, CallbackInfoReturnable<ItemStack> cir){
+        if(HideArmor.checkIfRenderable(slot)){
             cir.setReturnValue(ItemStack.EMPTY);
             cir.cancel();
         }

@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractSignEditScreen.class)
 public abstract class TextFieldMixin{
     @Inject(method = "keyPressed", at = @At("HEAD"))
-    private void enterKeyPressed(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
-        if(keyEvent.key() == GLFW.GLFW_KEY_ENTER && MiscFeatures.getCloseSign()){
+    private void enterKeyPressed(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+        if(event.key() == GLFW.GLFW_KEY_ENTER && MiscFeatures.getCloseSign()){
             Screen mcScreen=Minecraft.getInstance().screen;
             if(mcScreen instanceof SignEditScreen){
                 mcScreen.onClose();

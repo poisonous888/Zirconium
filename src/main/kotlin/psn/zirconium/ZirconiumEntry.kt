@@ -2,12 +2,14 @@ package psn.zirconium
 
 import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.config.ModuleConfig
+import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.features.Category
 import com.odtheking.odin.features.ModuleManager
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import psn.zirconium.features.*
+import psn.zirconium.utils.UpdateCheck
 
 object ZirconiumEntry : ClientModInitializer {
     override fun onInitializeClient() {
@@ -41,6 +43,7 @@ object ZirconiumEntry : ClientModInitializer {
             println(module.name)
             ModuleManager.registerModules((module as AsyncSave).getConfig(),module)
         }
+        EventBus.subscribe(UpdateCheck())
     }
     @JvmStatic val ZCON = Category.custom("Zirconium")
 }

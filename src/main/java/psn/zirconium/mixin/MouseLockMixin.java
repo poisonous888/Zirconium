@@ -10,7 +10,7 @@ import psn.zirconium.features.MouseLock;
 @Mixin(MouseHandler.class)
 public class MouseLockMixin{
     @Inject(method = "turnPlayer", at = @At("HEAD"), cancellable = true)
-    private void noRotate(double d, CallbackInfo ci) {
+    private void noRotate(double mousea, CallbackInfo ci) {
         if (MouseLock.enabled()) {
             ci.cancel();
         }

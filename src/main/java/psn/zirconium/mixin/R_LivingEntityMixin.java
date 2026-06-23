@@ -41,22 +41,22 @@ public abstract class R_LivingEntityMixin extends Entity {
         }
     }
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;abs(F)F"))
-    private float rotateBackwardsWalking(float value, Operation<Float> original) {
+    private float rotateBackwardsWalking(float v, Operation<Float> original) {
         if (Visuals.doDiagWalk()) {
             return 0F;
         }
-        return original.call(value);
+        return original.call(v);
     }
     @WrapOperation(method = "tickHeadTurn", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
-    private float backwardsWalkingHeadRotation(float value, Operation<Float> original) {
+    private float backwardsWalkingHeadRotation(float a, Operation<Float> original) {
         if (Visuals.doDiagWalk()) {
-            value = Mth.clamp(value, -75.0F, 75.0F);
-            this.yBodyRot = this.getYRot() - value;
-            if (Math.abs(value) > 50.0F) {
-                this.yBodyRot += value * 0.2F;
+            a= Mth.clamp(a, -75.0F, 75.0F);
+            this.yBodyRot = this.getYRot() - a;
+            if (Math.abs(a) > 50.0F) {
+                this.yBodyRot += a * 0.2F;
             }
             return Float.MIN_VALUE;
         }
-        return original.call(value);
+        return original.call(a);
     }
 }
