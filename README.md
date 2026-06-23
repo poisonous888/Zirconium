@@ -52,7 +52,7 @@ Chat Utils\
 |- custom chat rules that can hide messages and/or send an alert with a title and sfx\
 |- look into /chatrule or just /rule for more info\
 |- preset chat rules for common messages - pickaxe ability, blocks in the way, kill combo, ability damage, item on cooldown\
-|- (future) chat copy, compact chat, 
+|- (future) chat copy, compact chat\
 \
 Static Waypoints\
 |- custom island specific waypoints\
@@ -63,13 +63,16 @@ GUI Highlight\
 |- highlight completed commissions\
 |- anvil helper (enchanted book combine helper like skytils or skyblocker)\
 \
+(future) Zoom\
+|- keybind to zoom FOV (like optifine)\
+\
 Hide Armor\
 |- hides specified pieces of player worn armor (like 189 odin)\
 \
 Garden\
 |- pest equipment swap alert\
 |- pest cooldown hud\
-|- (future) pest glow & tracer
+|- (future) pest glow & tracer\
 \
 Mouse Lock\
 |- prevents mouse movement from rotating player\
