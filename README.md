@@ -63,13 +63,16 @@ GUI Highlight\
 |- highlight completed commissions\
 |- anvil helper (enchanted book combine helper like skytils or skyblocker)\
 \
+(future) Zoom\
+|- keybind to zoom FOV (like optifine)\
+\
 Hide Armor\
 |- hides specified pieces of player worn armor (like 189 odin)\
 \
 Garden\
 |- pest equipment swap alert\
 |- pest cooldown hud\
-|- (future) pest glow & tracer
+|- (future) pest glow & tracer\
 \
 Mouse Lock\
 |- prevents mouse movement from rotating player\
