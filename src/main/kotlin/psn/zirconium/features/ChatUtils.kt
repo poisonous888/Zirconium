@@ -48,15 +48,19 @@ object ChatUtils: AsyncSave, HasCommands, Module(
         }
         addRule(addName,addTrigger,type,addMessage,addHide)
     }
-    private val hiders by DropdownSetting("Preset Hiders")
-    private val abilityHider by BooleanSetting("Ability damage",false,"").withDependency { hiders }
+    private val presetChatRules by DropdownSetting("Preset Rules")
+    private val pickAlert by BooleanSetting("Pickaxe ability alert",false,"")
+    private val pickAlertEnd by BooleanSetting("Pickaxe ability done alert",false,"").withDependency { pickAlert }
+    private val pickReg=Regex("(Mining Speed Boost|Pickobulus|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) is now available!")
+    private val pickEndReg=Regex("Your (Mining Speed Boost|Pickobulus|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) has expired!")
+    private val abilityHider by BooleanSetting("Ability damage hider",false,"").withDependency { presetChatRules }
     private val abilityReg=Regex("^Your [A-Za-z ]+ hit [0-9]+ (enemies|enemy) for [0-9,.]+ damage\\.$")
-    private val blocksInWayHider by BooleanSetting("Blocks in the way",false,"").withDependency { hiders }
+    private val blocksInWayHider by BooleanSetting("Blocks in the way hider",false,"").withDependency { presetChatRules }
     private val blocksInWayReg=Regex("^There are blocks in the way!$")
-    private val grandmaHider by BooleanSetting("Kill combo",false,"").withDependency { hiders }
+    private val grandmaHider by BooleanSetting("Kill combo hider",false,"").withDependency { presetChatRules }
     private val grandmaReg=Regex("^\\+[0-9]+ Kill Combo")
     private val grandmaReg2=Regex("^Your Kill Combo has expired! You reached a [0-9]+ Kill Combo!$")
-    private val cooldownHider by BooleanSetting("Ability cooldown",false,"").withDependency { hiders }
+    private val cooldownHider by BooleanSetting("Ability cooldown hider",false,"").withDependency { presetChatRules }
     private val cooldownReg=Regex("^This ability is on cooldown for [0-9]+s\\.$")
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -229,10 +233,11 @@ object ChatUtils: AsyncSave, HasCommands, Module(
     }
     init{
         on<ChatPacketEvent>{
-            if(abilityHider&&abilityReg.containsMatchIn(value))hideMessage()
-            if(blocksInWayHider&&blocksInWayReg.containsMatchIn(value))hideMessage()
-            if(grandmaHider&&(grandmaReg.containsMatchIn(value)||grandmaReg2.containsMatchIn(value)))hideMessage()
-            if(cooldownHider&&cooldownReg.containsMatchIn(value))hideMessage()
+            if(abilityHider&&abilityReg.containsMatchIn(value)){hideMessage();return@on}
+            if(blocksInWayHider&&blocksInWayReg.containsMatchIn(value)){hideMessage();return@on}
+            if(grandmaHider&&(grandmaReg.containsMatchIn(value)||grandmaReg2.containsMatchIn(value))){hideMessage();return@on}
+            if(cooldownHider&&cooldownReg.containsMatchIn(value)){hideMessage();return@on}
+            if(pickAlert)if(pickReg.containsMatchIn(value)){alert("§4Ability");return@on}else if(pickAlertEnd&&pickEndReg.containsMatchIn(value)){alert("§aAbility Over");return@on}
             for(manip in loadedManips){
                 if(manip.trigger.regex.containsMatchIn(value)){
                     if(manip.message!="")alert(manip.message)

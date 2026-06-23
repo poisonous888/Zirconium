@@ -6,8 +6,6 @@ import com.odtheking.odin.OdinMod
 import com.odtheking.odin.OdinMod.mc
 import com.odtheking.odin.events.InputEvent
 import com.odtheking.odin.events.LevelEvent
-import com.odtheking.odin.events.RenderEvent
-import com.odtheking.odin.events.TickEvent
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.utils.modMessage
@@ -20,9 +18,7 @@ import net.minecraft.network.chat.HoverEvent
 import psn.zirconium.features.Lag
 import psn.zirconium.features.MiscFeatures
 import psn.zirconium.zcon
-import java.lang.System.gc
 import java.net.URI
-import kotlin.random.Random
 
 class UpdateCheck {
     init {

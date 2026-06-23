@@ -22,9 +22,9 @@ object GuiHighlight : Module(
 ) {
     private val highlightPet by BooleanSetting("Highlight Active Pet", false, desc = "displays a colored background behind your active pet")
     private val petColor by ColorSetting("Active Pet Color",Colors.MINECRAFT_RED,false,"the highlight color").withDependency { highlightPet }
-    private val highlightCommission by BooleanSetting("Highlight Completed Commissions", false, desc = "displays a colored background behind completed commissions")
+    private val highlightCommission by BooleanSetting("Highlight Completed Comms", false, desc = "displays a colored background behind completed commissions")
     private val commissionColor by ColorSetting("Commission Color",Colors.MINECRAFT_GREEN,false,"the highlight color").withDependency { highlightCommission }
-    private val highlightAnvil by BooleanSetting("Highlight Like Books In Anvil", false, desc = "skytils anvil helper")
+    private val highlightAnvil by BooleanSetting("Anvil Helper", false, desc = "skytils anvil helper")
     private val blockWrongAnvil by BooleanSetting("Block Incompatible Books", false, desc = "prevents you from combining books with different enchantment levels").withDependency { highlightAnvil }
     private val anvilColor by ColorSetting("Anvil Highlight Color",Colors.MINECRAFT_AQUA,false,"the highlight color").withDependency { highlightAnvil }
     private val petRegex = Regex("Pets(?: \\((\\d)/(\\d)\\))?")

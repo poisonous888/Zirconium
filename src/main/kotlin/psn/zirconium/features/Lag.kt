@@ -8,7 +8,7 @@ import java.lang.System.gc
 
 object Lag : Module(
     name = "Lag",
-    description = "increase lag, but decrease memory use",
+    description = "decreases memory usage",
     category=ZirconiumEntry.ZCON
 ){
     init{

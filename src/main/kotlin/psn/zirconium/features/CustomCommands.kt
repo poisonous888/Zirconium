@@ -100,7 +100,6 @@ object CustomCommands: AsyncSave, HasCommands, Module(
     fun saveAliasChanges(){
         modMessage("Commands will be reloaded when you swap lobbies",zcon)
         config.save()
-        //TODO reregister commands
     }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//

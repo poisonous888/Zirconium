@@ -9,6 +9,7 @@ import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.GuiEvent
 import com.odtheking.odin.events.InputEvent
 import com.odtheking.odin.events.ScreenEvent
+import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.*
@@ -50,6 +51,17 @@ object DropUtils: AsyncSave, Module(
     private val uidList by ListSetting("uuidList",mutableListOf(""))
     private val sbidList by ListSetting("sbidList",mutableListOf(""))
 
+    //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
+    
+    private object ProtectRender{
+        init {
+            on<GuiEvent.RenderSlot>{
+                isProtected(slot.item)?:return@on
+                guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
+            }
+        }
+    }
+    
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
     private var noClickScreen=false
@@ -143,11 +155,6 @@ object DropUtils: AsyncSave, Module(
         return mc.player?.inventory?.selectedItem
     }
     init {
-        on<GuiEvent.RenderSlot>{
-            if(!highlightProtected)return@on
-            isProtected(slot.item)?:return@on
-            guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, Colors.MINECRAFT_DARK_RED.rgba)
-        }
         on<ScreenEvent.KeyPress>{
             when(input.key) {
                 sbidKey.value -> sbidNew(getHoveredInv() ?: return@on)
@@ -166,11 +173,13 @@ object DropUtils: AsyncSave, Module(
             mc.player?.drop(true)
         }
         on<ScreenEvent.Open>{
+            if(highlightProtected) EventBus.subscribe(ProtectRender)
             noClickScreen=screen !is InventoryScreen
             if(noClickScreen) schedule(1,true) { doOpen() }
         }
         on<ScreenEvent.Close>{
             noClickScreen=false
+            EventBus.unsubscribe(ProtectRender)
         }
     }
     fun doOpen(){
