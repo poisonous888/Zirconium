@@ -1,31 +1,31 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "psn.zirconium.mixin",
-  "compatibilityLevel": "JAVA_25",
-  "mixins": [
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "overwrites": {
-    "requireAnnotations": true
-  },
-  "client": [
-    "ArmorRenderMixin",
-    "ArmorSkullMixin",
-    "DropHotbarMixin",
-    "DropInvMixin",
-    "MouseLockMixin",
-    "OdinModuleManagerMixin",
-    "PotionRenderGui",
-    "PotionRenderHud",
-    "R_AvatarRendererMixin",
-    "R_LivingEntityMixin",
-    "R_RenderItemMixin",
-    "LoadingScreenMixin",
-    "RecipeBookMixin",
-    "ResourcePackMixin",
-    "TextFieldMixin"
-  ]
+    "required": true,
+    "minVersion": "0.8",
+    "package": "psn.zirconium.mixin",
+    "compatibilityLevel": "JAVA_25",
+    "mixins": [],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "overwrites": {
+        "requireAnnotations": true
+    },
+    "client": [
+        "ArmorRenderMixin",
+        "ArmorSkullMixin",
+        "DropHotbarMixin",
+        "DropInvMixin",
+        "LoadingScreenMixin",
+        "MouseLockMixin",
+        "OdinModuleManagerMixin",
+        "PotionRenderGui",
+        "PotionRenderHud",
+        "R_AvatarRendererMixin",
+        "R_LivingEntityMixin",
+        "R_RenderItemMixin",
+        "RecipeBookMixin",
+        "ConnectionSetupMixin",
+        "ResourcePackMixin",
+        "TextFieldMixin"
+    ]
 }

@@ -8,6 +8,7 @@ import com.odtheking.odin.features.ModuleManager
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import psn.zirconium.commands.rctaCommand
 import psn.zirconium.features.*
 import psn.zirconium.utils.UpdateCheck
 
@@ -31,11 +32,18 @@ object ZirconiumEntry : ClientModInitializer {
             ChatUtils,
             CPSDisplay,
             //Dailies,
+            PacketChecker,
+        )
+        val commands=listOf(
+            rctaCommand,
         )
         println("Zirconium has entered the chat")
-        ClientCommandRegistrationCallback.EVENT.register { dispatcher, _ ->
+        ClientCommandRegistrationCallback.EVENT.register{dispatcher, _ ->
             modules.forEach{ module ->
-                if(module is HasCommands) module.buildCommands(dispatcher)
+                if(module is HasCommands)module.buildCommands(dispatcher)
+            }
+            commands.forEach{ command ->
+                command.register(dispatcher)
             }
         }
         ModuleManager.registerModules(ModuleConfig("Zirconium.json"),*modules.filter{module->module !is AsyncSave}.toTypedArray())
