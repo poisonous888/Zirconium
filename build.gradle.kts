@@ -14,6 +14,7 @@ repositories {
     maven("https://jitpack.io")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     maven("https://api.modrinth.com/maven")
+    //maven("https://raw.githubusercontent.com/odtheking/odinFabric/main/maven/")
 }
 
 dependencies {
@@ -25,7 +26,7 @@ dependencies {
     runtimeOnly("me.djtheredstoner:DevAuth-fabric:${property("devauth_version")}")
     
     //TODO do an actual implimentation instead of the bootleg jar method
-    //implementation("com.github.odtheking:Odin:${property("odin_version")}")
+    //implementation("com.github.odtheking:odinFabric:${property("odin_version")}")
     //implementation(files("libs/Odin-0.2.2.jar"))
     implementation("maven.modrinth:odin:${property("odin_version")}")
     
