@@ -83,6 +83,7 @@ object DropUtils: AsyncSave, Module(
         return null
     }
     @JvmStatic fun doDropHotbar(item: ItemStack): Boolean{
+        if(!enabled)return false
         if(disableDungeons && DungeonUtils.inDungeons){
             val room=DungeonUtils.currentRoomName
             if(room=="Entrance"||room=="Unknown"&&DungeonUtils.inClear){
@@ -95,6 +96,7 @@ object DropUtils: AsyncSave, Module(
         return dropWithMsg(item)
     }
     @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ContainerInput): Boolean{
+        if(!enabled)return false
         if(slot==null){
             if(clickType==ContainerInput.QUICK_CRAFT){
                 return false

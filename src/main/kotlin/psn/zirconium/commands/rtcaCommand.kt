@@ -1,6 +1,7 @@
 package psn.zirconium.commands
 
 import com.github.stivais.commodore.Commodore
+import com.github.stivais.commodore.utils.GreedyString
 import com.google.gson.JsonObject
 import com.odtheking.odin.OdinMod
 import com.odtheking.odin.OdinMod.mc
@@ -12,19 +13,25 @@ import kotlinx.coroutines.launch
 val rctaCommand=Commodore("rtca","classaverage"){
     runs{
         try {
-            OdinMod.scope.launch {
-            
-            
-            }
+            getClassAverage(mc.user.name)
         }
         catch(e: Exception){
             modMessage("Caught exception: ${e.message}")
         }
     }
+    runs{ name: GreedyString ->
+        try {
+            getClassAverage(name.string)
+        }
+        catch(e: Exception){
+            modMessage("Caught exception: ${e.message}")
+        }
+    }
+    
 }
 fun getClassAverage(name:String){
     OdinMod.scope.launch {
-        val uuid=RequestUtils.getUuid(mc.user.name).getOrNull()?.id
+        val uuid=RequestUtils.getUuid(name).getOrNull()?.id
         modMessage(uuid)
         val data=fetchJson<JsonObject>("https://api.odtheking.com/hypixel/get/$uuid").getOrNull()
         val profiles=data?.asJsonObject?.get("profiles")

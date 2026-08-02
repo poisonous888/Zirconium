@@ -15,6 +15,5 @@ object Lag : Module(
         on<TickEvent.End> {
            gc()
         }
-        //EventBus.subscribe({on<TickEvent.End>{gc()}})
     }
 }

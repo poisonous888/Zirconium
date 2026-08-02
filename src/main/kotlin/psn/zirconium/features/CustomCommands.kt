@@ -259,7 +259,7 @@ object CustomCommands: AsyncSave, HasCommands, Module(
                 modMessage("Custom Commands: Keybinds",zcon)
                 unabled()
                 modMessage(" | /keybind add <key> <command> : Adds a new keybind for the specified command","")
-                modMessage(" | /keybind bind <key> <new key> : Changes the key of the specified keybind","")
+                modMessage(" | /keybind key <key> <new key> : Changes the key of the specified keybind","")
                 modMessage(" | /keybind command <key> <new command> : Changes the command for the specified keybind","")
                 modMessage(" | /keybind list : Lists current keybinds","")
                 modMessage(" | /keybind remove <key> : Removes the specified keybind","")
@@ -284,7 +284,7 @@ object CustomCommands: AsyncSave, HasCommands, Module(
             }
             literal("clear").executable{runs{clearKeybinds()}}
             literal("list").executable{runs{printKeybinds()}}
-            literal("bind").executable{
+            literal("key").executable{
                 param("key").suggests {
                     savedKeybinds.map { i -> i.key }
                 }
@@ -293,7 +293,7 @@ object CustomCommands: AsyncSave, HasCommands, Module(
                     rekeyKeybind(parseKeybind(key)?:return@runs,parseKeybind(newKey)?:return@runs)
                 }
             }
-            literal("rebind").executable{
+            literal("command").executable{
                 param("key").suggests {
                     savedKeybinds.map { i -> i.key }
                 }

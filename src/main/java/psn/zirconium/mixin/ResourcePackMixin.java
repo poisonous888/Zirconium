@@ -15,10 +15,10 @@ public class ResourcePackMixin {
     
     @Inject(method = "isFixedPosition", at = @At("RETURN"), cancellable=true)
     private void noFixed(CallbackInfoReturnable<Boolean> cir){
-        if(MiscFeatures.getNoRequiredPacks())cir.setReturnValue(false);
+        cir.setReturnValue(false);
     }
     @Inject(method = "isRequired", at = @At("RETURN"), cancellable=true)
     private void noRequired(CallbackInfoReturnable<Boolean> cir){
-        if(MiscFeatures.getNoRequiredPacks())cir.setReturnValue(false);
+        if(MiscFeatures.canRemovePacks())cir.setReturnValue(false);
     }
 }

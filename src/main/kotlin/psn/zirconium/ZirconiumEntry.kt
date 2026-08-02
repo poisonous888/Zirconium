@@ -8,6 +8,8 @@ import com.odtheking.odin.features.ModuleManager
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.network.Connection
+import psn.zirconium.commands.modelCommand
 import psn.zirconium.commands.rctaCommand
 import psn.zirconium.features.*
 import psn.zirconium.utils.UpdateCheck
@@ -24,18 +26,21 @@ object ZirconiumEntry : ClientModInitializer {
             //AutoComplete,
             ItemPos,
             //TeleportLine,
-            MouseLock,
-            DVD,
+            //MouseLock,
+            //DVD,
             Lag,
             HideArmor,
             DropUtils,
+            ChatRules,
             ChatUtils,
             CPSDisplay,
             //Dailies,
             PacketChecker,
+            //ExplosiveMute,
         )
         val commands=listOf(
             rctaCommand,
+            modelCommand,
         )
         println("Zirconium has entered the chat")
         ClientCommandRegistrationCallback.EVENT.register{dispatcher, _ ->
@@ -48,12 +53,12 @@ object ZirconiumEntry : ClientModInitializer {
         }
         ModuleManager.registerModules(ModuleConfig("Zirconium.json"),*modules.filter{module->module !is AsyncSave}.toTypedArray())
         for(module in modules.filter{module->module is AsyncSave}){
-            println(module.name)
             ModuleManager.registerModules((module as AsyncSave).getConfig(),module)
         }
         EventBus.subscribe(UpdateCheck())
     }
     @JvmStatic val ZCON = Category.custom("Zirconium")
+    @JvmStatic var connection: Connection?=null
 }
 interface HasCommands{fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>)}
 interface AsyncSave{fun getConfig():ModuleConfig}

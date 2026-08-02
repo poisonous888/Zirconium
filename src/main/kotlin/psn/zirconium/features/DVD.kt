@@ -10,7 +10,7 @@ import com.odtheking.odin.utils.render.text
 import psn.zirconium.ZirconiumEntry
 import java.awt.Color.getHSBColor
 
-object DVD : Module(
+class DVD : Module(
     name = "DVD",
     description = "No further explanation.",
     category=ZirconiumEntry.ZCON

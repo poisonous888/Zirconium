@@ -26,6 +26,7 @@ dependencies {
     runtimeOnly("me.djtheredstoner:DevAuth-fabric:${property("devauth_version")}")
     
     //TODO do an actual implimentation instead of the bootleg jar method
+    //https://github.com/KnaxRo/OdinAddon/blob/refs/heads/update-odin-0.2.2/build.gradle.kts
     //implementation("com.github.odtheking:odinFabric:${property("odin_version")}")
     //implementation(files("libs/Odin-0.2.2.jar"))
     implementation("maven.modrinth:odin:${property("odin_version")}")
@@ -68,8 +69,17 @@ afterEvaluate {
 
 tasks {
     processResources {
+        val props = mapOf(
+            "version" to version,
+            "minecraft_version" to project.property("minecraft_version"),
+            "loader_version" to project.property("loader_version"),
+            "odin_version" to project.property("odin_version")
+        )
+        
+        inputs.properties(props)
+        
         filesMatching("fabric.mod.json") {
-            expand(getProperties())
+            expand(props)
         }
     }
 

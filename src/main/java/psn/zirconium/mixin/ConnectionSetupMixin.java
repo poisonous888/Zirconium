@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import psn.zirconium.utils.StaticConnection;
+import psn.zirconium.ZirconiumEntry;
 
 import java.time.Duration;
 import java.util.function.Consumer;
@@ -18,6 +18,6 @@ import java.util.function.Consumer;
 public class ConnectionSetupMixin{
     @Inject(method="<init>",at=@At("TAIL"))
     private void captureConnection(Connection connection, Minecraft minecraft, ServerData serverData, Screen parent, boolean newWorld, Duration worldLoadDuration, Consumer<Component> updateStatus, LevelLoadTracker levelLoadTracker, TransferState transferState, CallbackInfo ci){
-        StaticConnection.setConnection(connection);
+        ZirconiumEntry.setConnection(connection);
     }
 }

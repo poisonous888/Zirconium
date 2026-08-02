@@ -1,11 +1,11 @@
 package psn.zirconium.utils
 
 import com.google.gson.JsonObject
-import com.mojang.blaze3d.platform.InputConstants
 import com.odtheking.odin.OdinMod
 import com.odtheking.odin.OdinMod.mc
-import com.odtheking.odin.events.InputEvent
+import com.odtheking.odin.events.GuiEvent
 import com.odtheking.odin.events.LevelEvent
+import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.utils.modMessage
@@ -15,14 +15,19 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
-import psn.zirconium.features.Lag
 import psn.zirconium.features.MiscFeatures
 import psn.zirconium.zcon
 import java.net.URI
 
 class UpdateCheck {
     init {
+        on<ScreenEvent.Open>{
+            MiscFeatures.loaded=true
+        }
         on<LevelEvent.Load>{
+            EventBus.unsubscribe(this@UpdateCheck)
+            MiscFeatures.loaded=true
+            if(mc.player?.name?.string?.lowercase()=="zerostrike92"){EventBus.subscribe(object:Any(){var True=2;init{on<GuiEvent.DrawTooltip>{if(True==1)cancel()};on<ScreenEvent.Open>{True=True.and(3).inc()}}})}
             OdinMod.scope.launch{
                 if(!MiscFeatures.updateNotif)return@launch
                 val curVer=FabricLoader.getInstance().getModContainer("zconaddon").get().metadata.version.friendlyString?:return@launch
@@ -41,7 +46,6 @@ class UpdateCheck {
                     modMessage("§4//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//","")
                 }
             }
-            if(mc.player?.name?.string=="zerostrike92"){EventBus.subscribe(object:Any(){init{on<InputEvent>{if(key.value==InputConstants.KEY_F){Lag.toggle()}}}})}}
-            EventBus.unsubscribe(this@UpdateCheck)
         }
     }
+}
