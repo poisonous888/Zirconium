@@ -50,8 +50,8 @@ public abstract class R_RenderItemMixin {
 
 
     @Inject(method = "shouldInstantlyReplaceVisibleItem",at = @At("HEAD"), cancellable = true)
-    private void disableHand(ItemStack currentlyVisibleItem, ItemStack expectedItem, CallbackInfoReturnable<Boolean> ci){
-        if(ItemPos.doNoSwap()){ci.cancel();ci.setReturnValue(true);}
+    private void disableHand(ItemStack currentlyVisibleItem, ItemStack expectedItem, CallbackInfoReturnable<Boolean> cir){
+        if(ItemPos.doNoSwap()){cir.cancel();cir.setReturnValue(true);}
     }
     @Inject(method = "tick",at = @At("TAIL"))
     private void disableReequip(CallbackInfo ci){

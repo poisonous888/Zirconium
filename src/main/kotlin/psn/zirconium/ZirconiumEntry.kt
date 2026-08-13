@@ -37,6 +37,7 @@ object ZirconiumEntry : ClientModInitializer {
             //Dailies,
             PacketChecker,
             //ExplosiveMute,
+            Zoom,
         )
         val commands=listOf(
             rctaCommand,

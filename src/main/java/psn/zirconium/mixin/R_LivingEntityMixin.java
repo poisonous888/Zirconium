@@ -27,16 +27,16 @@ public abstract class R_LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "getCurrentSwingDuration",at = @At("HEAD"), cancellable = true)
-    private void noHaste(CallbackInfoReturnable<Integer> ci){
+    private void noHaste(CallbackInfoReturnable<Integer> cir){
         if(ItemPos.doHaste()){
-            ci.setReturnValue(ItemPos.getSwingDuration());
-            ci.cancel();
+            cir.setReturnValue(ItemPos.getSwingDuration());
+            cir.cancel();
         }
     }
     @Inject(method = "getCurrentSwingDuration",at = @At("RETURN"), cancellable = true)
-    private void withHaste(CallbackInfoReturnable<Integer> ci){
+    private void withHaste(CallbackInfoReturnable<Integer> cir){
         if(ItemPos.doSwingDur()) {
-            ci.setReturnValue(ItemPos.getSwingDuration() + ci.getReturnValue() - 7);
+            cir.setReturnValue(ItemPos.getSwingDuration() + cir.getReturnValue() - 7);
             // swing value is 7 without haste/fatigue
         }
     }

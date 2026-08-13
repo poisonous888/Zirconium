@@ -14,10 +14,12 @@
         "ArmorRenderMixin",
         "ArmorSkullMixin",
         "ChatMixin",
+        "ChatScreenMixin",
         "ConnectionSetupMixin",
         "DropHotbarMixin",
         "DropInvMixin",
         "LoadingScreenMixin",
+        "MouseMixin",
         "OdinModuleManagerMixin",
         "PotionRenderGui",
         "PotionRenderHud",
@@ -26,6 +28,7 @@
         "R_RenderItemMixin",
         "RecipeBookMixin",
         "ResourcePackMixin",
-        "TextFieldMixin"
+        "TextFieldMixin",
+        "ZoomMixin"
     ]
 }

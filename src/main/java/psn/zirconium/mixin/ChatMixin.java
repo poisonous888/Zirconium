@@ -1,7 +1,6 @@
 package psn.zirconium.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.client.multiplayer.chat.GuiMessageSource;
@@ -14,62 +13,67 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import psn.zirconium.features.ChatUtils;
-import java.util.ArrayDeque;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 
 @Mixin(value=ChatComponent.class,priority=69420)
 public class ChatMixin{
-    private static class CompactEntry{
-        CompactEntry(GuiMessage r,int c,String s){raw=r;count=c;msg=s;}
-        GuiMessage raw;
-        Integer count;
-        String msg;
-    }
-    @Unique @Final private ArrayDeque<CompactEntry> compactCheck=new ArrayDeque<>(ChatUtils.getCompactLines());
-    @Shadow @Final private List<GuiMessage> allMessages;
+    @Shadow @Final public List<GuiMessage> allMessages;
     @Shadow private void refreshTrimmedMessages(){}
     
-    @Inject(method="addMessage",at=@At("HEAD"), cancellable=true)
-    private void compact(Component contents, MessageSignature signature, GuiMessageSource source, GuiMessageTag tag, CallbackInfo ci){
-        if(ChatUtils.checkBlankAndSeparator(contents)){
-            ci.cancel();
-            return;
-        }
-        final var checkStr=contents.getString();
-        final var compIter=compactCheck.iterator();
-        while(compIter.hasNext()){
-            final var cur=compIter.next();
-            if(cur.msg.equals(checkStr)){
-                compIter.remove();
-                allMessages.remove(cur.raw);
-                refreshTrimmedMessages();
-                cur.count++;
-                compactCheck.addFirst(cur);
-                return;
-            }
-        }
-        while(compactCheck.size()>=ChatUtils.getCompactLines()){compactCheck.removeLast();}
-        compactCheck.addFirst(new CompactEntry(null, 1, contents.getString()));
-    }
-    @ModifyArg(method="addMessage",at=@At(value="INVOKE", target="Lnet/minecraft/client/multiplayer/chat/GuiMessage;<init>(ILnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/multiplayer/chat/GuiMessageSource;Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V"),index=1)
-    private Component addCount(Component content){
-        final var count=compactCheck.getFirst().count;
-        if(count<2)return content;
-        return content.copy().append(" §8("+count+")");
-    }
-    @Inject(method="addMessage",at=@At(value="TAIL"))
-    private void captureGuiMessage(Component contents, MessageSignature signature, GuiMessageSource source, GuiMessageTag tag, CallbackInfo ci, @Local(name="message") GuiMessage message){
-        if(!ChatUtils.getCompact())return;
-        compactCheck.getFirst().raw=message;
+    @Unique private final DateTimeFormatter format=DateTimeFormatter.ofPattern("HH:mm:ss");
+    @Unique @Final private HashMap<String,Info> lookup=new HashMap<>();
+    private static class Info{
+        Info(GuiMessage l){latest=l;}
+        GuiMessage latest;
+        int count=1;
     }
     
+    @Inject(method="addMessage",at=@At("HEAD"), cancellable=true)
+    private void checkInstantCancel(Component contents, MessageSignature signature, GuiMessageSource source, GuiMessageTag tag, CallbackInfo ci){
+        final var str=contents.getString();
+        final var blank=str.isBlank();
+        if(ChatUtils.getHideBlank()&&blank)ci.cancel();
+        if(blank)return;
+        separator=ChatUtils.checkSeparator(str);
+        if(ChatUtils.getSeparators()==0&&separator) ci.cancel();
+    }
+    @Unique boolean separator=false;
+    @Redirect(method="addMessage",at=@At(value="NEW", target="Lnet/minecraft/client/multiplayer/chat/GuiMessage;"))
+    private GuiMessage compact(int addedTime, Component content, MessageSignature signature, GuiMessageSource source, GuiMessageTag tag){
+        final var message=Component.empty();
+        final var out=new GuiMessage(addedTime,message,signature,source,tag);
+        if(ChatUtils.getTimestamp())message.append("§8["+LocalDateTime.now().format(format)+"]§r ");
+        message.append(content);
+        if(ChatUtils.getCompact()&&!(ChatUtils.getSeparators()==2&&separator)){
+            final var str=content.getString();
+            final var info=lookup.get(str);
+            if(info!=null){
+                info.count++;
+                message.append(" §8("+info.count+")");
+                allMessages.remove(info.latest);
+                refreshTrimmedMessages();
+                info.latest=out;
+                return out;
+            }
+            lookup.put(str,new Info(out));
+            return out;
+        }
+        return out;
+    }
+    
+    //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
     @Inject(method="clearMessages",at=@At("HEAD"), cancellable=true)
     private void noClear(boolean history, CallbackInfo ci){
-        if(ChatUtils.getNoClear())ci.cancel();
+        if(history&&ChatUtils.getNoClear())ci.cancel();
+        lookup.clear();
     }
     
     //props to https://modrinth.com/mod/morechathistory
