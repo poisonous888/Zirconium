@@ -5,6 +5,7 @@ import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.features.Category
 import com.odtheking.odin.features.ModuleManager
+import com.odtheking.odin.utils.modMessage
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
@@ -21,10 +22,10 @@ object ZirconiumEntry : ClientModInitializer {
             Garden,
             MiscFeatures,
             GuiHighlight,
-            Visuals,
+            //Visuals,
             StaticWaypoints,
             //AutoComplete,
-            ItemPos,
+            HeldItemRender,
             //TeleportLine,
             //MouseLock,
             //DVD,
@@ -38,6 +39,7 @@ object ZirconiumEntry : ClientModInitializer {
             PacketChecker,
             //ExplosiveMute,
             Zoom,
+            FastFuse,
         )
         val commands=listOf(
             rctaCommand,
@@ -60,6 +62,9 @@ object ZirconiumEntry : ClientModInitializer {
     }
     @JvmStatic val ZCON = Category.custom("Zirconium")
     @JvmStatic var connection: Connection?=null
+}
+fun modMessageJava(msg:String){
+    modMessage(msg,zcon)
 }
 interface HasCommands{fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>)}
 interface AsyncSave{fun getConfig():ModuleConfig}

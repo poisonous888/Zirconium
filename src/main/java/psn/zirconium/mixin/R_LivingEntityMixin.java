@@ -4,8 +4,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import psn.zirconium.features.ItemPos;
-import psn.zirconium.features.Visuals;
+import psn.zirconium.features.HeldItemRender;
+import psn.zirconium.features.MiscFeatures;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,10 +17,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntity.class)
 public abstract class R_LivingEntityMixin extends Entity {
-    
-    //from animatium
-    //https://modrinth.com/mod/animatium
-    
     @Shadow public float yBodyRot;
     public R_LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);
@@ -28,28 +24,32 @@ public abstract class R_LivingEntityMixin extends Entity {
 
     @Inject(method = "getCurrentSwingDuration",at = @At("HEAD"), cancellable = true)
     private void noHaste(CallbackInfoReturnable<Integer> cir){
-        if(ItemPos.doHaste()){
-            cir.setReturnValue(ItemPos.getSwingDuration());
+        if(HeldItemRender.doHaste()){
+            cir.setReturnValue(HeldItemRender.getSwingDuration());
             cir.cancel();
         }
     }
     @Inject(method = "getCurrentSwingDuration",at = @At("RETURN"), cancellable = true)
     private void withHaste(CallbackInfoReturnable<Integer> cir){
-        if(ItemPos.doSwingDur()) {
-            cir.setReturnValue(ItemPos.getSwingDuration() + cir.getReturnValue() - 7);
+        if(HeldItemRender.doSwingDur()) {
+            cir.setReturnValue(HeldItemRender.getSwingDuration() + cir.getReturnValue() - 7);
             // swing value is 7 without haste/fatigue
         }
     }
+    
+    //from animatium
+    //https://modrinth.com/mod/animatium
+    
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;abs(F)F"))
     private float rotateBackwardsWalking(float v, Operation<Float> original) {
-        if (Visuals.doDiagWalk()) {
+        if (MiscFeatures.getDiagonalWalk()) {
             return 0F;
         }
         return original.call(v);
     }
     @WrapOperation(method = "tickHeadTurn", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
     private float backwardsWalkingHeadRotation(float a, Operation<Float> original) {
-        if (Visuals.doDiagWalk()) {
+        if (MiscFeatures.getDiagonalWalk()) {
             a= Mth.clamp(a, -75.0F, 75.0F);
             this.yBodyRot = this.getYRot() - a;
             if (Math.abs(a) > 50.0F) {

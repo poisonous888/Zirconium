@@ -12,7 +12,7 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.HumanoidArm
 import psn.zirconium.ZirconiumEntry
 
-object ItemPos : Module(
+object HeldItemRender : Module(
     name = "Held Item Render",
     description = "changes the held item position",
     category=ZirconiumEntry.ZCON
@@ -65,7 +65,7 @@ object ItemPos : Module(
     @JvmStatic fun doHaste():Boolean{return enabled&&ignoreHaste&&customSwingDuration}
     
     private val customSwing by BooleanSetting("Custom Swing",false,"").withDependency { swingTransform }
-    private val swingWhileUsing by BooleanSetting("Swing While Using",false,"(NOT CURRENTLY IMPLIMENTED) left click while drawing a bow").withDependency { swingTransform }
+    //TODO private val swingWhileUsing by BooleanSetting("Swing While Using",false,"(NOT CURRENTLY IMPLIMENTED) left click while drawing a bow").withDependency { swingTransform }
 
     private val swingXrot by NumberSetting("Swing X Rot",-80f,-160,0,16,"").withDependency { swingTransform }
     private val swingYrot by NumberSetting("Swing Y Rot",-20f,-40,0,4,"").withDependency { swingTransform }
@@ -89,7 +89,7 @@ object ItemPos : Module(
     }.withDependency { swingTransform }
 
     @JvmStatic fun doSwing(): Boolean {return enabled&&customSwing}
-    @JvmStatic fun doSwingWhileUsing():Boolean{return enabled&&customSwing&&swingWhileUsing}
+    //TODO @JvmStatic fun doSwingWhileUsing():Boolean{return enabled&&customSwing&&swingWhileUsing}
     @JvmStatic fun executeSwing(poseStack: PoseStack,arm: Int,f: Float){
         val pi = 3.1415
         val sqf = Mth.sqrt(f) * pi
@@ -226,3 +226,261 @@ object ItemPos : Module(
         (settings["Custom Swing"] as BooleanSetting).value = true
     }
 }
+
+//TODO custom held item render pipeline
+//is it possible to merge 2 function objects java/kotlin
+//
+//Yes, it is entirely possible to merge two function objects in both Java and Kotlin. Depending on what you mean by "merge" (such as executing them sequentially, composing them, or combining their inputs/outputs), both languages provide built-in utilities or straightforward idioms to achieve this.
+//Kotlin
+//
+//Kotlin treats functions as first-class citizens and provides extension functions like andThen (via Java interoperability or custom definitions) and function composition out of the box.
+//1. Sequential Execution (Run A, then Run B)
+//
+//If you have two functions of type () -> Unit (or accepting arguments), you can invoke them sequentially using a custom extension or simple lambda:
+//Kotlin
+//
+//val func1: () -> Unit = { println("Hello from First") }
+//val func2: () -> Unit = { println("Hello from Second") }
+//
+//// Merged function executing both sequentially
+//val merged: () -> Unit = {
+//    func1()
+//    func2()
+//}
+//
+//merged()
+//// Output:
+//// Hello from First
+//// Hello from Second
+//
+//2. Function Composition (Pipeline: f(g(x)))
+//
+//To pass the output of one function as the input to another, you can use Kotlin's extension functions or infix operators:
+//Kotlin
+//
+//val addTwo: (Int) -> Int = { it + 2 }
+//val multiplyByThree: (Int) -> Int = { it * 3 }
+//
+//// Composition: multiplyByThree(addTwo(x))
+//infix fun <T, R, V> ((T) -> R).andThen(after: (R) -> V): (T) -> V = { t -> after(this(t)) }
+//
+//val combined = addTwo andThen multiplyByThree
+//
+//println(combined(4)) // Output: 18 -> (4 + 2) * 3
+//
+//Java
+//
+//In Java, function objects are typically represented by functional interfaces from the java.util.function package, such as Function, Consumer, and Predicate. These interfaces come with built-in default methods for merging.
+//1. Merging Consumer (Sequential Execution)
+//
+//If your functions take an argument and return nothing (void), use andThen:
+//Java
+//
+//Consumer<String> consumer1 = s -> System.out.println("First: " + s);
+//Consumer<String> consumer2 = s -> System.out.println("Second: " + s);
+//
+//// Merge using andThen
+//Consumer<String> merged = consumer1.andThen(consumer2);
+//
+//merged.accept("Hello Java");
+//// Output:
+//// First: Hello Java
+//// Second: Hello Java
+//
+//2. Merging Function (Composition / Pipeline)
+//
+//If your functions transform data, you can use andThen (execute left, then right) or compose (execute right, then left):
+//Java
+//
+//Function<Integer, Integer> addTwo = x -> x + 2;
+//Function<Integer, Integer> multiplyByThree = x -> x * 3;
+//
+//// Equivalent to multiplyByThree(addTwo(x))
+//Function<Integer, Integer> combined = addTwo.andThen(multiplyByThree);
+//
+//System.out.println(combined.apply(4)); // Output: 18
+//
+//3. Merging Predicate (Boolean Logic)
+//
+//If you are combining conditional functions, you can use and, or, or negate:
+//Java
+//
+//Predicate<String> isNotNull = s -> s != null;
+//Predicate<String> isNotEmpty = s -> !s.isEmpty();
+//
+//// Merge using and
+//Predicate<String> isValidString = isNotNull.and(isNotEmpty);
+//
+//System.out.println(isValidString.test("Test")); // Output: true
+//
+//i want to merge them into a single object that performs both actions upon being called
+//
+//Yes, you can combine multiple function objects into a single, unified object that wraps them both and executes them sequentially whenever it is called.
+//Kotlin
+//
+//In Kotlin, you can create a single function reference or a custom functional interface instance that calls both actions.
+//Using a Standard Lambda (Function Type)
+//
+//You can assign the merged behavior to a single variable. When invoked, it evaluates both blocks sequentially:
+//Kotlin
+//
+//val action1: () -> Unit = { println("Action 1 executed") }
+//val action2: () -> Unit = { println("Action 2 executed") }
+//
+//// Merged into a single function object
+//val combinedAction: () -> Unit = {
+//    action1()
+//    action2()
+//}
+//
+//// Called as a single object
+//combinedAction()
+//
+//Accepting Arguments
+//
+//If your functions take inputs, the wrapper passes the arguments down to both targets:
+//Kotlin
+//
+//val logConsole: (String) -> Unit = { println("Log: $it") }
+//val saveToDb: (String) -> Unit = { println("Saving $it to database") }
+//
+//val combined: (String) -> Unit = { input ->
+//    logConsole(input)
+//    saveToDb(input)
+//}
+//
+//combined("User Login")
+//
+//Java
+//
+//In Java, you can merge actions using built-in functional interfaces like Consumer (for procedures) or by defining a custom combination method.
+//1. Using Consumer.andThen()
+//
+//If your functions take an argument and return nothing (void), andThen fuses them into a single Consumer instance:
+//Java
+//
+//Consumer<String> action1 = s -> System.out.println("Action 1: " + s);
+//Consumer<String> action2 = s -> System.out.println("Action 2: " + s);
+//
+//// Merged into a single Consumer object
+//Consumer<String> combinedObject = action1.andThen(action2);
+//
+//// Invoked as a single object
+//combinedObject.accept("Test Data");
+//
+//2. Using a Custom Wrapper for Parameterless Functions (Runnable)
+//
+//For parameterless functions (like Runnable), you can create a utility method or wrapper that returns a single Runnable object executing both:
+//Java
+//
+//public class FunctionMerger {
+//    public static Runnable merge(Runnable r1, Runnable r2) {
+//        return () -> {
+//            r1.run();
+//            r2.run();
+//        };
+//    }
+//
+//    public static void main(String[] args) {
+//        Runnable task1 = () -> System.out.println("First task");
+//        Runnable task2 = () -> System.out.println("Second task");
+//
+//        // Merged into a single Runnable object
+//        Runnable combinedTask = merge(task1, task2);
+//
+//        // Executed together as a single entity
+//        combinedTask.run();
+//    }
+//}
+//
+//is there a way to do this automatically, without explicitly writing which 2 functions are being merged
+//
+//Yes! You can automate this so you don't have to manually write out wrapper lambdas every time.
+//
+//In Kotlin, you can achieve this elegantly using operator overloading (specifically the + operator). In Java, you can use built-in composition methods or a reusable helper.
+//Kotlin: Using Operator Overloading (+)
+//
+//By defining a custom plus operator extension, you can "add" two functions together seamlessly, and Kotlin will handle the merging behind the scenes.
+//1. For Parameterless Functions (() -> Unit)
+//Kotlin
+//
+//// Define the automatic merge rule once globally
+//operator fun (() -> Unit).plus(other: () -> Unit): () -> Unit = {
+//    this()
+//    other()
+//}
+//
+//// --- Usage ---
+//val func1 = { println("Task A") }
+//val func2 = { println("Task B") }
+//
+//// Automatically merged without writing a new lambda!
+//val combined = func1 + func2
+//
+//combined()
+//// Output:
+//// Task A
+//// Task B
+//
+//2. For Functions with Arguments ((T) -> Unit)
+//
+//You can do the same for functions that accept parameters:
+//Kotlin
+//
+//operator fun <T> ((T) -> Unit).plus(other: (T) -> Unit): (T) -> Unit = { input ->
+//    this(input)
+//    other(input)
+//}
+//
+//// --- Usage ---
+//val log: (String) -> Unit = { println("Logging: $it") }
+//val save: (String) -> Unit = { println("Saving: $it") }
+//
+//// Automatically combined using '+'
+//val auditAndSave = log + save
+//
+//auditAndSave("User_Token_123")
+//
+//Java: Using Built-in Methods or Helpers
+//
+//Java doesn't support operator overloading, but you can avoid writing boilerplate by using standard methods or a quick utility helper.
+//1. For Consumer (Actions taking an argument)
+//
+//Java's Consumer interface already automates this via .andThen():
+//Java
+//
+//Consumer<String> log = s -> System.out.println("Logging: " + s);
+//Consumer<String> save = s -> System.out.println("Saving: " + s);
+//
+//// Automatically merged using the built-in method
+//Consumer<String> combined = log.andThen(save);
+//
+//combined.accept("Data");
+//
+//2. For Runnable (Parameterless actions)
+//
+//For parameterless actions, you can write a tiny generic helper method once, then reuse it to combine any two runnables automatically:
+//Java
+//
+//public class FunctionUtils {
+//    // Reusable helper
+//    public static Runnable combine(Runnable... tasks) {
+//        return () -> {
+//            for (Runnable task : tasks) {
+//                task.run();
+//            }
+//        };
+//    }
+//}
+//
+//// --- Usage ---
+//Runnable task1 = () -> System.out.println("One");
+//Runnable task2 = () -> System.out.println("Two");
+//
+//// Automatically merged through the helper method
+//Runnable combined = FunctionUtils.combine(task1, task2);
+//
+//combined.run();
+//
+//
+//Gemini is AI and can make mistakes.

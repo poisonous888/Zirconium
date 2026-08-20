@@ -13,12 +13,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import psn.zirconium.features.ItemPos;
+import psn.zirconium.features.HeldItemRender;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class R_RenderItemMixin {
     
-    //from nofrills
+    //based on nofrills
     //https://modrinth.com/mod/nofrills
     
     @Shadow private float mainHandHeight;
@@ -26,17 +26,16 @@ public abstract class R_RenderItemMixin {
     @Shadow private float oOffHandHeight;
     @Shadow private float oMainHandHeight;
 
-    @Shadow
-    protected abstract void swingArm(float attack, PoseStack poseStack, int invert, HumanoidArm arm);
+    @Shadow protected abstract void swingArm(float attack, PoseStack poseStack, int invert, HumanoidArm arm);
 
     @Inject(method = "applyItemArmTransform", at = @At("TAIL"))
     private void applyTransform(PoseStack poseStack, HumanoidArm arm, float inverseArmHeight, CallbackInfo ci){
-        ItemPos.executeTranslate(poseStack, arm);
+        HeldItemRender.executeTranslate(poseStack, arm);
     }
     @Inject(method = "swingArm", at = @At("HEAD"), cancellable = true)
     private void customSwing(float attack, PoseStack poseStack, int invert, HumanoidArm arm, CallbackInfo ci){
-        if(ItemPos.doSwing()){
-            ItemPos.executeSwing(poseStack, arm ==HumanoidArm.RIGHT?1:-1, attack);
+        if(HeldItemRender.doSwing()){
+            HeldItemRender.executeSwing(poseStack, arm ==HumanoidArm.RIGHT?1:-1, attack);
             ci.cancel();
         }
     }
@@ -51,11 +50,14 @@ public abstract class R_RenderItemMixin {
 
     @Inject(method = "shouldInstantlyReplaceVisibleItem",at = @At("HEAD"), cancellable = true)
     private void disableHand(ItemStack currentlyVisibleItem, ItemStack expectedItem, CallbackInfoReturnable<Boolean> cir){
-        if(ItemPos.doNoSwap()){cir.cancel();cir.setReturnValue(true);}
+        if(HeldItemRender.doNoSwap()){
+            cir.cancel();
+            cir.setReturnValue(true);
+        }
     }
     @Inject(method = "tick",at = @At("TAIL"))
     private void disableReequip(CallbackInfo ci){
-        if(ItemPos.doNoSwap()){
+        if(HeldItemRender.doNoSwap()){
             this.mainHandHeight=1f;
             this.offHandHeight=1f;
             this.oMainHandHeight=1f;
@@ -64,12 +66,12 @@ public abstract class R_RenderItemMixin {
     }
     @Inject(method = "renderPlayerArm",at = @At("HEAD"), cancellable = true)
     private void disableHand(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, float inverseArmHeight, float attackValue, HumanoidArm arm, CallbackInfo ci){
-        if(ItemPos.doDisableHand()){ci.cancel();}
+        if(HeldItemRender.doDisableHand()) ci.cancel();
     }
     @Inject(method = "renderPlayerArm",at= @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;getPlayerRenderer(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/client/renderer/entity/player/AvatarRenderer;"))
     private void handTransform(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, float inverseArmHeight, float attackValue, HumanoidArm arm, CallbackInfo ci){
-        if(ItemPos.doSyncHand()){
-            ItemPos.executeTranslate(poseStack, arm);
+        if(HeldItemRender.doSyncHand()){
+            HeldItemRender.executeTranslate(poseStack, arm);
         }
     }
 }

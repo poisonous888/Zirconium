@@ -54,15 +54,15 @@ class UpdateCheck {
                 val newVer=Regex("zirconium-([0-9.]+)\\.jar").find(actionJson.getAsJsonArray("artifacts").get(0).asJsonObject.get("name").asString)?.groups[1]?.value
                 val link="https://github.com/poisonous888/Zirconium/actions"
                 if(newVer!=curVer){
-                    modMessage("§4//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//§r","")
-                    modMessage("§4new version available §7(§5$curVer§7 -> §d$newVer§7)", zcon)
+                    modMessage("§c//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//§r","")
+                    modMessage("§cnew version available §7(§5$curVer§7 -> §d$newVer§7)", zcon)
                     modMessage(
                         Component.literal("§b$link").withStyle {
                             it.withClickEvent(ClickEvent.OpenUrl(URI(link))).withHoverEvent(HoverEvent.ShowText(Component.literal(link)))
                         },""
                     )
-                    modMessage("§4you can disable this message under MiscFeatures","")
-                    modMessage("§4//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//","")
+                    modMessage("§cyou can disable this message under MiscFeatures","")
+                    modMessage("§c//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//","")
                 }
             }
         }

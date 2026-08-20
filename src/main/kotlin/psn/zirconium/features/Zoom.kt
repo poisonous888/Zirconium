@@ -41,7 +41,7 @@ object Zoom: Module(
     }
     
     var zoomLevel=1.0
-    @JvmStatic fun scroll(yoffset: Double){
+    @JvmStatic fun scroll(yoffset:Double){
         zoomLevel+=yoffset*if(invertScroll) -1 else 1
     }
     @JvmStatic fun getZoom():Float{

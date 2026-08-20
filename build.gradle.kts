@@ -4,6 +4,14 @@ plugins {
     id("net.fabricmc.fabric-loom")
     kotlin("jvm")
     `maven-publish`
+    idea
+}
+
+idea {
+    module {
+        isDownloadSources = true
+        isDownloadJavadoc = true
+    }
 }
 
 group = property("maven_group") as String
@@ -13,8 +21,6 @@ repositories {
     mavenCentral()
     maven("https://jitpack.io")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
-    maven("https://api.modrinth.com/maven")
-    //maven("https://raw.githubusercontent.com/odtheking/odinFabric/main/maven/")
 }
 
 dependencies {
@@ -25,12 +31,7 @@ dependencies {
 
     runtimeOnly("me.djtheredstoner:DevAuth-fabric:${property("devauth_version")}")
     
-    //TODO do an actual implimentation instead of the bootleg jar method
-    //https://github.com/KnaxRo/OdinAddon/blob/refs/heads/update-odin-0.2.2/build.gradle.kts
-    //implementation("com.github.odtheking:odinFabric:${property("odin_version")}")
-    //implementation(files("libs/Odin-0.2.2.jar"))
-    implementation("maven.modrinth:odin:${property("odin_version")}")
-    
+    implementation("com.github.odtheking:odinFabric:${property("odin_version")}")
     implementation("com.github.stivais:Commodore:${property("commodore_version")}")
 
     property("minecraft_lwjgl_version").let { lwjglVersion ->

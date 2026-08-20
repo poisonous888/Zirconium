@@ -18,6 +18,9 @@
         "ConnectionSetupMixin",
         "DropHotbarMixin",
         "DropInvMixin",
+        "FogCameraMixin",
+        "FogColorMixin",
+        "LightMixin",
         "LoadingScreenMixin",
         "MouseMixin",
         "OdinModuleManagerMixin",
@@ -28,6 +31,8 @@
         "R_RenderItemMixin",
         "RecipeBookMixin",
         "ResourcePackMixin",
+        "SkyboxMixin",
+        "SkySunTintMixin",
         "TextFieldMixin",
         "ZoomMixin"
     ]

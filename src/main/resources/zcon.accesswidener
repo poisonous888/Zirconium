@@ -2,7 +2,7 @@ accessWidener v2 official
 
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
 accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen slotClicked (Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V
-accessible field net/minecraft/client/MouseHandler mouseGrabbed Z
+# accessible field net/minecraft/client/MouseHandler mouseGrabbed Z
 accessible field net/minecraft/client/gui/components/ChatComponent trimmedMessages Ljava/util/List;
 accessible field net/minecraft/client/gui/components/ChatComponent chatScrollbarPos I
 accessible method net/minecraft/client/gui/components/ChatComponent getScale ()D

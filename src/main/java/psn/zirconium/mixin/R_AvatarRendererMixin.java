@@ -1,6 +1,6 @@
 package psn.zirconium.mixin;
 
-import psn.zirconium.features.Visuals;
+import psn.zirconium.features.MiscFeatures;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -20,14 +20,13 @@ public abstract class R_AvatarRendererMixin<AvatarlikeEntity extends Avatar & Cl
     
     @Redirect(method = "extractCapeState", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
     private float removeOldClamp(float value, float min, float max){
-        if(Visuals.doCustomCape()) return value;
+        if(MiscFeatures.getCustomCapePhysics()) return value;
         return Mth.clamp(value, min, max);
     }
     @Inject(method = "extractCapeState",at = @At("TAIL"))
     private void newClamp(AvatarlikeEntity entity, AvatarRenderState state, float partialTicks, CallbackInfo ci){
-        if(!Visuals.doCustomCape()) return;
-        state.capeFlap=state.capeFlap * Visuals.getFlapMult();
-        state.capeLean=Mth.clamp(state.capeLean, Visuals.getVerticalLeanNegClamp(), Visuals.getVerticalLeanPosClamp());
-        state.capeLean2=Mth.clamp(state.capeLean2,-Visuals.getSideLeanClamp(), Visuals.getSideLeanClamp());
+        if(!MiscFeatures.getCustomCapePhysics()) return;
+        state.capeLean=Mth.clamp(state.capeLean, 0, 180);
+        state.capeLean2=Mth.clamp(state.capeLean2,-150, 150);
     }
 }
