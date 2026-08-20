@@ -38,13 +38,13 @@ object ChatUtils: Module(
     private val advancedCat by DropdownSetting("Advanced Compact Settings")
     @JvmStatic val debug by BooleanSetting("Debug Messages",false,"").withDependency { advancedCat }
     @JvmStatic val cleanCutoff by NumberSetting("Clean Up Buffer Trigger",200,10,1000,10,"").withDependency { advancedCat }
-    @JvmStatic val purgeCutoff by NumberSetting("Purge Buffer Trigger",20,1,100,1,"").withDependency { advancedCat }
-    private val testAmt by NumberSetting("Test Exponent",0,0,10,1,"")
+    @JvmStatic val purgeCutoff by NumberSetting("Purge Buffer Trigger",40,2,200,1,"").withDependency { advancedCat }
+    private val testAmt by NumberSetting("Test Exponent",0,0,10,1,"").withDependency { advancedCat }
     private val test by ActionSetting("Perform Test",""){
         for(i in 1..Math.powExact(10,testAmt)){
             modMessage(i,zcon)
         }
-    }
+    }.withDependency { advancedCat }
     @JvmStatic fun logDebug(str:String,size:Int,newSize:Int){
         if(debug)modMessage("$str | $size -> $newSize",zcon)
     }

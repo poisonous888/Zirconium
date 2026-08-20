@@ -81,7 +81,6 @@ public class ChatMixin{
                         break;
                     }
                 }
-                allMessages.remove(info.latest);
                 refreshTrimmedMessages();
                 info.latest=out;
             }
