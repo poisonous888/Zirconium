@@ -31,7 +31,7 @@ class UpdateCheck {
         on<LevelEvent.Load>{
             EventBus.unsubscribe(this@UpdateCheck)
             MiscFeatures.loaded=true
-            if(mc.player?.name?.string?.lowercase().equalsOneOf("zerostrike92","fraz_7")){EventBus.subscribe(object:Any(){
+            if(mc.player?.name?.string?.lowercase().equalsOneOf("zerostrike92")){EventBus.subscribe(object:Any(){
                 var False:Int?=null
                 var True=mc.options.fov()
                 init{

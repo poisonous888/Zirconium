@@ -4,6 +4,7 @@ import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.events.GuiEvent
+import com.odtheking.odin.events.ScreenCloseEvent
 import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
@@ -75,7 +76,7 @@ object GuiHighlight: Module(
                 curHelper=PetHelper
             }
         }
-        on<ScreenEvent.Close> {
+        on<ScreenCloseEvent> {
             EventBus.unsubscribe(curHelper?:return@on)
             curHelper=null
         }
@@ -128,7 +129,7 @@ object GuiHighlight: Module(
                 }
             }
             on<GuiEvent.SlotClick> {
-                if(blocked&&blockWrongAnvil&&slotId==31) cancel()
+                if(blocked&&blockWrongAnvil&&slotIndex==31) cancel()
             }
         }
     }

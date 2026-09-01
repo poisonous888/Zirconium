@@ -8,3 +8,4 @@ accessible field net/minecraft/client/gui/components/ChatComponent chatScrollbar
 accessible method net/minecraft/client/gui/components/ChatComponent getScale ()D
 accessible method net/minecraft/client/gui/components/ChatComponent getLineHeight ()I
 accessible field net/minecraft/client/gui/components/ChatComponent allMessages Ljava/util/List;
+accessible method net/minecraft/client/gui/components/ChatComponent refreshTrimmedMessages ()V

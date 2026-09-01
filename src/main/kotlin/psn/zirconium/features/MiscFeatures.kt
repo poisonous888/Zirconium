@@ -45,7 +45,6 @@ object MiscFeatures : Module(
     @JvmStatic val customSkyColor by BooleanSetting("Custom Sky/Fog Color",false,"").withDependency { visualCat }
     @JvmStatic val skyColor by ColorSetting("Sky Color",Colors.MINECRAFT_AQUA,false,"").withDependency { visualCat&&customSkyColor }
     @JvmStatic val fullbright by BooleanSetting("Fullbright",false,"").withDependency { visualCat }
-    //@JvmStatic val brightness by NumberSetting("Brightness",1f,-1,10,1,"").withDependency { visualCat && fullbright }
     @JvmStatic val lightColor by ColorSetting("Light Color",Colors.WHITE,false,"").withDependency { visualCat&&fullbright }
 //    @JvmStatic val weather by SelectorSetting("Weather Type","Vanilla",listOf("Vanilla","Clear","Rain","Snow"),"").withDependency { visualCat }
 //    @JvmStatic val setWeatherStats by BooleanSetting("Set Weather Stats",false,"").withDependency { visualCat }

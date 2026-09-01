@@ -6,12 +6,11 @@ import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.*
 import com.odtheking.odin.config.ModuleConfig
-import com.odtheking.odin.events.ChatPacketEvent
+import com.odtheking.odin.events.ChatMessageEvent
 import com.odtheking.odin.events.LevelEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
-import com.odtheking.odin.utils.ChatManager.hideMessage
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.equalsOneOf
 import com.odtheking.odin.utils.modMessage
@@ -239,10 +238,10 @@ object ChatRules: AsyncSave, HasCommands, Module(
     }
     fun stripReg(s:String):String{return s.replace("/[#-.]|[[-^]|[?|{}]/g", "\\$&")}
     init{
-        on<ChatPacketEvent>{
+        on<ChatMessageEvent>{
             for((reg,hide,msg) in loadedManips){
                 if(reg.containsMatchIn(value)){
-                    if(hide)hideMessage()
+                    if(hide)cancel()
                     else{alert(msg?:"")}
                 }
             }

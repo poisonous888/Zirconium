@@ -25,7 +25,6 @@ public class LightMixin{
     @Shadow @Final private GameRenderer renderer;
     @Shadow @Final private Minecraft minecraft;
     @Unique private Vector3fc lightColor=new Vector3f(1,1,1);
-    //@Unique private Vector3fc darkColor=new Vector3f(0.03922f,0.03922f,0.03922f);
     
     @Inject(method="extract",at=@At(value="HEAD"), cancellable=true)
     public void extract(LightmapRenderState renderState, float partialTicks, CallbackInfo ci) {
@@ -46,33 +45,16 @@ public class LightMixin{
                 renderState.nightVisionEffectIntensity = 0;
                 renderState.bossOverlayWorldDarkening = renderer.getBossOverlayWorldDarkening(partialTicks);
                 
-                renderState.blockLightTint =lightColor;
-                renderState.skyLightColor =lightColor;
-                renderState.nightVisionColor =lightColor;
+                renderState.blockLightTint = lightColor;
+                renderState.skyLightColor = lightColor;
+                renderState.nightVisionColor = lightColor;
                 final var rgb=MiscFeatures.getLightColor();
-                renderState.ambientColor =new Vector3f(rgb.getRedFloat(),rgb.getGreenFloat(),rgb.getBlueFloat());
+                renderState.ambientColor=new Vector3f(rgb.getRedFloat(),rgb.getGreenFloat(),rgb.getBlueFloat());
+                //renderState.ambientColor = lightColor;
                 
                 profiler.pop();
                 this.needsUpdate = false;
             }
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    @Redirect(method="extract",at=@At(value="INVOKE", target="Ljava/lang/Math;max(FF)F"))
-//    private float blockBrightness(float a, float b){
-//        if(MiscFeatures.getFullbright()) return MiscFeatures.getBrightness();
-//        return Math.max(a,b);
-//    }
-//    @Inject(method="extract",at=@At(value="INVOKE", target="Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;getValue(Lnet/minecraft/world/attribute/EnvironmentAttribute;F)Ljava/lang/Object;",shift=At.Shift.AFTER))
-//    private void skyBrightness(LightmapRenderState renderState, float partialTicks, CallbackInfo ci){
-//        if(MiscFeatures.getFullbright())renderState.skyFactor=0;
-//    }
 }

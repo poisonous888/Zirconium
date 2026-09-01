@@ -27,7 +27,7 @@ object ZirconiumEntry : ClientModInitializer {
             //AutoComplete,
             HeldItemRender,
             //TeleportLine,
-            //MouseLock,
+            MouseLock,
             //DVD,
             Lag,
             HideArmor,

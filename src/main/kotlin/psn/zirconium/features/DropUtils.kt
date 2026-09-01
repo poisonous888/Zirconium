@@ -8,6 +8,7 @@ import com.odtheking.odin.clickgui.settings.impl.ListSetting
 import com.odtheking.odin.config.ModuleConfig
 import com.odtheking.odin.events.GuiEvent
 import com.odtheking.odin.events.InputEvent
+import com.odtheking.odin.events.ScreenCloseEvent
 import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
@@ -179,7 +180,7 @@ object DropUtils: AsyncSave, Module(
             noClickScreen=screen !is InventoryScreen
             if(noClickScreen) schedule(1,true) { doOpen() }
         }
-        on<ScreenEvent.Close>{
+        on<ScreenCloseEvent>{
             noClickScreen=false
             EventBus.unsubscribe(ProtectRender)
         }

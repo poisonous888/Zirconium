@@ -18,7 +18,7 @@ object Zoom: Module(
     private val zoomKey by KeybindSetting("Zoom Key",GLFW.GLFW_KEY_UNKNOWN)
     private val reset by BooleanSetting("Reset To Default After Use",true,"")
     private val defaultZoom by NumberSetting("Default Zoom",2.0,-5,5,1,"").withDependency { reset }
-    private val zoomMult by NumberSetting("Zoom Multiplier",1.0,0,3,0.1,"")
+    private val zoomMulti by NumberSetting("Zoom Multiplier",1.0,0,3,0.1,"")
     private val invertScroll by BooleanSetting("Invert Scroll",false,"")
     private val hideHud by BooleanSetting("Hide Hud",false,"")
     private val cinCam by BooleanSetting("Cinematic Camera",false,"")
@@ -26,7 +26,7 @@ object Zoom: Module(
     
     @JvmStatic var zooming=false
     @JvmStatic fun pollZoomKey(){
-        val test=enabled&&zoomKey.isDown()||always
+        val test=enabled&&mc.screen==null&&zoomKey.isDown()||always
         if(test&&!zooming){
             if(cinCam)mc.options.smoothCamera=true
             if(hideHud)mc.options.hideGui=true
@@ -40,11 +40,11 @@ object Zoom: Module(
         }
     }
     
-    var zoomLevel=1.0
+    var zoomLevel=defaultZoom
     @JvmStatic fun scroll(yoffset:Double){
         zoomLevel+=yoffset*if(invertScroll) -1 else 1
     }
     @JvmStatic fun getZoom():Float{
-        return 2.0.pow(zoomLevel*zoomMult).toFloat()
+        return 2.0.pow(zoomLevel*zoomMulti).toFloat()
     }
 }
