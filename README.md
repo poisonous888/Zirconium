@@ -25,17 +25,17 @@ https://modrinth.com/mod/no-chat-restrictions \
 
 <details><summary>Misc Features</summary>
 
-- update notif - sends message on first world load if your not on the most recent version\
+- update notif - sends message on first world load if your not on the most recent version
 
 - no loading screen (like 189 patcher)
 - no server packs - prevents server packs from being downloaded and applied
-- no required packs - allows you to move ANY pack in the resource pack menu (including the vanilla pack)\
+- no required packs - allows you to move ANY pack in the resource pack menu (including the vanilla pack)
 
-- no recipe book\
-- no potion effects - removes the potion effect hud in the top left and in your inventory\
+- no recipe book
+- no potion effects - removes the potion effect hud in the top left and in your inventory
 - no liquid fog - removes the fog effect from being submerged in liquid
 
-- close sign on enter - closes sign GUI's when you press the enter key (189 thing)\
+- close sign on enter - closes sign GUI's when you press the enter key (189 thing)
 
 - diagonal backwards walk - readds the ~45 degree rotation when walking backwards
 - custom cape physics - lets you change how the cape clamps its movement (and make it more goofy like 189)
@@ -54,7 +54,7 @@ https://modrinth.com/mod/no-chat-restrictions \
 
 <details><summary>Zoom</summary>
 
-- keybind to scroll zoom FOV (like optifine)\
+- keybind to scroll zoom FOV (like optifine)
 </details>
 
 <details><summary>Custom Commands</summary>
@@ -94,19 +94,19 @@ https://modrinth.com/mod/no-chat-restrictions \
 
 <details><summary>Hide Armor</summary>
 
-- hides specified pieces of player worn armor (like 189 odin)\
+- hides specified pieces of player worn armor (like 189 odin)
 </details>
 
 <details><summary>Garden</summary>
 
-- pest equipment swap alert\
+- pest equipment swap alert
 - pest cooldown hud
-- (future) pest tracer\
+- (future) pest tracer
 </details>
 
 <details><summary>Mouse Lock</summary>
 
-- prevents mouse movement from rotating player\
+- prevents mouse movement from rotating player
 </details>
 
 <details><summary>Fast Fuse</summary>
@@ -116,7 +116,7 @@ https://modrinth.com/mod/no-chat-restrictions \
 
 <details><summary>CPS Display</summary>
 
-- readds the CPS display from 189 odin (some1 requested)\
+- readds the CPS display from 189 odin (some1 requested)
 </details>
 
 <details><summary>Lag</summary>
