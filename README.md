@@ -13,7 +13,7 @@ https://modrinth.com/mod/no-telemetry \
 https://modrinth.com/mod/no-chat-restrictions \
 \
 <strong>feature list:</strong>\
-\
+
 <details><summary>Held Item Render</summary>
 
 - held item transform  - move held item (think odin animations)
