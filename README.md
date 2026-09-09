@@ -12,7 +12,7 @@ https://modrinth.com/mod/rrls \
 https://modrinth.com/mod/no-telemetry \
 https://modrinth.com/mod/no-chat-restrictions \
 \
-<strong>feature list:</strong>\
+<strong>feature list:</strong>
 
 <details><summary>Held Item Render</summary>
 
@@ -25,18 +25,18 @@ https://modrinth.com/mod/no-chat-restrictions \
 
 <details><summary>Misc Features</summary>
 
-- update notif - sends message on first world load if your not on the most recent version
-
+- update notif - sends message on first world load if your not on the most recent version\
+  //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 - no loading screen (like 189 patcher)
 - no server packs - prevents server packs from being downloaded and applied
-- no required packs - allows you to move ANY pack in the resource pack menu (including the vanilla pack)
-
+- no required packs - allows you to move ANY pack in the resource pack menu (including the vanilla pack)\
+  //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 - no recipe book
 - no potion effects - removes the potion effect hud in the top left and in your inventory
-- no liquid fog - removes the fog effect from being submerged in liquid
-
-- close sign on enter - closes sign GUI's when you press the enter key (189 thing)
-
+- no liquid fog - removes the fog effect from being submerged in liquid\
+  //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
+- close sign on enter - closes sign GUI's when you press the enter key (189 thing)\
+  //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 - diagonal backwards walk - readds the ~45 degree rotation when walking backwards
 - custom cape physics - lets you change how the cape clamps its movement (and make it more goofy like 189)
 - no sky effects - removes the sunrise gradients from the sky, making it a solid color
@@ -47,8 +47,8 @@ https://modrinth.com/mod/no-chat-restrictions \
 <details><summary>Drop Utils</summary>
 
 - drop protection - standard item protection
->>> settings for protecting: recombed, starred, museum donated, all
->>> bindable keys that mark items protected by skyblock ID and UUID
+  - settings for protecting: recombed, starred, museum donated, all
+  - bindable keys that mark items protected by skyblock ID and UUID
 - drop stack key
 </details>
 
