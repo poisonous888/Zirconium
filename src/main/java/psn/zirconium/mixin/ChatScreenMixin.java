@@ -43,7 +43,7 @@ public class ChatScreenMixin{
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
     //AI bc for some reason mc decided to make getting the hovered chat message for the style only
-    //dw i tested it
+    //TODO @#$% ai it knows nothing
     @Unique
     private GuiMessage getHoveredChatMessage(){
         var mc=Minecraft.getInstance();

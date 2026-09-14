@@ -33,12 +33,15 @@ object MiscFeatures : Module(
     
     val gameCat by DropdownSetting("Gameplay")
     @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"Closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }
+//    @JvmStatic val limitHudFps by BooleanSetting("Limit Hud FPS",false,"Exordium").withDependency { gameCat }
+//    @JvmStatic val hudFps by NumberSetting("Hud FPS",30,1,120,1,"").withDependency { gameCat&&limitHudFps }
 //    private val trimCommandOnFail by BooleanSetting("Trim commands on fail",false,"when a command fails, removes the last character and tries again until it succeeds or the command is empty")
 //    private val maxTrim by NumberSetting("Max Trim",1,1,10,1,"").withDependency { trimCommandOnFail }
 //    private val trimCmdDelay by NumberSetting("Trim Delay",5,0,20,1,"").withDependency { trimCommandOnFail }
 //    private val comFailReg=Regex("^Unknown command\\. Type \"/help\" for help\\. \\('([a-zA-Z0-9 ]+)'\\)$")
     
     val visualCat by DropdownSetting("Visual")
+    @JvmStatic val whiteCrosshair by BooleanSetting("White Crosshair",false,"removes the colored effect from the crosshair").withDependency { visualCat }
     @JvmStatic val diagonalWalk by BooleanSetting("Diagonal Backwards Walk",false,"1.8.9 backwards walking").withDependency { visualCat }
     @JvmStatic val customCapePhysics by BooleanSetting("Cape Physics",false,"1.8.9 adjacent cape physics").withDependency { visualCat }
     @JvmStatic val noSky by BooleanSetting("No Sky Effects",false,"").withDependency { visualCat }

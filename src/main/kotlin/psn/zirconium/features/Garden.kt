@@ -2,8 +2,8 @@ package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
-import com.odtheking.odin.events.ChatMessageEvent
 import com.odtheking.odin.events.LevelEvent
+import com.odtheking.odin.events.MessageEvent
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
@@ -105,8 +105,8 @@ object Garden : Module(
                 val tabListEntries=entries().mapNotNull{it.displayName?.string}.ifEmpty {return@onReceive}
                 processTabList(tabListEntries)
             }
-            on<ChatMessageEvent>{
-                if(pestRegex.containsMatchIn(value)){
+            on<MessageEvent>{
+                if(pestRegex.containsMatchIn(message)){
                     spawned=true
                     modMessage("spawned!")
                 }
