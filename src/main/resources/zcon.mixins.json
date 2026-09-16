@@ -21,7 +21,7 @@
         "FogCameraMixin",
         "FogColorMixin",
         "LightMixin",
-        "LoadingScreenMixin",
+        "MinecraftMixin",
         "MouseMixin",
         "OdinModuleManagerMixin",
         "PotionRenderGui",

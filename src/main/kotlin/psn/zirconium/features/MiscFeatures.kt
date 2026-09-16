@@ -41,7 +41,7 @@ object MiscFeatures : Module(
 //    private val comFailReg=Regex("^Unknown command\\. Type \"/help\" for help\\. \\('([a-zA-Z0-9 ]+)'\\)$")
     
     val visualCat by DropdownSetting("Visual")
-    @JvmStatic val whiteCrosshair by BooleanSetting("White Crosshair",false,"removes the colored effect from the crosshair").withDependency { visualCat }
+    //@JvmStatic val whiteCrosshair by BooleanSetting("White Crosshair",false,"removes the colored effect from the crosshair").withDependency { visualCat }
     @JvmStatic val diagonalWalk by BooleanSetting("Diagonal Backwards Walk",false,"1.8.9 backwards walking").withDependency { visualCat }
     @JvmStatic val customCapePhysics by BooleanSetting("Cape Physics",false,"1.8.9 adjacent cape physics").withDependency { visualCat }
     @JvmStatic val noSky by BooleanSetting("No Sky Effects",false,"").withDependency { visualCat }

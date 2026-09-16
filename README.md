@@ -65,10 +65,15 @@ https://modrinth.com/mod/no-chat-restrictions \
 
 <details><summary>Chat Utils</summary>
 
-- custom chat rules that can hide messages and/or send an alert with a title and sfx
-- look into /chatrule or just /rule for more info
-- preset chat rules for common messages - pickaxe ability, blocks in the way, kill combo, ability damage, item on cooldown
-- (future) chat copy, compact chat
+- copy chat key
+- include time - prefixes messages with the current time
+- dont clear chat - chat dosent reset when leaving a world
+- no chat limit
+- compact chat
+  - compact numbers - ignores number values when compacting, try cutting a tree in galatea with sweep details enabled
+- hide blank lines
+- change how seperators are handled
+
 </details>
 
 <details><summary>Chat Rules</summary>
@@ -76,7 +81,6 @@ https://modrinth.com/mod/no-chat-restrictions \
 - custom chat rules that can hide messages and/or send an alert with a title and sfx
 - look into /chatrule or just /rule for more info
 - preset chat rules for common messages - pickaxe ability, blocks in the way, kill combo, ability damage, item on cooldown
-- (future) chat copy, compact chat
 </details>
 
 <details><summary>Static Waypoints</summary>

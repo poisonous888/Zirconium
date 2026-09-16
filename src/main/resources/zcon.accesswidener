@@ -2,10 +2,14 @@ accessWidener v2 official
 
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
 accessible method net/minecraft/client/gui/screens/inventory/AbstractContainerScreen slotClicked (Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V
-# accessible field net/minecraft/client/MouseHandler mouseGrabbed Z
 accessible field net/minecraft/client/gui/components/ChatComponent trimmedMessages Ljava/util/List;
 accessible field net/minecraft/client/gui/components/ChatComponent chatScrollbarPos I
 accessible method net/minecraft/client/gui/components/ChatComponent getScale ()D
 accessible method net/minecraft/client/gui/components/ChatComponent getLineHeight ()I
 accessible field net/minecraft/client/gui/components/ChatComponent allMessages Ljava/util/List;
 accessible method net/minecraft/client/gui/components/ChatComponent refreshTrimmedMessages ()V
+accessible method net/minecraft/world/entity/LivingEntity getCurrentSwingDuration ()I
+accessible method net/minecraft/client/renderer/ItemInHandRenderer renderPlayerArm (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFLnet/minecraft/world/entity/HumanoidArm;)V
+accessible method net/minecraft/client/renderer/ItemInHandRenderer renderTwoHandedMap (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFF)V
+accessible field net/minecraft/client/renderer/ItemInHandRenderer itemModelResolver Lnet/minecraft/client/renderer/item/ItemModelResolver;
+accessible method net/minecraft/client/renderer/ItemInHandRenderer applyBrushTransform (Lcom/mojang/blaze3d/vertex/PoseStack;FLnet/minecraft/world/entity/HumanoidArm;Lnet/minecraft/world/entity/player/Player;)V
