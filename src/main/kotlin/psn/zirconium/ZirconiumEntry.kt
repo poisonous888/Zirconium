@@ -40,6 +40,7 @@ object ZirconiumEntry : ClientModInitializer {
             //ExplosiveMute,
             Zoom,
             FastFuse,
+            CryptAlert,
         )
         val commands=listOf(
             rctaCommand,
