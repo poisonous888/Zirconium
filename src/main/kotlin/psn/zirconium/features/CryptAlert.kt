@@ -6,6 +6,7 @@ import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.render.textDim
+import com.odtheking.odin.utils.skyblock.dungeon.DungeonUtils
 import psn.zirconium.ZirconiumEntry
 import psn.zirconium.zcon
 
@@ -15,6 +16,7 @@ object CryptAlert : Module(
     category=ZirconiumEntry.ZCON
 ) {
     private val hud by HUD("Hud",""){
+        example->if(!example||!DungeonUtils.inDungeons)return@HUD 0 to 0
         textDim("Crypts: $total",0,0)
     }
     var total=0
@@ -23,9 +25,10 @@ object CryptAlert : Module(
             total=0
         }
     }
-    fun add(i:Int){
+    
+    @JvmStatic fun add(i:Int) {
         total+=i
-        if(total>=75&&enabled){
+        if(total>=75&&enabled) {
             alert("75 CRYPTS!!!")
             modMessage("75 Crypts In This Dungeon",zcon)
         }
