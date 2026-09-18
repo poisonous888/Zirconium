@@ -61,7 +61,7 @@ object ZirconiumEntry : ClientModInitializer {
         }
         EventBus.subscribe(UpdateCheck())
     }
-    @JvmStatic val ZCON = Category.custom("Zirconium")
+    @JvmStatic val ZCON = Category.custom("Zirconium") //TODO rename
     @JvmStatic var connection: Connection?=null
 }
 fun modMessageJava(msg:String){
