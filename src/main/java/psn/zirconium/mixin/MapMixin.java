@@ -15,6 +15,6 @@ public class MapMixin{
     @Shadow public RoomData getData(){return null;}
     @Inject(method="<init>*", at=@At("HEAD"))
     private void appendCrypt(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir){
-        CryptAlert.add(getData().getCrypts());
+        CryptAlert.addCrypts(getData().getCrypts());
     }
 }

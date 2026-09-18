@@ -26,8 +26,8 @@ object CryptAlert : Module(
         }
     }
     
-    @JvmStatic fun add(i:Int) {
-        total+=i
+    @JvmStatic fun addCrypts(i:Int?) {
+        total+=i?:0
         if(total>=75&&enabled) {
             alert("75 CRYPTS!!!")
             modMessage("75 Crypts In This Dungeon",zcon)
