@@ -8,8 +8,10 @@ accessible method net/minecraft/client/gui/components/ChatComponent getScale ()D
 accessible method net/minecraft/client/gui/components/ChatComponent getLineHeight ()I
 accessible field net/minecraft/client/gui/components/ChatComponent allMessages Ljava/util/List;
 accessible method net/minecraft/client/gui/components/ChatComponent refreshTrimmedMessages ()V
-accessible method net/minecraft/world/entity/LivingEntity getCurrentSwingDuration ()I
-accessible method net/minecraft/client/renderer/ItemInHandRenderer renderPlayerArm (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFLnet/minecraft/world/entity/HumanoidArm;)V
-accessible method net/minecraft/client/renderer/ItemInHandRenderer renderTwoHandedMap (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFF)V
-accessible field net/minecraft/client/renderer/ItemInHandRenderer itemModelResolver Lnet/minecraft/client/renderer/item/ItemModelResolver;
-accessible method net/minecraft/client/renderer/ItemInHandRenderer applyBrushTransform (Lcom/mojang/blaze3d/vertex/PoseStack;FLnet/minecraft/world/entity/HumanoidArm;Lnet/minecraft/world/entity/player/Player;)V
+accessible method net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer renderPlayerArm (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFLnet/minecraft/world/entity/HumanoidArm;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;)V
+accessible method net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer renderTwoHandedMap (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFFLnet/minecraft/client/renderer/state/level/PlayerRenderState;Lnet/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState;)V
+accessible method net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer applyBrushTransform (Lcom/mojang/blaze3d/vertex/PoseStack;FLnet/minecraft/world/entity/HumanoidArm;F)V
+accessible field net/minecraft/world/entity/LivingEntity swingState Lnet/minecraft/world/entity/LivingEntity$SwingState;
+accessible method net/minecraft/world/entity/LivingEntity getModifiedSwingDuration (Lnet/minecraft/world/item/component/SwingAnimation;)I
+
+

@@ -12,16 +12,16 @@ object ChatUtils: Module(
     description = "Copy Chat, Compact Chat, Etc",
     category=ZirconiumEntry.ZCON
 ) {
-    @JvmStatic val copyChat by BooleanSetting("Copy Chat",false,"Copy hovered chat message to clipboard when you click it")
-    @JvmStatic val msgOnCopy by BooleanSetting("Message On Copy",false,"").withDependency { copyChat }
-    @JvmStatic val copyModifier by SelectorSetting("Copy Chat Modifier",Modifier.CONTROL,"").withDependency { copyChat }
-    @JvmStatic val formatRegex=Regex("§.")
-    enum class Modifier{
-        CONTROL,
-        SHIFT,
-        ALT,
-        NONE
-    }
+//    @JvmStatic val copyChat by BooleanSetting("Copy Chat",false,"Copy hovered chat message to clipboard when you click it")
+//    @JvmStatic val msgOnCopy by BooleanSetting("Message On Copy",false,"").withDependency { copyChat }
+//    @JvmStatic val copyModifier by SelectorSetting("Copy Chat Modifier",Modifier.CONTROL,"").withDependency { copyChat }
+//    @JvmStatic val formatRegex=Regex("§.")
+//    enum class Modifier{
+//        CONTROL,
+//        SHIFT,
+//        ALT,
+//        NONE
+//    }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     

@@ -43,7 +43,7 @@ public class LightMixin{
                 renderState.brightness = 0;
                 renderState.darknessEffectScale = 0;
                 renderState.nightVisionEffectIntensity = 0;
-                renderState.bossOverlayWorldDarkening = renderer.getBossOverlayWorldDarkening(partialTicks);
+                renderState.bossOverlayWorldDarkening = renderer.bossOverlayWorldDarkening(partialTicks);
                 
                 renderState.blockLightTint = lightColor;
                 renderState.skyLightColor = lightColor;
