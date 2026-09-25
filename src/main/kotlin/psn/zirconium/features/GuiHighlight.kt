@@ -19,7 +19,7 @@ import psn.zirconium.ZirconiumEntry
 object GuiHighlight: Module(
     name="GUI Highlight",
     description="Highlights Certain GUI Slots",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val highlightPet by BooleanSetting(
         "Highlight Active Pet",

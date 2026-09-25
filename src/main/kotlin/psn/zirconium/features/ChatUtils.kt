@@ -10,7 +10,7 @@ import psn.zirconium.zcon
 object ChatUtils: Module(
     name = "Chat Utils",
     description = "Copy Chat, Compact Chat, Etc",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
 //    @JvmStatic val copyChat by BooleanSetting("Copy Chat",false,"Copy hovered chat message to clipboard when you click it")
 //    @JvmStatic val msgOnCopy by BooleanSetting("Message On Copy",false,"").withDependency { copyChat }

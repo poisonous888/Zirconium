@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 object PacketChecker : Module(
     name = "Packet Checker",
     description = "Lists Packets",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     data class PacketStore(
         val name: String,

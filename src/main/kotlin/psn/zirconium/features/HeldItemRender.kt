@@ -11,7 +11,7 @@ import psn.zirconium.ZirconiumEntry
 object HeldItemRender : Module(
     name = "Held Item Render",
     description = "changes the held item position",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ){
     private val positioncat by DropdownSetting("Item Position",desc="")
     val itemX by NumberSetting("x",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }

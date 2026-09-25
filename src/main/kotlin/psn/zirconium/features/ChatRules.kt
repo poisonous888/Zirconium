@@ -23,7 +23,7 @@ import psn.zirconium.zcon
 object ChatRules: AsyncSave, HasCommands, Module(
     name = "Chat Rules",
     description = "Chat Alerts and Hider",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val addName by StringSetting("Name", "", desc="",placeholder="")
     private val addTrigger by StringSetting("Regex","",desc="",placeholder="")

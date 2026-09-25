@@ -1,4 +1,4 @@
-//package psn.zirconium.features
+package psn.zirconium.features
 //
 //import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 //import com.odtheking.odin.clickgui.settings.impl.StringSetting

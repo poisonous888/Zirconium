@@ -15,7 +15,7 @@ import psn.zirconium.ZirconiumEntry
 object MiscFeatures : Module(
     name = "Misc Features",
     description = "Random small stuff that dosent need a dedicated module",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     val updateNotif by BooleanSetting("Update Notification",true,"")
     

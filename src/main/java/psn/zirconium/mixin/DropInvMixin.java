@@ -11,7 +11,7 @@ import psn.zirconium.features.DropUtils;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class DropInvMixin{
-    @Inject(method = "slotClicked",at = @At("HEAD"), cancellable = true)
+    @Inject(method ="slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V",at = @At("HEAD"), cancellable = true)
     private void cancelDropInv(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci){
         if(DropUtils.doDropContainer(slot,slotId,containerInput)){
             ci.cancel();

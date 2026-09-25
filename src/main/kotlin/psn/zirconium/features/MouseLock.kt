@@ -6,7 +6,7 @@ import psn.zirconium.ZirconiumEntry
 object MouseLock : Module(
     name = "Mouse Lock",
     description = "Prevents turning with the mouse, use the keybind setting inside to enable/disable",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     @JvmStatic fun enabled():Boolean{return enabled}
 }

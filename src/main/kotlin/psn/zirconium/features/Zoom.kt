@@ -13,7 +13,7 @@ import kotlin.math.pow
 object Zoom: Module(
     name = "Zoom",
     description = "Copy Chat, Compact Chat, Etc",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val zoomKey by KeybindSetting("Zoom Key",InputConstants.UNKNOWN.value)
     private val reset by BooleanSetting("Reset To Default After Use",true,"")
@@ -42,7 +42,7 @@ object Zoom: Module(
     
     var zoomLevel=defaultZoom
     @JvmStatic fun scroll(yoffset:Double){
-        zoomLevel+=yoffset*if(invertScroll) -1 else 1
+        zoomLevel+=yoffset*if(invertScroll) 1 else -1
     }
     @JvmStatic fun getZoom():Float{
         return 2.0.pow(zoomLevel*zoomMulti).toFloat()

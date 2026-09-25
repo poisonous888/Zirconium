@@ -30,7 +30,7 @@ import psn.zirconium.zcon
 object DropUtils: AsyncSave, Module(
     name = "Drop Utils",
     description = "protect items and drop stack modifier",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val protections by DropdownSetting("Protections",desc="")
     private val doSBID by BooleanSetting("Protect Skyblock ID",true,"").withDependency { protections }

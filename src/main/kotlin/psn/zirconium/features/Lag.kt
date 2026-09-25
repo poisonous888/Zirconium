@@ -9,7 +9,7 @@ import java.lang.System.gc
 object Lag : Module(
     name = "Lag",
     description = "decreases memory usage",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ){
     init{
         on<TickEvent.End> {

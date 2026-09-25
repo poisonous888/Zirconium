@@ -23,7 +23,7 @@ import psn.zirconium.zcon
 object Garden : Module(
     name = "Garden",
     description = "various garden stuff",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val minTimeChange by NumberSetting("Min Time Change",30,0..120,1,"")
     private val timerRegex = Regex("(Cooldown: )([0-9]+m)? ?([0-9]+s)?")

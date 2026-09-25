@@ -18,7 +18,7 @@ import psn.zirconium.zcon
 object FastFuse : Module(
     name = "Fast Fuse",
     description = "Attribute Fusion Keybinds",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     val confirm by KeybindSetting("Confirm",InputConstants.UNKNOWN.value)
     val repeat by KeybindSetting("Repeat",InputConstants.UNKNOWN.value)

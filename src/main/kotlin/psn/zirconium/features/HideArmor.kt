@@ -7,7 +7,7 @@ import psn.zirconium.ZirconiumEntry
 
 object HideArmor:Module(
     name="Hide Armor",description="Hides certain armor pieces",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val skull by BooleanSetting("Skull",false,"")
     private val helm by BooleanSetting("Helmet",false,"")

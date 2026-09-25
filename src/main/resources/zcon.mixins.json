@@ -3,7 +3,7 @@
     "minVersion":"0.8",
     "package":"psn.zirconium.mixin",
     "compatibilityLevel":"JAVA_25",
-    "mixins":[],
+    "mixins":["R_LivingEntitySwingMixin"],
     "injectors":{
         "defaultRequire":1
     },
@@ -21,7 +21,6 @@
         "FogColorMixin",
         "GuiMixin",
         "LightMixin",
-        "R_SwingMixin",
         "MouseMixin",
         "OdinModuleManagerMixin",
         "PotionRenderGui",
@@ -29,6 +28,7 @@
         "R_AvatarRendererMixin",
         "R_LivingEntityMixin",
         "R_RenderItemMixin",
+        "R_SwingMixin",
         "RecipeBookMixin",
         "ResourcePackMixin",
         "SkyboxMixin",

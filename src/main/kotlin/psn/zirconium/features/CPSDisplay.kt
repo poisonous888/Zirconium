@@ -14,7 +14,7 @@ import psn.zirconium.ZirconiumEntry
 object CPSDisplay : Module(
     name = "CPS Display",
     description = "This is a test module's description.",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val button by SelectorSetting("Button",buttonEnum.Both, desc="The button to display the CPS of.")
     enum class buttonEnum{
@@ -31,13 +31,13 @@ object CPSDisplay : Module(
         val value = if (button == buttonEnum.Both) "${leftClicks.size}" else "${rightClicks.size}"
         
         if (mouseText) {
-            if (button == buttonEnum.RIGHT) {
+            if (button == buttonEnum.Both) {
                 text("LMB", 1, 1, textColor)
                 text(leftClicks.size.toString(), 7, 15, textColor)
                 text("RMB", 35, 1, textColor)
                 text(rightClicks.size.toString(), 42, 15, textColor)
             } else {
-                val text = if (button == buttonEnum.Both) "LMB" else "RMB"
+                val text = if (button == buttonEnum.LEFT) "LMB" else "RMB"
                 text(text, 1, 1, textColor)
                 text(value, 7, 15, textColor)
             }

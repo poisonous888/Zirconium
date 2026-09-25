@@ -1,24 +1,18 @@
 package psn.zirconium.mixin;
 
-import com.mojang.authlib.GameProfile;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import psn.zirconium.features.DropUtils;
 
-@Mixin(LocalPlayer.class)
-public abstract class DropHotbarMixin extends AbstractClientPlayer{
-    public DropHotbarMixin(ClientLevel clientLevel, GameProfile gameProfile) {
-        super(clientLevel, gameProfile);
-    }
-
-    @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
-    private void cancelDropHotbar(boolean all, CallbackInfoReturnable<Boolean> ci) {
-        if(DropUtils.doDropHotbar(getInventory().getSelectedItem())){
+@Mixin(MultiPlayerGameMode.class)
+public abstract class DropHotbarMixin{
+    @Inject(method = "dropItem", at = @At("HEAD"), cancellable = true)
+    private void cancelDropHotbar(LocalPlayer player, boolean all, CallbackInfo ci) {
+        if(DropUtils.doDropHotbar(player.getInventory().getSelectedItem())){
             ci.cancel();
         }
     }

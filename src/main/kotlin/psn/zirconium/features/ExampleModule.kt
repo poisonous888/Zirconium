@@ -14,7 +14,7 @@ import psn.zirconium.ZirconiumEntry
 object ExampleModule : Module(
     name = "Test Module",
     description = "This is a test module's description.",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     // These are visible settings that will render under this module in the GUI
     private val boolean by BooleanSetting("Example Boolean Setting", true, desc = "Description.")

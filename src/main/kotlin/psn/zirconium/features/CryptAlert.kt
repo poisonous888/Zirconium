@@ -11,7 +11,7 @@ import psn.zirconium.ZirconiumEntry
 object CryptAlert : Module(
     name = "Crypt Alert",
     description = "warns you when there are 75+ crypts in the current dungeon",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     private val hud by HUD("Hud",""){example->
         if(!example&&!DungeonUtils.inClear){
