@@ -28,9 +28,9 @@ object CustomCommands: AsyncSave, HasCommands, Module(
     description = "Command Aliases and Command Keybinds",
     category=ZirconiumEntry.ZCON
 ) {
-    private val aliasCmd by StringSetting("Alias","",desc="")
+    private val aliasCmd by StringSetting("Alias","",desc="",placeholder="")
     private val keybindKey by KeybindSetting("Key", GLFW.GLFW_KEY_UNKNOWN)
-    private val exec by StringSetting("Runs","",desc="")
+    private val exec by StringSetting("Runs","",desc="",placeholder="")
     private val aliasAdd by ActionSetting("Add Alias",""){
         addAlias(aliasCmd,exec)
     }

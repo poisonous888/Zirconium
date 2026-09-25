@@ -26,7 +26,7 @@ object Zoom: Module(
     
     @JvmStatic var zooming=false
     @JvmStatic fun pollZoomKey(){
-        val test=enabled&&mc.screen==null&&zoomKey.isDown()||always
+        val test=enabled&&mc.gui==null&&zoomKey.isDown()||always
         if(test&&!zooming){
             if(cinCam)mc.options.smoothCamera=true
             if(hideHud)mc.options.hideGui=true

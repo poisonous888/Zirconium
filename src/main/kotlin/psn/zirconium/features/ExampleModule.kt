@@ -20,13 +20,13 @@ object ExampleModule : Module(
     private val boolean by BooleanSetting("Example Boolean Setting", true, desc = "Description.")
     private val number by NumberSetting("Example Number Setting", 50, 0, 100, desc = "Description.")
     private val select by SelectorSetting("Example Select", "Option 1", listOf("Option 1", "Option 2", "Option 3"), desc = "Description.")
-    private val string by StringSetting("Example String Setting", "Hello, Odin!", desc = "Description.")
+    private val string by StringSetting("Example String Setting", "Hello, Odin!", desc = "Description.",placeholder="")
     private val action by ActionSetting("Example Action Setting", "Description") {
         modMessage("You clicked the action setting!")
     }
     private val color by ColorSetting("Example Color Setting", Colors.MINECRAFT_RED, true, desc = "Description.")
 
-    private val dropdown by DropdownSetting("Example Dropdown Setting")
+    private val dropdown by DropdownSetting("Example Dropdown Setting",false,"")
     private val keybind by KeybindSetting("Example Keybind Setting", GLFW.GLFW_KEY_UNKNOWN, desc = "Description.").withDependency { dropdown }
 
     // These are not visible settings, but are used to store data under the module

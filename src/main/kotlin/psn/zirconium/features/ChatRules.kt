@@ -26,11 +26,11 @@ object ChatRules: AsyncSave, HasCommands, Module(
     description = "Chat Alerts and Hider",
     category=ZirconiumEntry.ZCON
 ) {
-    private val addName by StringSetting("Name", "", desc="")
-    private val addTrigger by StringSetting("Regex","",desc="")
+    private val addName by StringSetting("Name", "", desc="",placeholder="")
+    private val addTrigger by StringSetting("Regex","",desc="",placeholder="")
     private val addType by SelectorSetting("Type", "",listOf("Contains","Matches","Regex"),"")
     private val addHide by BooleanSetting("Hide",false,"")
-    private val addMessage by StringSetting("Alert (blank for none)","",desc="")
+    private val addMessage by StringSetting("Alert (blank for none)","",desc="",placeholder="")
     private val ruleAdd by ActionSetting("Add Rule", "") {
         addRule(addName,addTrigger,"$addType",addMessage,addHide)
     }

@@ -13,7 +13,7 @@ object HeldItemRender : Module(
     description = "changes the held item position",
     category=ZirconiumEntry.ZCON
 ){
-    private val positioncat by DropdownSetting("Item Position")
+    private val positioncat by DropdownSetting("Item Position",desc="")
     val itemX by NumberSetting("x",0.0,-0.5,0.5,0.05,"").withDependency { positioncat }
     val itemY by NumberSetting("y",0.0,-0.5,0.5,0.05,"").withDependency { positioncat }
     val itemZ by NumberSetting("z",0.0,-0.5,0.5,0.05,"").withDependency { positioncat }
@@ -61,7 +61,7 @@ object HeldItemRender : Module(
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
-    private val swingcat by DropdownSetting("Swing")
+    private val swingcat by DropdownSetting("Swing",desc="")
     private val swingWhileUsing by BooleanSetting("Swing While Using",false,"left click while drawing a bow, drinking a potion, etc").withDependency {swingcat}
 
     private val customSwingDuration by BooleanSetting("Custom Swing Duration",false,"").withDependency { swingcat }
@@ -79,7 +79,7 @@ object HeldItemRender : Module(
 
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
-    private val presets by DropdownSetting("Presets")
+    private val presets by DropdownSetting("Presets",desc="")
     private val vanilla by ActionSetting("Vanilla",""){
         rsTrans.invoke()
         rsRot.invoke()
