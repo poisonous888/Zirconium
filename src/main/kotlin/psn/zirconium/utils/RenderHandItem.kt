@@ -5,7 +5,7 @@ import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.model.effects.SpearAnimations
 import net.minecraft.client.player.LocalPlayer
-import net.minecraft.client.renderer.ItemInHandRenderer
+import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer
 import net.minecraft.client.renderer.SubmitNodeCollector
 import net.minecraft.client.renderer.item.ItemStackRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -39,7 +39,7 @@ import kotlin.math.pow
 
 object RenderHandItem{
     val mc=Minecraft.getInstance()
-    val fallback:ItemInHandRenderer = mc.gameRenderer.itemInHandRenderer
+    val fallback:FirstPersonHandsAndItemsRenderer = mc.gameRenderer.firstPersonHandsAndItemsRenderer
     
     //inverseArmHeight | 0f = up, 1f = down
     const val HEIGHT=0f

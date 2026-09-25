@@ -1,5 +1,6 @@
 package psn.zirconium.features
 
+import com.mojang.blaze3d.platform.InputConstants
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.on
@@ -11,7 +12,6 @@ import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.playSoundAtPlayer
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.sounds.SoundEvents
-import org.lwjgl.glfw.GLFW
 import psn.zirconium.ZirconiumEntry
 import psn.zirconium.zcon
 
@@ -20,8 +20,8 @@ object FastFuse : Module(
     description = "Attribute Fusion Keybinds",
     category=ZirconiumEntry.ZCON
 ) {
-    val confirm by KeybindSetting("Confirm",GLFW.GLFW_KEY_UNKNOWN)
-    val repeat by KeybindSetting("Repeat",GLFW.GLFW_KEY_UNKNOWN)
+    val confirm by KeybindSetting("Confirm",InputConstants.UNKNOWN.value)
+    val repeat by KeybindSetting("Repeat",InputConstants.UNKNOWN.value)
     val fusionRegex = Regex("(\\([0-9]+/[0-9]+\\) )?Fusion Box")
     var timeout=false
     

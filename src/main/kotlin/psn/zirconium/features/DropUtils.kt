@@ -1,5 +1,6 @@
 package psn.zirconium.features
 
+import com.mojang.blaze3d.platform.InputConstants
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
@@ -22,7 +23,6 @@ import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import org.lwjgl.glfw.GLFW
 import psn.zirconium.AsyncSave
 import psn.zirconium.ZirconiumEntry
 import psn.zirconium.zcon
@@ -32,7 +32,7 @@ object DropUtils: AsyncSave, Module(
     description = "protect items and drop stack modifier",
     category=ZirconiumEntry.ZCON
 ) {
-    private val protections by DropdownSetting("Protections")
+    private val protections by DropdownSetting("Protections",desc="")
     private val doSBID by BooleanSetting("Protect Skyblock ID",true,"").withDependency { protections }
     private val doUUID by BooleanSetting("Protect UUID",true,"").withDependency { protections }
     private val doRecombed by BooleanSetting("Protect Recombed",true,"").withDependency { protections }
@@ -45,9 +45,9 @@ object DropUtils: AsyncSave, Module(
     private val disableDungeons by BooleanSetting("Disable in Dungeons",true,"dungeons use drop as use ultimate so its not needed")
     private val highlightProtected by BooleanSetting("Highlight Protected",false,"tooltips are too hard rn")
 
-    private val dropStackKey by KeybindSetting("Drop Stack Key", GLFW.GLFW_KEY_UNKNOWN, desc = "Set to unknown to disable,\nCtrl+drop still works,\nCurrently only works outside container/inventory")
-    private val sbidKey by KeybindSetting("Skyblock ID Key", GLFW.GLFW_KEY_UNKNOWN).withDependency { doSBID }
-    private val uuidKey by KeybindSetting("UUID Key",GLFW.GLFW_KEY_UNKNOWN).withDependency { doUUID }
+    private val dropStackKey by KeybindSetting("Drop Stack Key", InputConstants.UNKNOWN.value, desc = "Set to unknown to disable,\nCtrl+drop still works,\nCurrently only works outside container/inventory")
+    private val sbidKey by KeybindSetting("Skyblock ID Key", InputConstants.UNKNOWN.value).withDependency { doSBID }
+    private val uuidKey by KeybindSetting("UUID Key",InputConstants.UNKNOWN.value).withDependency { doUUID }
 
     private val uidList by ListSetting("uuidList",mutableListOf(""))
     private val sbidList by ListSetting("sbidList",mutableListOf(""))
@@ -102,7 +102,7 @@ object DropUtils: AsyncSave, Module(
             if(clickType==ContainerInput.QUICK_CRAFT){
                 return false
             }
-            return dropWithMsg((mc.screen as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
+            return dropWithMsg((mc.gui.screen() as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
         }
         if(noClickScreen||clickType==ContainerInput.THROW||slotId<0)return dropWithMsg(slot.item)
         return false
@@ -150,7 +150,7 @@ object DropUtils: AsyncSave, Module(
         config.save()
     }
     fun getHoveredInv():ItemStack?{
-        val item=(mc.screen as? AbstractContainerScreen<*>)?.hoveredSlot?.item?:return null
+        val item=(mc.gui.screen() as? AbstractContainerScreen<*>)?.hoveredSlot?.item?:return null
         if(item.item==Items.AIR)return null
         return item
     }
@@ -163,7 +163,7 @@ object DropUtils: AsyncSave, Module(
                 sbidKey.value -> sbidNew(getHoveredInv() ?: return@on)
                 uuidKey.value -> uuidNew(getHoveredInv() ?: return@on)
                 dropStackKey.value -> {
-                    val screenAccess = mc.screen as? AbstractContainerScreen<*> ?: return@on
+                    val screenAccess = mc.gui.screen() as? AbstractContainerScreen<*> ?: return@on
                     val slot = screenAccess.hoveredSlot ?: return@on
                     if (dropWithMsg(slot.item)) return@on
                     screenAccess.slotClicked(slot, slot.index, 1, ContainerInput.THROW)
@@ -173,7 +173,7 @@ object DropUtils: AsyncSave, Module(
         on<InputEvent>{
             if(key!=dropStackKey)return@on
             if(doDropHotbar(getHeldHotbar()?:return@on))return@on
-            mc.player?.drop(true)
+            mc.gameMode?.dropItem(mc.player?:return@on,true)
         }
         on<ScreenEvent.Open>{
             if(highlightProtected) EventBus.subscribe(ProtectRender)
@@ -186,7 +186,7 @@ object DropUtils: AsyncSave, Module(
         }
     }
     fun doOpen(){
-        val sc=mc.screen as? AbstractContainerScreen<*> ?:return
+        val sc=mc.gui.screen() as? AbstractContainerScreen<*> ?:return
         if(sc.title.string=="Salvage Items"){
             noClickScreen=true
             return

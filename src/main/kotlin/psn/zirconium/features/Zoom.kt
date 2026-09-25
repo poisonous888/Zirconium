@@ -1,12 +1,12 @@
 package psn.zirconium.features
 
+import com.mojang.blaze3d.platform.InputConstants
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting.Companion.isDown
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.features.Module
-import org.lwjgl.glfw.GLFW
 import psn.zirconium.ZirconiumEntry
 import kotlin.math.pow
 
@@ -15,10 +15,10 @@ object Zoom: Module(
     description = "Copy Chat, Compact Chat, Etc",
     category=ZirconiumEntry.ZCON
 ) {
-    private val zoomKey by KeybindSetting("Zoom Key",GLFW.GLFW_KEY_UNKNOWN)
+    private val zoomKey by KeybindSetting("Zoom Key",InputConstants.UNKNOWN.value)
     private val reset by BooleanSetting("Reset To Default After Use",true,"")
-    private val defaultZoom by NumberSetting("Default Zoom",2.0,-5,5,1,"").withDependency { reset }
-    private val zoomMulti by NumberSetting("Zoom Multiplier",1.0,0,3,0.1,"")
+    private val defaultZoom by NumberSetting("Default Zoom",2.0,-5..5,1,"").withDependency { reset }
+    private val zoomMulti by NumberSetting("Zoom Multiplier",1.0,0..3,0.1,"")
     private val invertScroll by BooleanSetting("Invert Scroll",false,"")
     private val hideHud by BooleanSetting("Hide Hud",false,"")
     private val cinCam by BooleanSetting("Cinematic Camera",false,"")
@@ -26,15 +26,15 @@ object Zoom: Module(
     
     @JvmStatic var zooming=false
     @JvmStatic fun pollZoomKey(){
-        val test=enabled&&mc.gui==null&&zoomKey.isDown()||always
+        val test=enabled&&mc.gui.screen()==null&&zoomKey.isDown()||always
         if(test&&!zooming){
             if(cinCam)mc.options.smoothCamera=true
-            if(hideHud)mc.options.hideGui=true
+            if(hideHud&&!mc.gui.hud.isHidden)mc.gui.hud.toggle()
             zooming=true
         }
         if(zooming&&!test){
             if(cinCam)mc.options.smoothCamera=false
-            if(hideHud)mc.options.hideGui=false
+            if(hideHud&&mc.gui.hud.isHidden)mc.gui.hud.toggle()
             if(reset)zoomLevel=defaultZoom
             zooming=false
         }

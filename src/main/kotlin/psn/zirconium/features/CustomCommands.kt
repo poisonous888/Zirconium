@@ -17,7 +17,6 @@ import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.sendCommand
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import org.lwjgl.glfw.GLFW
 import psn.zirconium.AsyncSave
 import psn.zirconium.HasCommands
 import psn.zirconium.ZirconiumEntry
@@ -29,7 +28,7 @@ object CustomCommands: AsyncSave, HasCommands, Module(
     category=ZirconiumEntry.ZCON
 ) {
     private val aliasCmd by StringSetting("Alias","",desc="",placeholder="")
-    private val keybindKey by KeybindSetting("Key", GLFW.GLFW_KEY_UNKNOWN)
+    private val keybindKey by KeybindSetting("Key",InputConstants.UNKNOWN.value)
     private val exec by StringSetting("Runs","",desc="",placeholder="")
     private val aliasAdd by ActionSetting("Add Alias",""){
         addAlias(aliasCmd,exec)

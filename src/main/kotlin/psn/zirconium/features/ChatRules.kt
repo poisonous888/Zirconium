@@ -12,7 +12,6 @@ import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.alert
-import com.odtheking.odin.utils.equalsOneOf
 import com.odtheking.odin.utils.modMessage
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.network.protocol.configuration.ClientboundResetChatPacket
@@ -28,16 +27,30 @@ object ChatRules: AsyncSave, HasCommands, Module(
 ) {
     private val addName by StringSetting("Name", "", desc="",placeholder="")
     private val addTrigger by StringSetting("Regex","",desc="",placeholder="")
-    private val addType by SelectorSetting("Type", "",listOf("Contains","Matches","Regex"),"")
+    private val addType by SelectorSetting("Type",RegType.CONTAINS,"")
     private val addHide by BooleanSetting("Hide",false,"")
     private val addMessage by StringSetting("Alert (blank for none)","",desc="",placeholder="")
     private val ruleAdd by ActionSetting("Add Rule", "") {
-        addRule(addName,addTrigger,"$addType",addMessage,addHide)
+        addRule(addName,addTrigger,addType,addMessage,addHide)
+    }
+    enum class RegType{
+        CONTAINS,
+        MATCHES,
+        REGEX,
+        ERR
+    }
+    fun parseType(str:String):RegType{
+        return when(str.lowercase()){
+            "contains"-> RegType.CONTAINS
+            "matches"->RegType.MATCHES
+            "regex"->RegType.REGEX
+            else->RegType.ERR
+        }
     }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
-    private val presetChatRules by DropdownSetting("Preset Rules")
+    private val presetChatRules by DropdownSetting("Preset Rules",desc="")
     private val pickAlert by BooleanSetting("Pickaxe ability alert",false,"").withDependency { presetChatRules }
     private val pickAlertEnd by BooleanSetting("Pickaxe ability done alert",false,"").withDependency { presetChatRules && pickAlert }
     private val pickReg=Regex("(Mining Speed Boost|Pickobulus|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) is now available!")
@@ -57,12 +70,12 @@ object ChatRules: AsyncSave, HasCommands, Module(
     data class Rule(
         var name:String,
         var trigger:String,
-        var type:String,
+        var type:RegType,
         var message:String,
         var hide:Boolean,
         var enabled:Boolean=true,
     )
-    fun addRule(name:String, trigger:String, type: String, message:String, hide: Boolean){
+    fun addRule(name:String, trigger:String, type: RegType, message:String, hide: Boolean){
         if(name==""){
             modMessage("§cName cannot be blank",zcon)
             return
@@ -151,7 +164,7 @@ object ChatRules: AsyncSave, HasCommands, Module(
         saveLoad()
         unabled()
     }
-    fun rebindRule(name:String, newType: String, newTrigger:String){
+    fun rebindRule(name:String, newType: RegType, newTrigger:String){
         var found:Rule?=null
         for(alrt in savedRules){
             if(alrt.name==name){
@@ -222,9 +235,9 @@ object ChatRules: AsyncSave, HasCommands, Module(
         for(rule in savedRules){
             if(!rule.enabled)continue
             val reg = when(rule.type){
-                "regex" -> rule.trigger
-                "contains" -> stripReg(rule.trigger)
-                "matches" -> "^${stripReg(rule.trigger)}$"
+                RegType.REGEX-> rule.trigger
+                RegType.CONTAINS -> stripReg(rule.trigger)
+                RegType.MATCHES -> "^${stripReg(rule.trigger)}$"
                 else -> {modMessage("Invalid regex type ${rule.type} with string ${rule.trigger}");""}
             }
             loadedManips.add(Manip(Regex(reg),rule.hide,rule.message.ifBlank{null}))
@@ -278,14 +291,15 @@ object ChatRules: AsyncSave, HasCommands, Module(
                 }
                 param("trigger")
                 runs{name:String,type:String,regexType: String,trigger:GreedyString ->
-                    if(!regexType.lowercase().equalsOneOf("contains","matches","regex")){
+                    val rType=parseType(regexType)
+                    if(rType==RegType.ERR){
                         modMessage("§cInvalid regex type $regexType",zcon)
                         return@runs
                     }
                     when(type.lowercase()){
-                        "alert" -> addRule(name,trigger.string,regexType.lowercase(),name,false)
-                        "hider" -> addRule(name,trigger.string,regexType.lowercase(),"",true)
-                        "blank" -> addRule(name,trigger.string,regexType.lowercase(),"",false)
+                        "alert" -> addRule(name,trigger.string,rType,name,false)
+                        "hider" -> addRule(name,trigger.string,rType,"",true)
+                        "blank" -> addRule(name,trigger.string,rType,"",false)
                         else -> {
                             modMessage("§cInvalid type $type",zcon)
                             modMessage("","")
@@ -303,11 +317,12 @@ object ChatRules: AsyncSave, HasCommands, Module(
                 }
                 param("trigger")
                 runs{name:String,regexType:String,trigger:GreedyString ->
-                    if(!regexType.lowercase().equalsOneOf("contains","matches","regex")){
+                    val type=parseType(regexType)
+                    if(type==RegType.ERR){
                         modMessage("§cInvalid regex type $regexType",zcon)
                         return@runs
                     }
-                    rebindRule(name,regexType,trigger.string)
+                    rebindRule(name,type,trigger.string)
                 }
             }
             literal("message").executable{

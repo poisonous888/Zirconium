@@ -14,10 +14,14 @@ object ChatUtils: Module(
 ) {
     @JvmStatic val copyChat by BooleanSetting("Copy Chat",false,"Copy hovered chat message to clipboard when you click it")
     @JvmStatic val msgOnCopy by BooleanSetting("Message On Copy",false,"").withDependency { copyChat }
-    @JvmStatic val copyModifier by SelectorSetting("Copy Chat Modifier", "Control",
-        listOf("Control","Shift","Alt","None"),""
-    ).withDependency { copyChat }
+    @JvmStatic val copyModifier by SelectorSetting("Copy Chat Modifier",Modifier.CONTROL,"").withDependency { copyChat }
     @JvmStatic val formatRegex=Regex("§.")
+    enum class Modifier{
+        CONTROL,
+        SHIFT,
+        ALT,
+        NONE
+    }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
@@ -32,14 +36,18 @@ object ChatUtils: Module(
     @JvmStatic val compactNumbers by BooleanSetting("Compact Numbers",false,"")
     @JvmStatic val numberRegex=Regex("[0-9.,]+")
     @JvmStatic val hideBlank by BooleanSetting("Hide Blank",false,"")
-    @JvmStatic val separators by SelectorSetting("Separator Mode", "All",
-        listOf("Hide","Compact","All"),""
+    @JvmStatic val separators by SelectorSetting("Separator Mode",Seperator.ALL,""
     )
-    private val advancedCat by DropdownSetting("Advanced Compact Settings")
+    enum class Seperator{
+        HIDE,
+        COMPACT,
+        ALL
+    }
+    private val advancedCat by DropdownSetting("Advanced Compact Settings",desc="")
     @JvmStatic val debug by BooleanSetting("Debug Messages",false,"").withDependency { advancedCat }
-    @JvmStatic val cleanCutoff by NumberSetting("Clean Up Buffer Trigger",200,10,1000,10,"").withDependency { advancedCat }
-    @JvmStatic val purgeCutoff by NumberSetting("Purge Buffer Trigger",40,2,200,1,"").withDependency { advancedCat }
-    private val testAmt by NumberSetting("Test Exponent",0,0,10,1,"").withDependency { advancedCat }
+    @JvmStatic val cleanCutoff by NumberSetting("Clean Up Buffer Trigger",200,10..1000,10,"").withDependency { advancedCat }
+    @JvmStatic val purgeCutoff by NumberSetting("Purge Buffer Trigger",40,2..200,1,"").withDependency { advancedCat }
+    private val testAmt by NumberSetting("Test Exponent",0,0..10,1,"").withDependency { advancedCat }
     private val test by ActionSetting("Perform Test",""){
         for(i in 1..Math.powExact(10,testAmt)){
             modMessage(i,zcon)

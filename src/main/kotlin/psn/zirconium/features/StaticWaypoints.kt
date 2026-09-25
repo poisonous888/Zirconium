@@ -6,7 +6,7 @@ import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
 import com.odtheking.odin.config.ModuleConfig
-import com.odtheking.odin.events.RenderEvent
+import com.odtheking.odin.events.RenderExtractEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.Color
@@ -42,7 +42,7 @@ object StaticWaypoints: AsyncSave, HasCommands, Module(
         )
     )
     init {
-        on<RenderEvent.Extract> {
+        on<RenderExtractEvent> {
             storage[LocationUtils.currentArea]?.removeAll {
                 drawCustomBeacon(it.name, it.blockPos, it.color)
                 false

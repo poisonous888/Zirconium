@@ -25,7 +25,7 @@ object Garden : Module(
     description = "various garden stuff",
     category=ZirconiumEntry.ZCON
 ) {
-    private val minTimeChange by NumberSetting("Min Time Change",30,0,120,1,"")
+    private val minTimeChange by NumberSetting("Min Time Change",30,0..120,1,"")
     private val timerRegex = Regex("(Cooldown: )([0-9]+m)? ?([0-9]+s)?")
     private val pestRegex = Regex("^YUCK! [0-9] \uE07F Pest have spawned in Plot - [0-9]+!$")
     private val pestHud by HUD("Pest HUD","") {

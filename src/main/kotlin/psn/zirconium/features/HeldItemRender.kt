@@ -14,39 +14,39 @@ object HeldItemRender : Module(
     category=ZirconiumEntry.ZCON
 ){
     private val positioncat by DropdownSetting("Item Position",desc="")
-    val itemX by NumberSetting("x",0.0,-0.5,0.5,0.05,"").withDependency { positioncat }
-    val itemY by NumberSetting("y",0.0,-0.5,0.5,0.05,"").withDependency { positioncat }
-    val itemZ by NumberSetting("z",0.0,-0.5,0.5,0.05,"").withDependency { positioncat }
+    val itemX by NumberSetting("x",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
+    val itemY by NumberSetting("y",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
+    val itemZ by NumberSetting("z",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
     private val rsTrans by ActionSetting("Reset Translation",""){
         settings["x"]?.reset()
         settings["y"]?.reset()
         settings["z"]?.reset()
     }.withDependency { positioncat }
-    val itemXrot by NumberSetting("x rot",0,-180,180,1,"").withDependency { positioncat }
-    val itemYrot by NumberSetting("y rot",0,-180,180,1,"").withDependency { positioncat }
-    val itemZrot by NumberSetting("z rot",0,-180,180,1,"").withDependency { positioncat }
+    val itemXrot by NumberSetting("x rot",0,-180..180,1,"").withDependency { positioncat }
+    val itemYrot by NumberSetting("y rot",0,-180..180,1,"").withDependency { positioncat }
+    val itemZrot by NumberSetting("z rot",0,-180..180,1,"").withDependency { positioncat }
     private val rsRot by ActionSetting("Reset Rotation",""){
         settings["x rot"]?.reset()
         settings["y rot"]?.reset()
         settings["z rot"]?.reset()
     }.withDependency { positioncat }
-    val itemWidth by NumberSetting("width",1f,-1,5,0.05,"").withDependency { positioncat }
-    val itemHeight by NumberSetting("height",1f,-1,5,0.05,"").withDependency { positioncat }
-    val itemLength by NumberSetting("length",1f,-1,5,0.05,"").withDependency { positioncat }
+    val itemWidth by NumberSetting("width",1f,-1..5,0.05,"").withDependency { positioncat }
+    val itemHeight by NumberSetting("height",1f,-1..5,0.05,"").withDependency { positioncat }
+    val itemLength by NumberSetting("length",1f,-1..5,0.05,"").withDependency { positioncat }
     private val rsScale by ActionSetting("Reset Scale",""){
         settings["width"]?.reset()
         settings["height"]?.reset()
         settings["length"]?.reset()
     }.withDependency { positioncat }
-    val swingXrot by NumberSetting("Swing X Rot",-80f,-160,0,16,"").withDependency { positioncat }
-    val swingYrot by NumberSetting("Swing Y Rot",-20f,-40,0,4,"").withDependency { positioncat }
-    val swingZrot by NumberSetting("Swing Z Rot",-20f,-40,0,4,"").withDependency { positioncat }
-    val swingOrot by NumberSetting("Swing Offset Rot",-45f,-90,0,5,"").withDependency { positioncat }
+    val swingXrot by NumberSetting("Swing X Rot",-80f,-160..0,16,"").withDependency { positioncat }
+    val swingYrot by NumberSetting("Swing Y Rot",-20f,-40..0,4,"").withDependency { positioncat }
+    val swingZrot by NumberSetting("Swing Z Rot",-20f,-40..0,4,"").withDependency { positioncat }
+    val swingOrot by NumberSetting("Swing Offset Rot",-45f,-90..0,5,"").withDependency { positioncat }
     
     val translateSwing by BooleanSetting("Translate Swing",true,"").withDependency { positioncat }
-    val swingx by NumberSetting("Swing X",1f,0,4,0.25,"").withDependency { positioncat && translateSwing }
-    val swingy by NumberSetting("Swing Y",1f,0,4,0.25,"").withDependency { positioncat && translateSwing }
-    val swingz by NumberSetting("Swing Z",1f,0,4,0.25,"").withDependency { positioncat && translateSwing }
+    val swingx by NumberSetting("Swing X",1f,0..4,0.25,"").withDependency { positioncat && translateSwing }
+    val swingy by NumberSetting("Swing Y",1f,0..4,0.25,"").withDependency { positioncat && translateSwing }
+    val swingz by NumberSetting("Swing Z",1f,0..4,0.25,"").withDependency { positioncat && translateSwing }
     
     private val rsSwing by ActionSetting("Reset Swing Transform",""){
         settings["Swing X Rot"]?.reset()
@@ -66,7 +66,7 @@ object HeldItemRender : Module(
 
     private val customSwingDuration by BooleanSetting("Custom Swing Duration",false,"").withDependency { swingcat }
     private val ignoreHaste by BooleanSetting("Ignore Haste",false,"").withDependency { swingcat && customSwingDuration }
-    @JvmStatic val swingDuration by NumberSetting("Swing Duration",7,2,20,1,"").withDependency {swingcat&&customSwingDuration}
+    @JvmStatic val swingDuration by NumberSetting("Swing Duration",7,2..20,1,"").withDependency {swingcat&&customSwingDuration}
     @JvmStatic fun doUsing():Boolean {
         return enabled&&swingWhileUsing
     }

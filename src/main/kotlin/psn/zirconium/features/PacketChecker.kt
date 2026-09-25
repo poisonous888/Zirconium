@@ -5,7 +5,7 @@ import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
-import com.odtheking.odin.events.RenderEvent
+import com.odtheking.odin.events.RenderExtractEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.events.core.onSend
@@ -48,7 +48,7 @@ object PacketChecker : Module(
             //if(onlyBetweenLevels&&!logging)return@onSend
             OdinMod.logger.warn(toString())
         }
-        on<RenderEvent.Extract>{
+        on<RenderExtractEvent>{
             val curTime=System.currentTimeMillis()
             packetBuffer.removeIf {
                 (if(it.incoming)serverClear else clientClear)&&it.timestamp<curTime
@@ -62,10 +62,10 @@ object PacketChecker : Module(
     val serverCol by ColorSetting("Serverbound Color",Colors.MINECRAFT_DARK_GREEN,true,"")
     
     val clientClear by BooleanSetting("Clientbound Clear packets",true,"")
-    val clientLen by NumberSetting("Clientbound Keep duration",1000,100,5000,100,"")
+    val clientLen by NumberSetting("Clientbound Keep duration",1000,100..5000,100,"")
     
     val serverClear by BooleanSetting("Serverbound Clear packets",true,"")
-    val serverLen by NumberSetting("Serverbound Keep duration",1000,100,5000,100,"")
+    val serverLen by NumberSetting("Serverbound Keep duration",1000,100..5000,100,"")
     
 //    val doDelay by BooleanSetting("Delay Adding Packets",false,"")
 //    val addDelay by NumberSetting("Add Delay",0,0,20,1,"")
@@ -101,7 +101,7 @@ object PacketChecker : Module(
         text("Recent Packets", 0, curLine,Colors.MINECRAFT_DARK_PURPLE)
         80 to curLine
     }
-    val maxOnScreen by NumberSetting("Max Packets Shown",80,1,100,1,"")
+    val maxOnScreen by NumberSetting("Max Packets Shown",80,1..100,1,"")
     val logPackets by BooleanSetting("Log Packets",false,"")
     val reset by ActionSetting("Reset",""){
         packetBuffer.clear()

@@ -41,7 +41,7 @@ public class ChatMixin{
         if(ChatUtils.getHideBlank()&&blank)ci.cancel();
         if(blank)return;
         checkSeparator(str);
-        if(ChatUtils.getSeparators()==0&&separator) ci.cancel();
+        if(ChatUtils.getSeparators()==ChatUtils.Seperator.HIDE&&separator) ci.cancel();
     }
     @Unique private void checkSeparator(String str){
         final var first=str.charAt(0);
@@ -62,7 +62,7 @@ public class ChatMixin{
         if(ChatUtils.getTimestamp())message.append("§8["+LocalDateTime.now().format(format)+"]§r ");
         message.append(content);
         //separator mode "all" does not get compacted
-        if(ChatUtils.getCompact()&&!(ChatUtils.getSeparators()==2&&separator)){
+        if(ChatUtils.getCompact()&&!(ChatUtils.getSeparators()== ChatUtils.Seperator.ALL&&separator)){
             if(ChatUtils.getDebug())IO.println(lookup.size());
             //get the lookup key for the message
             //with compact numbers on, additionally replace every number with a tab character
