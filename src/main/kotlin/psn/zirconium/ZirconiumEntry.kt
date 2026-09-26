@@ -41,6 +41,7 @@ object ZirconiumEntry : ClientModInitializer {
             Zoom,
             FastFuse,
             CryptAlert,
+            RiftHelper,
         )
         val commands=listOf(
             rctaCommand,
