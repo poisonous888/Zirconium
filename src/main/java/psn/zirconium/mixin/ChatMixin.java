@@ -1,6 +1,7 @@
 package psn.zirconium.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.client.multiplayer.chat.GuiMessageSource;
@@ -24,7 +25,6 @@ import java.util.List;
 @Mixin(value=ChatComponent.class,priority=69420)
 public class ChatMixin{
     @Shadow @Final public List<GuiMessage> allMessages;
-    @Shadow private void refreshTrimmedMessages(){}
     
     @Unique private final DateTimeFormatter format=DateTimeFormatter.ofPattern("HH:mm:ss");
     @Unique @Final private HashMap<String,Info> lookup=new HashMap<>();
@@ -41,7 +41,7 @@ public class ChatMixin{
         if(ChatUtils.getHideBlank()&&blank)ci.cancel();
         if(blank)return;
         checkSeparator(str);
-        if(ChatUtils.getSeparators()==ChatUtils.Seperator.HIDE&&separator) ci.cancel();
+        if(separator&&ChatUtils.getSeparators()==ChatUtils.Seperator.HIDE) ci.cancel();
     }
     @Unique private void checkSeparator(String str){
         final var first=str.charAt(0);
@@ -81,7 +81,7 @@ public class ChatMixin{
                         break;
                     }
                 }
-                refreshTrimmedMessages();
+                Minecraft.getInstance().gui.hud.getChat().refreshTrimmedMessages();
                 info.latest=out;
             }
             //message has not been seen before
