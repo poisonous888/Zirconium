@@ -10,9 +10,11 @@ import com.odtheking.odin.utils.clickSlot
 import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.playSoundAtPlayer
+import com.odtheking.odin.utils.skyblock.Island
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.sounds.SoundEvents
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.utils.LocationCheck.dynamicLoad
 import psn.zirconium.zcon
 
 object FastFuse : Module(
@@ -26,6 +28,7 @@ object FastFuse : Module(
     var timeout=false
     
     init {
+        dynamicLoad(Island.MoongladeMarsh)
         on<ScreenEvent.KeyPress>{
             var type=0
             val title=screen.title.string

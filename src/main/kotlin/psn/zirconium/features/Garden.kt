@@ -2,9 +2,7 @@ package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.NumberSetting
-import com.odtheking.odin.events.LevelEvent
 import com.odtheking.odin.events.MessageEvent
-import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
@@ -18,6 +16,7 @@ import com.odtheking.odin.utils.skyblock.LocationUtils
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import net.minecraft.sounds.SoundEvents
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.utils.LocationCheck.dynamicLoad
 import psn.zirconium.zcon
 
 object Garden : Module(
@@ -29,10 +28,10 @@ object Garden : Module(
     private val timerRegex = Regex("(Cooldown: )([0-9]+m)? ?([0-9]+s)?")
     private val pestRegex = Regex("^YUCK! [0-9] \uE07F Pest have spawned in Plot - [0-9]+!$")
     private val pestHud by HUD("Pest HUD","") {
-        editing -> when{
-        LocationUtils.isCurrentArea(Island.Garden)||editing->textDim(curString,0,0)
-            else -> 0 to 0
-        }
+        example ->
+        if(example) textDim("3m 24s Until Spawn",0,0)
+        else if(LocationUtils.isCurrentArea(Island.Garden))textDim(curString,0,0)
+        else 0 to 0
     }
     private val test by ActionSetting("Test Alert",""){
         announce()
@@ -99,32 +98,16 @@ object Garden : Module(
             }
         }
     }
-    private object GardenHelper {
-        init {
-            onReceive<ClientboundPlayerInfoUpdatePacket> {
-                val tabListEntries=entries().mapNotNull{it.displayName?.string}.ifEmpty {return@onReceive}
-                processTabList(tabListEntries)
-            }
-            on<MessageEvent>{
-                if(pestRegex.containsMatchIn(message)){
-                    spawned=true
-                    modMessage("spawned!")
-                }
-            }
-//            onReceive<ClientboundAddEntityPacket> {
-//                modMessage("x:$x y:$y z:$z - $type")
-//            }
-        }
-    }
     init {
-        on<LevelEvent.Load> {
-            EventBus.unsubscribe(GardenHelper)
-            schedule(100,true){
-                if(LocationUtils.isCurrentArea(Island.Garden)) {
-                    EventBus.subscribe(GardenHelper)
-                    modMessage("loaded garden module",zcon)
-                    return@schedule
-                }
+        dynamicLoad(Island.Garden)
+        onReceive<ClientboundPlayerInfoUpdatePacket> {
+            val tabListEntries=entries().mapNotNull{it.displayName?.string}.ifEmpty {return@onReceive}
+            processTabList(tabListEntries)
+        }
+        on<MessageEvent>{
+            if(pestRegex.containsMatchIn(message)){
+                spawned=true
+                modMessage("spawned!")
             }
         }
     }

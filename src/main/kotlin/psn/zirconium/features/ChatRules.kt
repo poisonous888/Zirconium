@@ -2,7 +2,6 @@ package psn.zirconium.features
 
 import com.github.stivais.commodore.Commodore
 import com.github.stivais.commodore.utils.GreedyString
-import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.*
 import com.odtheking.odin.config.ModuleConfig
@@ -13,14 +12,13 @@ import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.modMessage
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.network.protocol.configuration.ClientboundResetChatPacket
 import psn.zirconium.AsyncSave
-import psn.zirconium.HasCommands
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.utils.onCommand
 import psn.zirconium.zcon
 
-object ChatRules: AsyncSave, HasCommands, Module(
+object ChatRules: AsyncSave, Module(
     name = "Chat Rules",
     description = "Chat Alerts and Hider",
     category=ZirconiumEntry.zconCat
@@ -251,6 +249,7 @@ object ChatRules: AsyncSave, HasCommands, Module(
     }
     fun stripReg(s:String):String{return s.replace("/[#-.]|[[-^]|[?|{}]/g", "\\$&")}
     init{
+        onCommand{command}
         on<MessageEvent.Chat>{
             for((reg,hide,msg) in loadedManips){
                 if(reg.containsMatchIn(message)){
@@ -267,123 +266,122 @@ object ChatRules: AsyncSave, HasCommands, Module(
     
     private val config=ModuleConfig("ChatRules.json")
     override fun getConfig():ModuleConfig{ return config }
-    override fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>){
-        Commodore("chatrule","rule"){
+    
+    val command = Commodore("chatrule","rule"){
+        runs{
+            modMessage("Chat Utils: Chat Rule",zcon)
+            modMessage(" | /rule add <name> <alert|hider|blank> <contains|matches|regex> <trigger> : Creates a new chat rule for the specified regex","")
+            modMessage(" | /rule message <name> <new message> : Changes the alert message for the specified chat rule, leave blank to remove message","")
+            modMessage(" | /rule hide <name> <true|false> : Changes weather the message is hidden","")
+            modMessage(" | /rule regex <name> <contains|matches|regex> <new trigger> : Changes the trigger regex of the specified chat rule","")
+            modMessage(" | /rule rename <name> <new name> : Changes the trigger regex of the specified chat rule","")
+            modMessage(" | /rule toggle <name> <true|false (optional)> : Enables or disables a chat rule","")
+            modMessage(" | /rule list : Lists all chat rules","")
+            modMessage(" | /rule remove <name> : Removes the specified chat rule","")
+            modMessage(" | /rule clear : Removes all chat rules","")
+        }
+        literal("add").executable{
+            param("name")
+            param("type").suggests{
+                listOf("alert","hider","blank")
+            }
+            param("regexType").suggests{
+                listOf("contains","matches","regex")
+            }
+            param("trigger")
+            runs{name:String,type:String,regexType: String,trigger:GreedyString ->
+                val rType=parseType(regexType)
+                if(rType==RegType.ERR){
+                    modMessage("§cInvalid regex type $regexType",zcon)
+                    return@runs
+                }
+                when(type.lowercase()){
+                    "alert" -> addRule(name,trigger.string,rType,name,false)
+                    "hider" -> addRule(name,trigger.string,rType,"",true)
+                    "blank" -> addRule(name,trigger.string,rType,"",false)
+                    else -> {
+                        modMessage("§cInvalid type $type",zcon)
+                        modMessage("","")
+                        return@runs
+                    }
+                }
+            }
+        }
+        literal("regex").executable{
+            param("name").suggests {
+                savedRules.map { i -> i.name }
+            }
+            param("regexType").suggests{
+                listOf("contains","matches","regex")
+            }
+            param("trigger")
+            runs{name:String,regexType:String,trigger:GreedyString ->
+                val type=parseType(regexType)
+                if(type==RegType.ERR){
+                    modMessage("§cInvalid regex type $regexType",zcon)
+                    return@runs
+                }
+                rebindRule(name,type,trigger.string)
+            }
+        }
+        literal("message").executable{
+            param("name").suggests {
+                savedRules.map { i -> i.name }
+            }
+            param("newMessage")
+            runs{name:String,newMessage:GreedyString ->
+                remessageRule(name,newMessage.string)
+            }
+        }
+        literal("rename").executable{
+            param("name").suggests {
+                savedRules.map { i -> i.name }
+            }
+            param("newName")
+            runs{name:String,newName:String ->
+                renameRule(name,newName)
+            }
+        }
+        literal("hide").executable{
+            param("name").suggests {
+                savedRules.map { i -> i.name }
+            }
+            param("hide").suggests{
+                listOf("true","false")
+            }
+            runs{name:String,hide:Boolean ->
+                rehideRule(name,hide)
+            }
+        }
+        literal("toggle").executable{
+            param("name").suggests {
+                savedRules.map { i -> i.name }
+            }
+            param("state").suggests{
+                listOf("true","false")
+            }
+            runs{name:String,state:Boolean? ->
+                toggleRule(name,state)
+            }
+        }
+        literal("list").executable{
             runs{
-                modMessage("Chat Utils: Chat Rule",zcon)
-                modMessage(" | /rule add <name> <alert|hider|blank> <contains|matches|regex> <trigger> : Creates a new chat rule for the specified regex","")
-                modMessage(" | /rule message <name> <new message> : Changes the alert message for the specified chat rule, leave blank to remove message","")
-                modMessage(" | /rule hide <name> <true|false> : Changes weather the message is hidden","")
-                modMessage(" | /rule regex <name> <contains|matches|regex> <new trigger> : Changes the trigger regex of the specified chat rule","")
-                modMessage(" | /rule rename <name> <new name> : Changes the trigger regex of the specified chat rule","")
-                modMessage(" | /rule toggle <name> <true|false (optional)> : Enables or disables a chat rule","")
-                modMessage(" | /rule list : Lists all chat rules","")
-                modMessage(" | /rule remove <name> : Removes the specified chat rule","")
-                modMessage(" | /rule clear : Removes all chat rules","")
+                printRules()
             }
-            literal("add").executable{
-                param("name")
-                param("type").suggests{
-                    listOf("alert","hider","blank")
-                }
-                param("regexType").suggests{
-                    listOf("contains","matches","regex")
-                }
-                param("trigger")
-                runs{name:String,type:String,regexType: String,trigger:GreedyString ->
-                    val rType=parseType(regexType)
-                    if(rType==RegType.ERR){
-                        modMessage("§cInvalid regex type $regexType",zcon)
-                        return@runs
-                    }
-                    when(type.lowercase()){
-                        "alert" -> addRule(name,trigger.string,rType,name,false)
-                        "hider" -> addRule(name,trigger.string,rType,"",true)
-                        "blank" -> addRule(name,trigger.string,rType,"",false)
-                        else -> {
-                            modMessage("§cInvalid type $type",zcon)
-                            modMessage("","")
-                            return@runs
-                        }
-                    }
-                }
+        }
+        literal("remove").executable{
+            param("name").suggests {
+                savedRules.map { i -> i.name }
             }
-            literal("regex").executable{
-                param("name").suggests {
-                    savedRules.map { i -> i.name }
-                }
-                param("regexType").suggests{
-                    listOf("contains","matches","regex")
-                }
-                param("trigger")
-                runs{name:String,regexType:String,trigger:GreedyString ->
-                    val type=parseType(regexType)
-                    if(type==RegType.ERR){
-                        modMessage("§cInvalid regex type $regexType",zcon)
-                        return@runs
-                    }
-                    rebindRule(name,type,trigger.string)
-                }
+            runs{name:String ->
+                removeRule(name)
             }
-            literal("message").executable{
-                param("name").suggests {
-                    savedRules.map { i -> i.name }
-                }
-                param("newMessage")
-                runs{name:String,newMessage:GreedyString ->
-                    remessageRule(name,newMessage.string)
-                }
+        }
+        literal("clear").executable{
+            runs{
+                clearRules()
             }
-            literal("rename").executable{
-                param("name").suggests {
-                    savedRules.map { i -> i.name }
-                }
-                param("newName")
-                runs{name:String,newName:String ->
-                    renameRule(name,newName)
-                }
-            }
-            literal("hide").executable{
-                param("name").suggests {
-                    savedRules.map { i -> i.name }
-                }
-                param("hide").suggests{
-                    listOf("true","false")
-                }
-                runs{name:String,hide:Boolean ->
-                    rehideRule(name,hide)
-                }
-            }
-            literal("toggle").executable{
-                param("name").suggests {
-                    savedRules.map { i -> i.name }
-                }
-                param("state").suggests{
-                    listOf("true","false")
-                }
-                runs{name:String,state:Boolean? ->
-                    toggleRule(name,state)
-                }
-            }
-            literal("list").executable{
-                runs{
-                    printRules()
-                }
-            }
-            literal("remove").executable{
-                param("name").suggests {
-                    savedRules.map { i -> i.name }
-                }
-                runs{name:String ->
-                    removeRule(name)
-                }
-            }
-            literal("clear").executable{
-                runs{
-                    clearRules()
-                }
-            }
-        }.register(dispatcher)
+        }
     }
     fun unabled(){
         if(!enabled)modMessage("§cChat Utils Module is disabled, custom chat rules will not function but can be modified","")

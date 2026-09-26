@@ -25,6 +25,7 @@ import kotlin.random.Random
 
 class UpdateCheck {
     init {
+        CommandCheck()
         on<ScreenEvent.Open>{
             MiscFeatures.loaded=true
         }

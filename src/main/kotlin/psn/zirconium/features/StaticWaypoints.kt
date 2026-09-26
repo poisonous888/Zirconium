@@ -1,7 +1,6 @@
 package psn.zirconium.features
 
 import com.github.stivais.commodore.Commodore
-import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
@@ -15,16 +14,15 @@ import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.render.drawCustomBeacon
 import com.odtheking.odin.utils.skyblock.Island
 import com.odtheking.odin.utils.skyblock.LocationUtils
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.util.Mth
 import psn.zirconium.AsyncSave
-import psn.zirconium.HasCommands
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.utils.onCommand
 import java.util.Locale.getDefault
 
-object StaticWaypoints: AsyncSave, HasCommands, Module(
+object StaticWaypoints: AsyncSave, Module(
     name = "Static Waypoints",
     description = "static island based waypoints",
     category=ZirconiumEntry.zconCat
@@ -42,6 +40,7 @@ object StaticWaypoints: AsyncSave, HasCommands, Module(
         )
     )
     init {
+        onCommand { command }
         on<RenderExtractEvent> {
             storage[LocationUtils.currentArea]?.removeAll {
                 drawCustomBeacon(it.name, it.blockPos, it.color)
@@ -99,85 +98,82 @@ object StaticWaypoints: AsyncSave, HasCommands, Module(
     fun listAll(){
         storage.keys.forEach{ list(it) }
     }
-    
-    override fun buildCommands(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
-        Commodore("staticwaypoints","sw"){
-            runs { modMessage("Static Waypoints") }
-            literal("add").executable{
-                param("name")
-                runs{
-                    name: String -> addWaypoint(name)
-                }
+    val command=Commodore("staticwaypoints","sw"){
+        runs { modMessage("Static Waypoints") }
+        literal("add").executable{
+            param("name")
+            runs{
+                name: String -> addWaypoint(name)
             }
-            literal("add").executable{
-                param("name")
-                param("x")
-                param("y")
-                param("z")
-                runs{
-                        name: String, x: Int,y: Int, z: Int -> addWaypoint(name,x,y,z)
-                }
+        }
+        literal("add").executable{
+            param("name")
+            param("x")
+            param("y")
+            param("z")
+            runs{
+                    name: String, x: Int,y: Int, z: Int -> addWaypoint(name,x,y,z)
             }
-            literal("add").executable{
-                param("name")
-                param("color"){
-                    parser{
+        }
+        literal("add").executable{
+            param("name")
+            param("color"){
+                parser{
+                    string: String ->
+                    colorStringMap[string.lowercase(getDefault())]
+                }
+                suggests { colorStringMap.keys }
+            }
+            runs{
+                name: String -> addWaypoint(name)
+            }
+        }
+        literal("add").executable{
+            param("name")
+            param("x")
+            param("y")
+            param("z")
+            param("color"){
+                parser{
                         string: String ->
-                        colorStringMap[string.lowercase(getDefault())]
-                    }
-                    suggests { colorStringMap.keys }
+                    colorStringMap[string.lowercase(getDefault())]
                 }
+                suggests { colorStringMap.keys }
+            }
+            runs{
+                    name: String, x: Int,y: Int, z: Int, color: Color ->
+                addWaypoint(name,x,y,z,color)
+            }
+        }
+        literal("remove").executable{
+            param("name")
+            runs{
+                    name: String ->
+                removeWaypoint(name)
+            }
+        }
+        literal("clear"){
+            literal("island").executable {
                 runs{
-                    name: String -> addWaypoint(name)
+                    clearIsland()
                 }
             }
-            literal("add").executable{
-                param("name")
-                param("x")
-                param("y")
-                param("z")
-                param("color"){
-                    parser{
-                            string: String ->
-                        colorStringMap[string.lowercase(getDefault())]
-                    }
-                    suggests { colorStringMap.keys }
-                }
+            literal("all").executable {
                 runs{
-                        name: String, x: Int,y: Int, z: Int, color: Color ->
-                    addWaypoint(name,x,y,z,color)
+                    clearAll()
                 }
             }
-            literal("remove").executable{
-                param("name")
-                runs{
-                        name: String ->
-                    removeWaypoint(name)
-                }
+        }
+        literal("list").executable {
+            runs{
+                list()
             }
-            literal("clear"){
-                literal("island").executable {
-                    runs{
-                        clearIsland()
-                    }
-                }
-                literal("all").executable {
-                    runs{
-                        clearAll()
-                    }
-                }
+        }
+        literal("listAll").executable {
+            runs{
+                listAll()
             }
-            literal("list").executable {
-                runs{
-                    list()
-                }
-            }
-            literal("listAll").executable {
-                runs{
-                    listAll()
-                }
-            }
-        }.register(dispatcher)
+        }
         //TODO redo static waypoints better
     }
     private val config=ModuleConfig("StaticWaypoints.json")

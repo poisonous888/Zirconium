@@ -25,6 +25,7 @@ object MiscFeatures : Module(
     private val noRequiredPacks by BooleanSetting("No Required Packs",false,"you can remove any resource pack you want, just dont remove the minecraft pack ;}").withDependency { loadCat }
     var loaded=false
     @JvmStatic fun canRemovePacks():Boolean{return noRequiredPacks&&loaded}
+    val dynamicLoading by BooleanSetting("Dynamic Loading",true,"dynamically loads island specific modules").withDependency { loadCat }
     
     val renderCat by DropdownSetting("Render",desc="")
     @JvmStatic val noRecipeBook by BooleanSetting("No Recipe Book",false,"removes recipe book from inv").withDependency { renderCat }

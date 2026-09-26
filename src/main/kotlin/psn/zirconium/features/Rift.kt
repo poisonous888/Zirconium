@@ -1,9 +1,7 @@
 package psn.zirconium.features
 
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
-import com.odtheking.odin.events.LevelEvent
 import com.odtheking.odin.events.MessageEvent
-import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
@@ -17,8 +15,8 @@ import com.odtheking.odin.utils.skyblock.LocationUtils
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundEvents
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.utils.LocationCheck.dynamicLoad
 import psn.zirconium.zcon
-
 
 object Rift : Module(
     name = "Rift",
@@ -27,10 +25,10 @@ object Rift : Module(
 ) {
     private val announce by BooleanSetting("Kill Timeout",true,"")
     private val puffHud by HUD("HUD","") {
-        editing -> when{
-            LocationUtils.isCurrentArea(Island.Garden)||editing->textDim(curString,0,0)
-            else -> 0 to 0
-        }
+        example->
+        if(example)textDim("Spawns: 12 - Gravity Time: 120",0,0)
+        else if(LocationUtils.isCurrentArea(Island.Rift)){ textDim(curString,0,0) }
+        else 0 to 0
     }
     var curString=""
     var headCount=0
@@ -39,28 +37,27 @@ object Rift : Module(
         alert("POTION")
         modMessage("Get Potion",zcon)
     }
-    private object RiftHelper {
-        init {
-            on<MessageEvent>{
-                if(message.contains("BUFF! A vending machine splashed you with Gravity I!")){
-                    modMessage("Captured Gravity Buff",zcon)
-                    schedule(12000,true){announce()}
-                }
+    init {
+        dynamicLoad(Island.Rift)
+        on<MessageEvent>{
+            modMessage(message)
+            if(message.contains("vending machine")){
+                modMessage("Captured Gravity Buff",zcon)
+                schedule(12000,true){announce()}
             }
-            onReceive<ClientboundSoundPacket>{
-                if(type()==SoundEvents.HORSE_BREATHE){
-                    headCount++
-                }
-                if(type()==SoundEvents.CHICKEN_EGG){
-                    startTimeout(-1)
-                }
-                curString=if(killCount>0){
-                    "Kills: $killCount\nGravity Time: ???"
-                }
-                else{
-                    "Spawns: $headCount\nGravity Time: ???"
-                }
-                
+        }
+        onReceive<ClientboundSoundPacket>{
+            if(type()==SoundEvents.HORSE_BREATHE){
+                headCount++
+            }
+            if(type()==SoundEvents.CHICKEN_EGG){
+                startTimeout(-1)
+            }
+            curString=if(killCount>0){
+                "Kills: $killCount - Gravity Time: ???"
+            }
+            else{
+                "Spawns: $headCount - Gravity Time: ???"
             }
         }
     }
@@ -79,17 +76,5 @@ object Rift : Module(
             return
         }
         schedule(20,true){startTimeout(killCount)}
-    }
-    init {
-        on<LevelEvent.Load> {
-            EventBus.unsubscribe(RiftHelper)
-            schedule(100,true){
-                if(LocationUtils.isCurrentArea(Island.Rift)) {
-                    EventBus.subscribe(RiftHelper)
-                    modMessage("loaded rift module",zcon)
-                    return@schedule
-                }
-            }
-        }
     }
 }
