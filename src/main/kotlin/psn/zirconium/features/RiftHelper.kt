@@ -27,10 +27,10 @@ object RiftHelper : Module(
 ) {
     private val announce by BooleanSetting("Kill Timeout",true,"")
     private val puffHud by HUD("HUD","") {
-            editing -> when{
-        LocationUtils.isCurrentArea(Island.Garden)||editing->textDim(curString,0,0)
-        else -> 0 to 0
-    }
+        editing -> when{
+            LocationUtils.isCurrentArea(Island.Rift)||editing->textDim(curString,0,0)
+            else -> 0 to 0
+        }
     }
     var curString=""
     var headCount=0
