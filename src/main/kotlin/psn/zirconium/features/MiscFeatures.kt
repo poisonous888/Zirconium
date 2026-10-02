@@ -20,9 +20,9 @@ object MiscFeatures : Module(
     val updateNotif by BooleanSetting("Update Notification",true,"")
     
     val loadCat by DropdownSetting("Load",desc="")
-    @JvmStatic val noLoadingScreen by BooleanSetting("No Loading Screen",false,"disables the loading screen ").withDependency { loadCat }
     private val noPackPush by BooleanSetting("No Server Packs",false,"disables servers downloading and forcing a resource pack").withDependency { loadCat }
     private val noRequiredPacks by BooleanSetting("No Required Packs",false,"you can remove any resource pack you want, just dont remove the minecraft pack ;}").withDependency { loadCat }
+    @JvmStatic val noLoadingScreen by BooleanSetting("No Loading Screen",false,"disables the loading screen ").withDependency { loadCat }
     var loaded=false
     @JvmStatic fun canRemovePacks():Boolean{return noRequiredPacks&&loaded}
     val dynamicLoading by BooleanSetting("Dynamic Loading",true,"dynamically loads island specific modules").withDependency { loadCat }
@@ -33,7 +33,10 @@ object MiscFeatures : Module(
     @JvmStatic val noLiquidFog by BooleanSetting("No Liquid Fog",false,"removes the fog from being underwater or under lava").withDependency { renderCat }
     
     val gameCat by DropdownSetting("Gameplay",desc="")
-    @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"Closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }
+    @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }
+    @JvmStatic val noRawInput by BooleanSetting("Disable Raw Input", false,"disabled raw input, making mouse movement respect acceleration").withDependency { gameCat }
+    @JvmStatic val invertHotbarScroll by BooleanSetting("Invert Hotbar Scroll", false,"flips the scrolling direction of the hotbar with the scroll wheel").withDependency { gameCat }
+    @JvmStatic val noHotbarScroll by BooleanSetting("No Hotbar Scroll", false,"prevents scroll wheel from changing held item").withDependency { gameCat }
 //    @JvmStatic val limitHudFps by BooleanSetting("Limit Hud FPS",false,"Exordium").withDependency { gameCat }
 //    @JvmStatic val hudFps by NumberSetting("Hud FPS",30,1,120,1,"").withDependency { gameCat&&limitHudFps }
 //    private val trimCommandOnFail by BooleanSetting("Trim commands on fail",false,"when a command fails, removes the last character and tries again until it succeeds or the command is empty")
