@@ -5,6 +5,8 @@ import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
+import com.odtheking.odin.clickgui.settings.impl.SelectorSetting
+import com.odtheking.odin.clickgui.settings.impl.StringSetting
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.Colors
@@ -37,6 +39,8 @@ object MiscFeatures : Module(
     @JvmStatic val noRawInput by BooleanSetting("Disable Raw Input", false,"disabled raw input, making mouse movement respect acceleration").withDependency { gameCat }
     @JvmStatic val invertHotbarScroll by BooleanSetting("Invert Hotbar Scroll", false,"flips the scrolling direction of the hotbar with the scroll wheel").withDependency { gameCat }
     @JvmStatic val noHotbarScroll by BooleanSetting("No Hotbar Scroll", false,"prevents scroll wheel from changing held item").withDependency { gameCat }
+    private val sbapiFix by BooleanSetting("Sbapi Profile Fix",false,"fixes errors caused by unknown profile in sbapi")
+    private val profile by StringSetting("Profile","", desc = "", placeholder = "")
 //    @JvmStatic val limitHudFps by BooleanSetting("Limit Hud FPS",false,"Exordium").withDependency { gameCat }
 //    @JvmStatic val hudFps by NumberSetting("Hud FPS",30,1,120,1,"").withDependency { gameCat&&limitHudFps }
 //    private val trimCommandOnFail by BooleanSetting("Trim commands on fail",false,"when a command fails, removes the last character and tries again until it succeeds or the command is empty")
