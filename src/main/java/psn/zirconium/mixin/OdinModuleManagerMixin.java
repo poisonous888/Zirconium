@@ -1,27 +1,13 @@
 package psn.zirconium.mixin;
-import com.odtheking.odin.config.ModuleConfig;
 import com.odtheking.odin.features.Module;
 import com.odtheking.odin.features.ModuleManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-
-import java.util.Arrays;
-import java.util.stream.Stream;
+import psn.zirconium.features.MiscFeatures;
 
 @Mixin(value = ModuleManager.class, remap = false)
 public class OdinModuleManagerMixin{
-    @ModifyVariable(method = "registerModules", at = @At("HEAD"), argsOnly = true, name = "modules")
-    private static Module[] separateDevModules(Module[] modules, ModuleConfig config) {
-        if(modules.length<2){return modules;}
-        Stream<Module> dev=Arrays.stream(modules).filter(Module::isDevModule);
-        Stream<Module> out=Arrays.stream(modules).filter(module -> !module.isDevModule());
-        for(Module reregester:dev.toArray(Module[]::new)){
-            ModuleManager.INSTANCE.registerModules(new ModuleConfig(reregester.getName()+".json"),reregester);
-        }
-        return out.toArray(Module[]::new);
-    }
     @Redirect(
         method = {"registerModules"},
         at = @At(
@@ -30,6 +16,6 @@ public class OdinModuleManagerMixin{
         )
     )
     private boolean noDevModules(Module no) {
-        return false;
+        return MiscFeatures.getOdinDevModules();
     }
 }

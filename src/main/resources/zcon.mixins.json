@@ -20,6 +20,7 @@
         "FogCameraMixin",
         "FogColorMixin",
         "GuiMixin",
+        "InputConstantsMixin",
         "LightMixin",
         "MouseMixin",
         "OdinModuleManagerMixin",
