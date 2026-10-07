@@ -1,7 +1,7 @@
 package psn.zirconium.features
 
 import com.odtheking.odin.OdinMod
-import com.odtheking.odin.clickgui.settings.Setting.Companion.withDependency
+import com.odtheking.odin.clickgui.settings.RenderableSetting.Companion.withDependency
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
@@ -37,7 +37,7 @@ object MiscFeatures : Module(
     val gameCat by DropdownSetting("Gameplay",desc="")
     @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }
     @JvmStatic val noRawInput by BooleanSetting("Disable Raw Input", false,"disabled raw input, making mouse movement respect acceleration").withDependency { gameCat }
-//    @JvmStatic val invertAllScroll by BooleanSetting("Invert All Scroll", false,"flips the scrolling direction of the hotbar with the scroll wheel").withDependency { gameCat }
+    @JvmStatic val invertHotbarScroll by BooleanSetting("Invert Hotbar Scroll", false,"flips the scrolling direction of the hotbar with the scroll wheel").withDependency { gameCat }
 //    private val sbapiFix by BooleanSetting("Sbapi Profile Fix",false,"fixes errors caused by unknown profile in sbapi").withDependency { gameCat }
 //    private val profile by StringSetting("Profile","", desc = "", placeholder = "").withDependency { gameCat }
 //    @JvmStatic val limitHudFps by BooleanSetting("Limit Hud FPS",false,"Exordium").withDependency { gameCat }
