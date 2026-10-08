@@ -3,7 +3,6 @@ package psn.zirconium.features
 import com.github.stivais.commodore.Commodore
 import com.github.stivais.commodore.utils.GreedyString
 import com.mojang.blaze3d.platform.InputConstants
-import com.mojang.brigadier.CommandDispatcher
 import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.KeybindSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
@@ -16,21 +15,19 @@ import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.sendCommand
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
-import org.lwjgl.glfw.GLFW
 import psn.zirconium.AsyncSave
-import psn.zirconium.HasCommands
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.utils.onCommand
 import psn.zirconium.zcon
 
-object Timers: AsyncSave, HasCommands, Module(
+object Timers: AsyncSave, Module(
     name = "Timers",
     description = "Reminds you to do @#$%",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
-    private val aliasCmd by StringSetting("Alias","",desc="")
-    private val keybindKey by KeybindSetting("Key", GLFW.GLFW_KEY_UNKNOWN)
-    private val exec by StringSetting("Runs","",desc="")
+    private val aliasCmd by StringSetting("Alias","",desc="", placeholder = "")
+    private val keybindKey by KeybindSetting("Key",InputConstants.UNKNOWN.value)
+    private val exec by StringSetting("Runs","",desc="", placeholder = "")
     private val aliasAdd by ActionSetting("Add Alias",""){
         addAlias(aliasCmd,exec)
     }
@@ -177,6 +174,7 @@ object Timers: AsyncSave, HasCommands, Module(
     
     private var timeout=false
     init{
+        onCommand{command}
         on<InputEvent>{
             if(timeout)return@on
             for(bind in loadedKeybinds){
@@ -210,98 +208,47 @@ object Timers: AsyncSave, HasCommands, Module(
         modMessage(" | /reminder list : lists current reminders","")
         modMessage(" | /reminder clear : clears all reminders","")
     }
-    override fun buildCommands(dispatcher:CommandDispatcher<FabricClientCommandSource>){
-        Commodore("daily"){
-            runs{
-                printCommands()
+    val command=Commodore("daily"){
+        runs{
+            printCommands()
+        }
+        literal("add").executable{
+            param("alias").suggests {
+                savedAliases.map { i -> i.key }
             }
-            literal("add").executable{
-                param("alias").suggests {
-                    savedAliases.map { i -> i.key }
-                }
-                param("command")
-                runs{alias: String, command: GreedyString ->
-                    addAlias(alias,command.string)
-                }
+            param("command")
+            runs{alias: String, command: GreedyString ->
+                addAlias(alias,command.string)
             }
-            literal("remove").executable{
-                param("alias").suggests {
-                    savedAliases.map { i -> i.key }
-                }
-                runs{alias: String ->
-                    removeAlias(alias)
-                }
+        }
+        literal("remove").executable{
+            param("alias").suggests {
+                savedAliases.map { i -> i.key }
             }
-            literal("clear").executable{runs{clearAliases()}}
-            literal("list").executable{runs{printAliases()}}
-            literal("rename").executable{
-                param("alias").suggests {
-                    savedAliases.map { i -> i.key }
-                }
-                param("newName")
-                runs{alias: String, newName: String ->
-                    renameAlias(alias,newName)
-                }
+            runs{alias: String ->
+                removeAlias(alias)
             }
-            literal("command").executable{
-                param("alias").suggests {
-                    savedAliases.map { i -> i.key }
-                }
-                param("newCommand")
-                runs{alias: String, newCommand: GreedyString ->
-                    rebindAlias(alias,newCommand.string)
-                }
+        }
+        literal("clear").executable{runs{clearAliases()}}
+        literal("list").executable{runs{printAliases()}}
+        literal("rename").executable{
+            param("alias").suggests {
+                savedAliases.map { i -> i.key }
             }
-        }.register(dispatcher)
-        Commodore("keybind"){
-            runs{
-                modMessage("Custom Commands: Keybinds",zcon)
-                unabled()
-                modMessage(" | /keybind add <key> <command> : Adds a new keybind for the specified command","")
-                modMessage(" | /keybind key <key> <new key> : Changes the key of the specified keybind","")
-                modMessage(" | /keybind command <key> <new command> : Changes the command for the specified keybind","")
-                modMessage(" | /keybind list : Lists current keybinds","")
-                modMessage(" | /keybind remove <key> : Removes the specified keybind","")
-                modMessage(" | /keybind clear : Removes all keybinds","")
+            param("newName")
+            runs{alias: String, newName: String ->
+                renameAlias(alias,newName)
             }
-            literal("add").executable{
-                param("key").suggests {
-                    savedKeybinds.map { i -> i.key }
-                }
-                param("command")
-                runs{key: String, command: GreedyString ->
-                    addKeybind(parseKeybind(key)?:return@runs,command.string)
-                }
+        }
+        literal("command").executable{
+            param("alias").suggests {
+                savedAliases.map { i -> i.key }
             }
-            literal("remove").executable{
-                param("key").suggests {
-                    savedKeybinds.map { i -> i.key }
-                }
-                runs{key: String ->
-                    removeKeybind(parseKeybind(key)?:return@runs)
-                }
+            param("newCommand")
+            runs{alias: String, newCommand: GreedyString ->
+                rebindAlias(alias,newCommand.string)
             }
-            literal("clear").executable{runs{clearKeybinds()}}
-            literal("list").executable{runs{printKeybinds()}}
-            literal("key").executable{
-                param("key").suggests {
-                    savedKeybinds.map { i -> i.key }
-                }
-                param("newKey")
-                runs{key: String, newKey: String ->
-                    rekeyKeybind(parseKeybind(key)?:return@runs,parseKeybind(newKey)?:return@runs)
-                }
-            }
-            literal("command").executable{
-                param("key").suggests {
-                    savedKeybinds.map { i -> i.key }
-                }
-                param("newCommand")
-                runs{key: String, newCommand: GreedyString ->
-                    rebindKeybind(parseKeybind(key)?:return@runs,newCommand.string)
-                }
-            }
-        }.register(dispatcher)
+        }
     }
     fun unabled() {
         if(!enabled) modMessage("§cCustom Commands Module is disabled, custom keybinds will not function but can be modified","")
