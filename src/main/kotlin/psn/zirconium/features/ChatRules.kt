@@ -10,7 +10,6 @@ import com.odtheking.odin.events.LevelEvent
 import com.odtheking.odin.events.MessageEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
-import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.alert
 import com.odtheking.odin.utils.equalsOneOf
 import com.odtheking.odin.utils.modMessage

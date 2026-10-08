@@ -22,7 +22,6 @@
         "LightMixin",
         "MinecraftMixin",
         "MouseMixin",
-        "OdinModuleManagerMixin",
         "PotionRenderGui",
         "PotionRenderHud",
         "R_AvatarRendererMixin",

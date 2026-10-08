@@ -15,24 +15,31 @@ import psn.zirconium.ZirconiumEntry
 object MiscFeatures : Module(
     name = "Misc Features",
     description = "Random small stuff that dosent need a dedicated module",
-    category=ZirconiumEntry.ZCON
+    category=ZirconiumEntry.zconCat
 ) {
     val updateNotif by BooleanSetting("Update Notification",true,"")
     
-    val loadCat by DropdownSetting("Load")
-    @JvmStatic val noLoadingScreen by BooleanSetting("No Loading Screen",false,"disables the loading screen ").withDependency { loadCat }
+    val loadCat by DropdownSetting("Load",desc="")
     private val noPackPush by BooleanSetting("No Server Packs",false,"disables servers downloading and forcing a resource pack").withDependency { loadCat }
     private val noRequiredPacks by BooleanSetting("No Required Packs",false,"you can remove any resource pack you want, just dont remove the minecraft pack ;}").withDependency { loadCat }
+    @JvmStatic val noLoadingScreen by BooleanSetting("No Loading Screen",false,"disables the loading screen ").withDependency { loadCat }
+//    @JvmStatic val odinDevModules by BooleanSetting("Odin Dev Modules",false,"REQUIRES RESTART enables developer modules in odin WONT SAVE IF YOU TURN OFF").withDependency { loadCat }
+    
     var loaded=false
     @JvmStatic fun canRemovePacks():Boolean{return noRequiredPacks&&loaded}
+    val dynamicLoading by BooleanSetting("Dynamic Loading",true,"dynamically loads island specific modules").withDependency { loadCat }
     
-    val renderCat by DropdownSetting("Render")
+    val renderCat by DropdownSetting("Render",desc="")
     @JvmStatic val noRecipeBook by BooleanSetting("No Recipe Book",false,"removes recipe book from inv").withDependency { renderCat }
     @JvmStatic val noPotionEffects by BooleanSetting("No Potion Effects",false,"removes the potion effect display from the inventory and the main hud").withDependency { renderCat }
     @JvmStatic val noLiquidFog by BooleanSetting("No Liquid Fog",false,"removes the fog from being underwater or under lava").withDependency { renderCat }
     
-    val gameCat by DropdownSetting("Gameplay")
-    @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"Closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }
+    val gameCat by DropdownSetting("Gameplay",desc="")
+    @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }
+    @JvmStatic val noRawInput by BooleanSetting("Disable Raw Input", false,"disabled raw input, making mouse movement respect acceleration").withDependency { gameCat }
+//    @JvmStatic val invertAllScroll by BooleanSetting("Invert All Scroll", false,"flips the scrolling direction of the hotbar with the scroll wheel").withDependency { gameCat }
+//    private val sbapiFix by BooleanSetting("Sbapi Profile Fix",false,"fixes errors caused by unknown profile in sbapi").withDependency { gameCat }
+//    private val profile by StringSetting("Profile","", desc = "", placeholder = "").withDependency { gameCat }
 //    @JvmStatic val limitHudFps by BooleanSetting("Limit Hud FPS",false,"Exordium").withDependency { gameCat }
 //    @JvmStatic val hudFps by NumberSetting("Hud FPS",30,1,120,1,"").withDependency { gameCat&&limitHudFps }
 //    private val trimCommandOnFail by BooleanSetting("Trim commands on fail",false,"when a command fails, removes the last character and tries again until it succeeds or the command is empty")
@@ -40,7 +47,7 @@ object MiscFeatures : Module(
 //    private val trimCmdDelay by NumberSetting("Trim Delay",5,0,20,1,"").withDependency { trimCommandOnFail }
 //    private val comFailReg=Regex("^Unknown command\\. Type \"/help\" for help\\. \\('([a-zA-Z0-9 ]+)'\\)$")
     
-    val visualCat by DropdownSetting("Visual")
+    val visualCat by DropdownSetting("Visual",desc="")
     //@JvmStatic val whiteCrosshair by BooleanSetting("White Crosshair",false,"removes the colored effect from the crosshair").withDependency { visualCat }
     @JvmStatic val diagonalWalk by BooleanSetting("Diagonal Backwards Walk",false,"1.8.9 backwards walking").withDependency { visualCat }
     @JvmStatic val customCapePhysics by BooleanSetting("Cape Physics",false,"1.8.9 adjacent cape physics").withDependency { visualCat }

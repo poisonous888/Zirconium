@@ -35,7 +35,7 @@ object ZirconiumEntry : ClientModInitializer {
             ChatRules,
             ChatUtils,
             CPSDisplay,
-            //Dailies,
+            Timers,
             PacketChecker,
             //ExplosiveMute,
             Zoom,
