@@ -23,7 +23,7 @@ object MiscFeatures : Module(
     private val noPackPush by BooleanSetting("No Server Packs",false,"disables servers downloading and forcing a resource pack").withDependency { loadCat }
     private val noRequiredPacks by BooleanSetting("No Required Packs",false,"you can remove any resource pack you want, just dont remove the minecraft pack ;}").withDependency { loadCat }
     @JvmStatic val noLoadingScreen by BooleanSetting("No Loading Screen",false,"disables the loading screen ").withDependency { loadCat }
-    @JvmStatic val odinDevModules by BooleanSetting("Odin Dev Modules",false,"REQUIRES RESTART enables developer modules in odin WONT SAVE IF YOU TURN OFF").withDependency { loadCat }
+    //@JvmStatic val odinDevModules by BooleanSetting("Odin Dev Modules",false,"REQUIRES RESTART enables developer modules in odin WONT SAVE IF YOU TURN OFF").withDependency { loadCat }
     
     var loaded=false
     @JvmStatic fun canRemovePacks():Boolean{return noRequiredPacks&&loaded}

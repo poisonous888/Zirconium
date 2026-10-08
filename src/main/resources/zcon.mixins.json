@@ -3,7 +3,7 @@
     "minVersion":"0.8",
     "package":"psn.zirconium.mixin",
     "compatibilityLevel":"JAVA_25",
-    "mixins":["R_LivingEntitySwingMixin"],
+    "mixins":["render.LivingEntitySwingMixin"],
     "injectors":{
         "defaultRequire":1
     },
@@ -23,18 +23,18 @@
         "InputConstantsMixin",
         "LightMixin",
         "MouseMixin",
-        "OdinModuleManagerMixin",
         "PotionRenderGui",
         "PotionRenderHud",
-        "R_AvatarRendererMixin",
-        "R_LivingEntityMixin",
-        "R_RenderItemMixin",
-        "R_SwingMixin",
         "RecipeBookMixin",
         "ResourcePackMixin",
         "SkyboxMixin",
         "SkySunTintMixin",
         "TextFieldMixin",
-        "ZoomMixin"
+        "ZoomMixin",
+        "render.AvatarRendererMixin",
+        "render.HandItemMixin",
+        "render.LivingEntityMixin",
+        "render.RenderItemMixin",
+        "render.SwingMixin"
     ]
 }

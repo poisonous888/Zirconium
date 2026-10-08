@@ -14,151 +14,141 @@ object HeldItemRender : Module(
     category=ZirconiumEntry.zconCat
 ){
     private val positioncat by DropdownSetting("Item Position",desc="")
-    val itemX by NumberSetting("x",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
-    val itemY by NumberSetting("y",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
-    val itemZ by NumberSetting("z",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
+    var itemX by NumberSetting("x",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
+    var itemY by NumberSetting("y",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
+    var itemZ by NumberSetting("z",0.0,-0.5..0.5,0.05,"").withDependency { positioncat }
+    fun setPos(x:Double,y:Double,z:Double){
+        itemX=x
+        itemY=y
+        itemZ=z
+    }
     private val rsTrans by ActionSetting("Reset Translation",""){
-        settings["x"]?.reset()
-        settings["y"]?.reset()
-        settings["z"]?.reset()
+        setPos(0.0,0.0,0.0)
     }.withDependency { positioncat }
-    val itemXrot by NumberSetting("x rot",0,-180..180,1,"").withDependency { positioncat }
-    val itemYrot by NumberSetting("y rot",0,-180..180,1,"").withDependency { positioncat }
-    val itemZrot by NumberSetting("z rot",0,-180..180,1,"").withDependency { positioncat }
+    var itemXrot by NumberSetting("x rot",0f,-180..180,1,"").withDependency { positioncat }
+    var itemYrot by NumberSetting("y rot",0f,-180..180,1,"").withDependency { positioncat }
+    var itemZrot by NumberSetting("z rot",0f,-180..180,1,"").withDependency { positioncat }
+    fun setRot(x:Float,y:Float,z:Float){
+        itemXrot=x
+        itemYrot=y
+        itemZrot=z
+    }
     private val rsRot by ActionSetting("Reset Rotation",""){
-        settings["x rot"]?.reset()
-        settings["y rot"]?.reset()
-        settings["z rot"]?.reset()
+        setRot(0f,0f,0f)
     }.withDependency { positioncat }
-    val itemWidth by NumberSetting("width",1f,-1..5,0.05,"").withDependency { positioncat }
-    val itemHeight by NumberSetting("height",1f,-1..5,0.05,"").withDependency { positioncat }
-    val itemLength by NumberSetting("length",1f,-1..5,0.05,"").withDependency { positioncat }
+    var itemWidth by NumberSetting("width",1f,-1..5,0.05,"").withDependency { positioncat }
+    var itemHeight by NumberSetting("height",1f,-1..5,0.05,"").withDependency { positioncat }
+    var itemLength by NumberSetting("length",1f,-1..5,0.05,"").withDependency { positioncat }
+    fun setScale(w:Float,h:Float,l:Float){
+        itemWidth=w
+        itemHeight=h
+        itemLength=l
+    }
     private val rsScale by ActionSetting("Reset Scale",""){
-        settings["width"]?.reset()
-        settings["height"]?.reset()
-        settings["length"]?.reset()
+        setScale(1f,1f,1f)
     }.withDependency { positioncat }
-    val swingXrot by NumberSetting("Swing X Rot",-80f,-160..0,16,"").withDependency { positioncat }
-    val swingYrot by NumberSetting("Swing Y Rot",-20f,-40..0,4,"").withDependency { positioncat }
-    val swingZrot by NumberSetting("Swing Z Rot",-20f,-40..0,4,"").withDependency { positioncat }
-    val swingOrot by NumberSetting("Swing Offset Rot",-45f,-90..0,5,"").withDependency { positioncat }
+    private val rsPos by ActionSetting("Reset Position",""){
+        rsTrans.invoke()
+        rsRot.invoke()
+        rsScale.invoke()
+    }.withDependency { positioncat }
     
-    val translateSwing by BooleanSetting("Translate Swing",true,"").withDependency { positioncat }
-    val swingx by NumberSetting("Swing X",1f,0..4,0.25,"").withDependency { positioncat && translateSwing }
-    val swingy by NumberSetting("Swing Y",1f,0..4,0.25,"").withDependency { positioncat && translateSwing }
-    val swingz by NumberSetting("Swing Z",1f,0..4,0.25,"").withDependency { positioncat && translateSwing }
+    private val swingcat by DropdownSetting("Swing",desc="")
+    var swingXrot by NumberSetting("Swing X Rot",-80f,-160..0,16,"").withDependency { swingcat }
+    var swingYrot by NumberSetting("Swing Y Rot",-20f,-40..0,4,"").withDependency { swingcat }
+    var swingZrot by NumberSetting("Swing Z Rot",-20f,-40..0,4,"").withDependency { swingcat }
+    var swingOrot by NumberSetting("Swing Offset Rot",-45f,-90..0,5,"").withDependency { swingcat }
     
+    var translateSwing by BooleanSetting("Translate Swing",true,"").withDependency { swingcat }
+    var swingX by NumberSetting("Swing X",1f,0..4,0.25,"").withDependency { swingcat && translateSwing }
+    var swingY by NumberSetting("Swing Y",1f,0..4,0.25,"").withDependency { swingcat && translateSwing }
+    var swingZ by NumberSetting("Swing Z",1f,0..4,0.25,"").withDependency { swingcat && translateSwing }
+    fun setSwing(xrot:Float,yrot:Float,zrot:Float,orot:Float,x:Float,y:Float,z:Float){
+        swingXrot=xrot
+        swingYrot=yrot
+        swingZrot=zrot
+        swingOrot=orot
+        swingX=x
+        swingY=y
+        swingZ=z
+    }
     private val rsSwing by ActionSetting("Reset Swing Transform",""){
-        settings["Swing X Rot"]?.reset()
-        settings["Swing Y Rot"]?.reset()
-        settings["Swing Z Rot"]?.reset()
-        settings["Swing Offset Rot"]?.reset()
-        settings["Translate Swing"]?.reset()
-        settings["Swing X"]?.reset()
-        settings["Swing Y"]?.reset()
-        settings["Swing Z"]?.reset()
-    }.withDependency { positioncat }
+        setSwing(-80f,-20f,-20f,-45f,1f,1f,1f)
+    }.withDependency { swingcat }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
-    private val swingcat by DropdownSetting("Swing",desc="")
-    private val swingWhileUsing by BooleanSetting("Swing While Using",false,"left click while drawing a bow, drinking a potion, etc").withDependency {swingcat}
-
-    private val customSwingDuration by BooleanSetting("Custom Swing Duration",false,"").withDependency { swingcat }
-    private val ignoreHaste by BooleanSetting("Ignore Haste",false,"").withDependency { swingcat && customSwingDuration }
-    @JvmStatic val swingDuration by NumberSetting("Swing Duration",7,2..20,1,"").withDependency {swingcat&&customSwingDuration}
+    private val misccat by DropdownSetting("Misc",desc="")
+    private var swingWhileUsing by BooleanSetting("Swing While Using",false,"left click while drawing a bow, drinking a potion, etc").withDependency {misccat}
+    private var drink3rd by BooleanSetting("Alternate Eat And Drink",false,"3rd person anim").withDependency { misccat }
+    var driftMult by NumberSetting("Drift Multiplier",.1f,0.0..0.4,0.02,"").withDependency {misccat&&customSwingDuration}
+    
+    private var customSwingDuration by BooleanSetting("Custom Swing Duration",false,"").withDependency { misccat }
+    private var ignoreHaste by BooleanSetting("Ignore Haste",false,"").withDependency { misccat && customSwingDuration }
+    @JvmStatic var swingDuration by NumberSetting("Swing Duration",7,2..20,1,"").withDependency {misccat&&customSwingDuration}
+    
     @JvmStatic fun doUsing():Boolean {
         return enabled&&swingWhileUsing
+    }
+    @JvmStatic fun doDrink3rd():Boolean {
+        return enabled&&drink3rd
     }
     @JvmStatic fun doSwingDur():Boolean {
         return enabled&&customSwingDuration
     }
     @JvmStatic fun doHaste():Boolean {
-        return enabled&&ignoreHaste&&customSwingDuration
+        return enabled&&!ignoreHaste&&customSwingDuration
     }
 
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
     private val presets by DropdownSetting("Presets",desc="")
     private val vanilla by ActionSetting("Vanilla",""){
-        rsTrans.invoke()
-        rsRot.invoke()
-        rsScale.invoke()
+        rsPos.invoke()
         rsSwing.invoke()
-        settings["Custom Swing Duration"]?.reset()
-        settings["Swing Duration"]?.reset()
-        settings["Swing While Using"]?.reset()
+        translateSwing=true
+        swingWhileUsing=false
+        drink3rd=false
+        customSwingDuration=false
+        swingDuration=7
+        ignoreHaste=false
     }.withDependency { presets }
     private val small by ActionSetting("Small",""){
-        setSettings(Preset(
-            trans=listOf(0.1,0.2,0.0),
-            rot=listOf(0,0,0),
-            scale=listOf(0.35f,0.35f,0.35f),
-            swing=listOf(-80f,-20f,-20f,-45f,0f,0f,0f),
-            doSwingDur=true,
-            swingDur=4,
-            haste=true,
-            using=true,
-        ))
+        setPos(0.15,0.5,0.0)
+        rsRot.invoke()
+        setScale(0.35f,0.35f,0.35f)
+        rsSwing.invoke()
+        translateSwing=false
+        swingWhileUsing=true
+        drink3rd=true
+        customSwingDuration=true
+        swingDuration=16
+        ignoreHaste=true
     }.withDependency { presets }
     private val horizontal by ActionSetting("Horizontal",""){
-        setSettings(Preset(
-            trans=listOf(-0.3,0.25,-0.05),
-            rot=listOf(11,-22,92),
-            scale=listOf(1f,1f,1f),
-            swing=listOf(0f,0f,0f,0f,0.75f,0f,0f),
-            doSwingDur=true,
-            swingDur=12,
-            haste=true,
-            using=true,
-        ))
+        setPos(-0.3,0.25,-0.05)
+        setRot(11f,-22f,92f)
+        setScale(1f,1f,1f)
+        setSwing(0f,0f,0f,0f,0.75f,0f,0f)
+        translateSwing=true
+        swingWhileUsing=false
+        drink3rd=true
+        customSwingDuration=true
+        swingDuration=12
+        ignoreHaste=true
     }.withDependency { presets }
     private val poison by ActionSetting("Poison",""){
-        setSettings(Preset(
-            trans=listOf(0.1,0.1,0.0),
-            rot=listOf(0,0,0),
-            scale=listOf(0.75f,0.75f,0.75f),
-            swing=listOf(-80f,-20f,-20f,-45f,0f,0f,0f),
-            doSwingDur=true,
-            swingDur=6,
-            haste=true,
-            using=true,
-        ))
+        setPos(0.1,0.1,0.0)
+        rsRot.invoke()
+        setScale(0.75f,0.75f,0.75f)
+        rsSwing.invoke()
+        translateSwing=false
+        swingWhileUsing=true
+        drink3rd=true
+        customSwingDuration=true
+        swingDuration=6
+        ignoreHaste=true
     }.withDependency { presets }
-    data class Preset(
-        val trans:List<Double>,
-        val rot:List<Int>,
-        val scale:List<Float>,
-        val swing:List<Float>,
-        val doSwingDur:Boolean,
-        val swingDur:Int,
-        val haste:Boolean,
-        val using:Boolean,
-    )
-    @Suppress("UNCHECKED_CAST")
-    private fun setSettings(p: Preset){
-        (settings["x"] as NumberSetting<Double>).value = p.trans[0]
-        (settings["y"] as NumberSetting<Double>).value = p.trans[1]
-        (settings["z"] as NumberSetting<Double>).value = p.trans[2]
-        (settings["x rot"] as NumberSetting<Int>).value = p.rot[0]
-        (settings["y rot"] as NumberSetting<Int>).value = p.rot[1]
-        (settings["z rot"] as NumberSetting<Int>).value = p.rot[2]
-        (settings["width"] as NumberSetting<Float>).value = p.scale[0]
-        (settings["height"] as NumberSetting<Float>).value = p.scale[1]
-        (settings["length"] as NumberSetting<Float>).value = p.scale[2]
-        (settings["Swing X Rot"] as NumberSetting<Float>).value = p.swing[0]
-        (settings["Swing Y Rot"] as NumberSetting<Float>).value = p.swing[1]
-        (settings["Swing Z Rot"] as NumberSetting<Float>).value = p.swing[2]
-        (settings["Swing Offset Rot"] as NumberSetting<Float>).value = p.swing[3]
-        (settings["Swing X"] as NumberSetting<Float>).value = p.swing[4]
-        (settings["Swing Y"] as NumberSetting<Float>).value = p.swing[5]
-        (settings["Swing Z"] as NumberSetting<Float>).value = p.swing[6]
-        (settings["Translate Swing"] as BooleanSetting).value = p.swing[4] != 0f || p.swing[5] != 0f || p.swing[6] != 0f
-        (settings["Custom Swing Duration"] as BooleanSetting).value = p.doSwingDur
-        (settings["Swing Duration"] as NumberSetting<Int>).value = p.swingDur
-        (settings["Swing While Using"] as BooleanSetting).value = p.using
-        (settings["Ignore Haste"] as BooleanSetting).value = p.haste
-    }
 }
 
 //TODO custom held item render pipeline

@@ -1,4 +1,4 @@
-package psn.zirconium.mixin;
+package psn.zirconium.mixin.render;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import psn.zirconium.features.HeldItemRender;
 
 @Mixin(Minecraft.class)
-public abstract class R_SwingMixin{
+public abstract class SwingMixin{
     @Redirect(
         method = "handleKeybinds",
         at = @At(value="INVOKE", target="Lnet/minecraft/client/KeyMapping;consumeClick()Z",ordinal = 0),

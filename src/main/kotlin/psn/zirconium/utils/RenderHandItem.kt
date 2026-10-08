@@ -16,6 +16,7 @@ import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.item.ShieldItem
+import psn.zirconium.features.HeldItemRender.driftMult
 import psn.zirconium.features.HeldItemRender.itemHeight
 import psn.zirconium.features.HeldItemRender.itemLength
 import psn.zirconium.features.HeldItemRender.itemWidth
@@ -25,13 +26,6 @@ import psn.zirconium.features.HeldItemRender.itemY
 import psn.zirconium.features.HeldItemRender.itemYrot
 import psn.zirconium.features.HeldItemRender.itemZ
 import psn.zirconium.features.HeldItemRender.itemZrot
-import psn.zirconium.features.HeldItemRender.swingOrot
-import psn.zirconium.features.HeldItemRender.swingXrot
-import psn.zirconium.features.HeldItemRender.swingYrot
-import psn.zirconium.features.HeldItemRender.swingZrot
-import psn.zirconium.features.HeldItemRender.swingx
-import psn.zirconium.features.HeldItemRender.swingy
-import psn.zirconium.features.HeldItemRender.swingz
 import psn.zirconium.features.HeldItemRender.translateSwing
 import kotlin.math.pow
 
@@ -62,8 +56,8 @@ object RenderHandItem{
         val attackHand=ars.currentSwing?.hand?:InteractionHand.MAIN_HAND
         
         //the slowly catching up effect when you turn the camera
-        ps.rotateDegrees(Axis.XP,(state.viewXRot-state.xBob)*0.1f)
-        ps.rotateDegrees(Axis.YP,(state.viewYRot-state.yBob)*0.1f)
+        ps.rotateDegrees(Axis.XP,(state.viewXRot-state.xBob)*driftMult)
+        ps.rotateDegrees(Axis.YP,(state.viewYRot-state.yBob)*driftMult)
         
         //items
         val mainHandItem=ars.mainHandItemStack
@@ -87,18 +81,18 @@ object RenderHandItem{
             if(mainHandItem.isEmpty){
                 if(ars.isInvisible)return
                 val arm=HumanoidArm.RIGHT //TODO left hand support
-                fallback.renderPlayerArm(ps, snc, ars.lightCoords, 0f, attack, arm,prs)
+                fallback.renderPlayerArm(ps, snc, 0, 0f, attack, arm,prs)
             }
             //map if map
             else if(mainHandItem.has(DataComponents.MAP_ID)){
-                fallback.renderTwoHandedMap(ps,snc,ars.lightCoords,ars.xRot,HEIGHT,attack,prs,state)
+                fallback.renderTwoHandedMap(ps,snc,0,ars.xRot,HEIGHT,attack,prs,state)
             }
             //normal item
             else{
                 //all the translation stuff
                 translate(ps,mainHandItem,state)
                 //render the item
-                state.offHandRenderState.submit(ps,snc,ars.lightCoords,OverlayTexture.NO_OVERLAY,0)
+                state.mainHandRenderState.submit(ps,snc,ars.lightCoords,OverlayTexture.NO_OVERLAY,0)
             }
             //saves positioning
             ps.popPose()
@@ -120,55 +114,74 @@ object RenderHandItem{
         }
     }
     
-    private fun translate(poseStack:PoseStack,itemStack:ItemStack,state:FirstPersonHandsAndItemsRenderState){
+    private fun translate(ps:PoseStack,stack:ItemStack,state:FirstPersonHandsAndItemsRenderState){
         //applyItemArmTransform
-        poseStack.translate(invert*0.56f,-0.52f+HEIGHT*-0.6f,-0.72f)
+        ps.translate(invert*0.56f,-0.52f+HEIGHT*-0.6f,-0.72f)
         
         //use transform
         if(mc.player?.isUsingItem==true){
-            useTranslate(poseStack,itemStack,state)
+            useTranslate(ps,stack,state)
         }
         
         //apply custom position
-        customTranslate(poseStack)
+        customTranslate(ps)
         
         //swing transform
-        swingTranslate(poseStack)
+        swingTranslate(ps)
     }
-    private fun customTranslate(poseStack:PoseStack){
-        poseStack.scale(itemWidth, itemHeight, itemLength)
-        poseStack.translate(invert * itemX, itemY, itemZ)
-        poseStack.rotate(Axis.XP,(itemXrot.toFloat()))
-        poseStack.rotate(Axis.YP,(invert * itemYrot).toFloat())
-        poseStack.rotate(Axis.ZP,(invert * itemZrot).toFloat())
+    private fun customTranslate(ps:PoseStack){
+        ps.scale(itemWidth, itemHeight, itemLength)
+        ps.translate(invert * itemX, itemY, itemZ)
+        ps.rotate(Axis.XP,(itemXrot))
+        ps.rotate(Axis.YP,(invert * itemYrot))
+        ps.rotate(Axis.ZP,(invert * itemZrot))
     }
-    private fun swingTranslate(poseStack:PoseStack) {
-        val sqf = Mth.sqrt(attack) * Math.PI
-        
+    private fun swingTranslate(ps:PoseStack) {
         if(translateSwing){
-            val tx = swingx * -0.4f * Mth.sin(sqf) * invert
-            val ty = swingy * 0.2f * Mth.sin(sqf * 2)
-            val tz = swingz * -0.2f * Mth.sin(attack * Math.PI)
-            poseStack.translate(tx, ty, tz)
+            val tx=-0.4f*Mth.sin((Mth.sqrt(attack)*Math.PI.toFloat()).toDouble())
+            val ty=0.2f*Mth.sin((Mth.sqrt(attack)*(Math.PI.toFloat()*2f)).toDouble())
+            val tz=-0.2f*Mth.sin((attack*Math.PI))
+            ps.translate(invert*tx,ty,tz)
         }
         
-        val xz = Mth.sin(sqf)
-        val r = invert * swingOrot
+        val yRot=Mth.sin((attack*attack*Math.PI.toFloat()).toDouble())
+        val xzRot=Mth.sin((Mth.sqrt(attack)*Math.PI))
         
-        val y = swingYrot * Mth.sin(attack * attack * Math.PI) * invert - r
-        val x = swingXrot * xz
-        val z = swingZrot * xz * invert
-        poseStack.rotate(Axis.YP,y)
-        poseStack.rotate(Axis.ZP,z)
-        poseStack.rotate(Axis.XP,x)
-        poseStack.rotate(Axis.YP,r)
+        ps.rotateDegrees(Axis.YP,invert*(45.0f+yRot*-20.0f))
+        ps.rotateDegrees(Axis.ZP,invert*xzRot*-20.0f)
+        ps.rotateDegrees(Axis.XP,xzRot*-80.0f)
+        ps.rotateDegrees(Axis.YP,invert*-45.0f)
     }
     
-    private fun block(poseStack:PoseStack){
-        poseStack.translate(invert*-0.14142136f,0.08f,0.14142136f)
-        poseStack.rotate(Axis.XP.rotationDegrees(-102.25f))
-        poseStack.rotate(Axis.YP.rotationDegrees(invert*13.365f))
-        poseStack.rotate(Axis.ZP.rotationDegrees(invert*78.05f))
+    private fun block(ps:PoseStack){
+        ps.translate(invert*-0.14142136f,0.08f,0.14142136f)
+        ps.rotate(Axis.XP.rotationDegrees(-102.25f))
+        ps.rotate(Axis.YP.rotationDegrees(invert*13.365f))
+        ps.rotate(Axis.ZP.rotationDegrees(invert*78.05f))
+    }
+    private fun eatOfficial(ps:PoseStack,ticks:Int){
+        val currUsageTime:Float=ticks-frameInterp+1f
+        val scaledUsageTime=currUsageTime/useDur
+        val eatJiggle=1.0f-scaledUsageTime.toDouble().pow(27.0).toFloat()
+        
+        if(scaledUsageTime<0.8f) {
+            val extraHeightOffset=Mth.abs(Mth.cos((currUsageTime/4f*Math.PI))*0.1f)
+            ps.translate(0.0f,extraHeightOffset,0.0f)
+        }
+        
+        ps.translate(eatJiggle*0.6f*invert.toFloat(),eatJiggle*-0.5f,0f)
+        ps.rotateDegrees(Axis.YP,invert.toFloat()*eatJiggle*90f)
+        ps.rotateDegrees(Axis.XP,eatJiggle*10f)
+        ps.rotateDegrees(Axis.ZP,invert.toFloat()*eatJiggle*30f)
+    }
+    private fun eatBetter(ps:PoseStack,ticks:Int){
+        val currUsageTime=ticks-frameInterp+1
+        val scaledUsageTime=currUsageTime/useDur
+        
+        if(scaledUsageTime<0.8f) {
+        
+        }
+        ps.translate(-scaledUsageTime,scaledUsageTime/2,0f)
     }
     private fun useTranslate(ps:PoseStack,item:ItemStack,state:FirstPersonHandsAndItemsRenderState){
         val arm=if(invert==1)HumanoidArm.LEFT else HumanoidArm.RIGHT
@@ -176,20 +189,7 @@ object RenderHandItem{
         when(item.useAnimation) {
             ItemUseAnimation.NONE,ItemUseAnimation.BUNDLE -> {}
             ItemUseAnimation.EAT,ItemUseAnimation.DRINK -> {
-                ps.translate(invert*-0.56f,0.52f+HEIGHT*0.6f,0.72f)
-                val currUsageTime=state.useItemRemainingTicks-frameInterp+1.0f
-                val scaledUsageTime=currUsageTime/useDur
-                if(scaledUsageTime<0.8f) {
-                    val extraHeightOffset=Mth.abs(Mth.cos((currUsageTime/4.0f*Math.PI))*0.1f)
-                    ps.translate(0.0f,extraHeightOffset,0.0f)
-                }
-                
-                val eatJiggle=1.0f-scaledUsageTime.toDouble().pow(27.0).toFloat()
-                ps.translate(eatJiggle*0.6f*invert,eatJiggle*-0.5f,eatJiggle*0.0f)
-                ps.rotate(Axis.YP,invert*eatJiggle*90.0f)
-                ps.rotate(Axis.XP,eatJiggle*10.0f)
-                ps.rotate(Axis.ZP,invert*eatJiggle*30.0f)
-                ps.translate(invert*0.56f,-0.52f+HEIGHT*-0.6f,-0.72f)
+                eatBetter(ps,state.useItemRemainingTicks)
             }
             
             ItemUseAnimation.BLOCK -> if(item.item !is ShieldItem) {
@@ -197,26 +197,24 @@ object RenderHandItem{
             }
             
             ItemUseAnimation.BOW,ItemUseAnimation.CROSSBOW -> {
-                ps.translate(invert*-0.2785682f,0.18344387f,0.15731531f)
-                ps.rotate(Axis.XP,-13.935f)
-                ps.rotate(Axis.YP,invert*35.3f)
-                ps.rotate(Axis.ZP,invert*-9.785f)
-                var power=timeHeld/20.0f
-                power=(power*power+power*2.0f)/3.0f
-                if(power>1.0f) {
-                    power=1.0f
-                }
+                ps.translate(invert.toFloat()*-0.2785682f,0.18344387f,0.15731531f)
+                ps.rotateDegrees(Axis.XP,-13.935f)
+                ps.rotateDegrees(Axis.YP,invert.toFloat()*35.3f)
+                ps.rotateDegrees(Axis.ZP,invert.toFloat()*-9.785f)
+                val timeHeld:Float=useDur-(state.useItemRemainingTicks-frameInterp+1f)
+                val p=timeHeld/20f
+                val power=((p*p+p*2f)/3f).coerceAtMost(1f)
                 
                 if(power>0.1f) {
                     val shakeOffset=Mth.sin(((timeHeld-0.1f)*1.3f).toDouble())
                     val shakeIntensity=power-0.1f
                     val shake=shakeOffset*shakeIntensity
-                    ps.translate(shake*0.0f,shake*0.004f,shake*0.0f)
+                    ps.translate(shake*0f,shake*0.004f,shake*0f)
                 }
                 
-                ps.translate(power*0.0f,power*0.0f,power*0.04f)
-                ps.scale(1.0f,1.0f,1.0f+power*0.2f)
-                ps.rotate(Axis.YN,invert*45.0f)
+                ps.translate(0f,0f,power*0.04f)
+                ps.scale(1f,1f,1f+power*0.2f)
+                ps.rotateDegrees(Axis.YN,invert*45f)
             }
             
             ItemUseAnimation.TRIDENT -> {
@@ -242,7 +240,7 @@ object RenderHandItem{
             }
             
             ItemUseAnimation.BRUSH -> {
-                ps.translate(invert*-0.56f,0.52f+HEIGHT*0.6f,0.72f)
+                //ps.translate(invert*-0.56f,0.52f+HEIGHT*0.6f,0.72f)
                 fallback.applyBrushTransform(ps,frameInterp,arm,state.useItemRemainingTicks.toFloat())
             }
             

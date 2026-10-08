@@ -1,4 +1,4 @@
-package psn.zirconium.mixin;
+package psn.zirconium.mixin.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer;
@@ -13,7 +13,7 @@ import psn.zirconium.features.HeldItemRender;
 import psn.zirconium.utils.RenderHandItem;
 
 @Mixin(FirstPersonHandsAndItemsRenderer.class)
-public abstract class R_RenderItemMixin {
+public abstract class RenderItemMixin{
     @Inject(method = "submitHandsWithItems",at = @At("HEAD"), cancellable=true)
     private void customRenderer(float partialTicks, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, PlayerRenderState playerState, FirstPersonHandsAndItemsRenderState state, CallbackInfo ci){
         if(HeldItemRender.INSTANCE.getEnabled()){

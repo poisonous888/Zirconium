@@ -1,4 +1,4 @@
-package psn.zirconium.mixin;
+package psn.zirconium.mixin.render;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntity.class)
-public abstract class R_LivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin extends Entity {
     @Shadow public float yBodyRot;
-    public R_LivingEntityMixin(EntityType<?> type, Level level) {
+    public LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);
     }
     
