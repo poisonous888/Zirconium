@@ -26,12 +26,12 @@ object ZirconiumEntry : ClientModInitializer {
             DropUtils,
             ChatRules,
             ChatUtils,
-            //Dailies,
             PacketChecker,
             Zoom,
             FastFuse,
             CryptAlert,
             Rift,
+            Timers,
         )
         println("Zirconium has entered the chat")
         ModuleManager.registerModules(ModuleConfig("Zirconium.json"),*modules.filter{module->module !is AsyncSave}.toTypedArray())
