@@ -7,15 +7,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import psn.zirconium.features.MiscFeatures;
-import psn.zirconium.features.MouseLock;
 import psn.zirconium.features.Zoom;
 
 @Mixin(MouseHandler.class)
 public class MouseMixin{
-    @Inject(method = "turnPlayer", at = @At("HEAD"), cancellable = true)
-    private void noRotate(double mousea, CallbackInfo ci) {
-        if (MouseLock.enabled()) ci.cancel();
-    }
+//    @Inject(method = "turnPlayer", at = @At("HEAD"), cancellable = true)
+//    private void noRotate(double mousea, CallbackInfo ci) {
+//        if (MouseLock.enabled()) ci.cancel();
+//    }
     
     @Inject(method="onScroll",at=@At("HEAD"), cancellable=true)
     private void zoomScroll(long handle, double xoffset, double yoffset, CallbackInfo ci){

@@ -13,5 +13,9 @@ accessible method net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer
 accessible method net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer applyBrushTransform (Lcom/mojang/blaze3d/vertex/PoseStack;FLnet/minecraft/world/entity/HumanoidArm;F)V
 accessible field net/minecraft/world/entity/LivingEntity swingState Lnet/minecraft/world/entity/LivingEntity$SwingState;
 accessible method net/minecraft/world/entity/LivingEntity getModifiedSwingDuration (Lnet/minecraft/world/item/component/SwingAnimation;)I
+accessible field net/minecraft/client/gui/screens/PauseScreen RETURN_TO_GAME Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/gui/screens/PauseScreen OPTIONS Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/gui/screens/options/OptionsScreen RESOURCEPACK Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/client/gui/screens/options/OptionsScreen SOUNDS Lnet/minecraft/network/chat/Component;
 
 

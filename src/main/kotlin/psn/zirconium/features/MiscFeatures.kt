@@ -5,6 +5,7 @@ import com.odtheking.odin.clickgui.settings.RenderableSetting.Companion.withDepe
 import com.odtheking.odin.clickgui.settings.impl.BooleanSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.DropdownSetting
+import com.odtheking.odin.clickgui.settings.impl.StringSetting
 import com.odtheking.odin.events.core.onReceive
 import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.Colors
@@ -33,6 +34,10 @@ object MiscFeatures : Module(
     @JvmStatic val noRecipeBook by BooleanSetting("No Recipe Book",false,"removes recipe book from inv").withDependency { renderCat }
     @JvmStatic val noPotionEffects by BooleanSetting("No Potion Effects",false,"removes the potion effect display from the inventory and the main hud").withDependency { renderCat }
     @JvmStatic val noLiquidFog by BooleanSetting("No Liquid Fog",false,"removes the fog from being underwater or under lava").withDependency { renderCat }
+    @JvmStatic val noSkyFog by BooleanSetting("No Sky Fog",false,"removes the fog from being far away from something").withDependency { renderCat }
+    @JvmStatic val noMicroSlop by BooleanSetting("No Microslop",false,"cleans up the title and pause menu").withDependency { renderCat }
+    @JvmStatic val titleText by StringSetting("Title Text","Hello World!",desc="cleans up the title and pause menu", placeholder = "").withDependency { renderCat && noMicroSlop }
+    
     
     val gameCat by DropdownSetting("Gameplay",desc="")
     @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }

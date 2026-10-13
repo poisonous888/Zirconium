@@ -20,7 +20,7 @@ object ZirconiumEntry : ClientModInitializer {
             GuiHighlight,
             StaticWaypoints,
             HeldItemRender,
-            MouseLock,
+            //MouseLock,
             Lag,
             HideArmor,
             DropUtils,
