@@ -264,9 +264,6 @@ object ChatRules: AsyncSave, Module(
         onReceive<ClientboundResetChatPacket>{  }
     }
     
-    private val config=ModuleConfig("ChatRules.json")
-    override fun getConfig():ModuleConfig{ return config }
-    
     val command = Commodore("chatrule","rule"){
         runs{
             modMessage("Chat Utils: Chat Rule",zcon)
@@ -386,4 +383,5 @@ object ChatRules: AsyncSave, Module(
     fun unabled(){
         if(!enabled)modMessage("§cChat Utils Module is disabled, custom chat rules will not function but can be modified","")
     }
+    override val config=ModuleConfig("ChatRules.json")
 }

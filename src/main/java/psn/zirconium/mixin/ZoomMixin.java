@@ -18,8 +18,4 @@ public class ZoomMixin{
         }
         return projectionMatrix;
     }
-//    @Inject(method="getNightVisionScale",at=@At("HEAD"))
-//    private static void fullbrightMaybeMaybe(LivingEntity camera, float a, CallbackInfoReturnable<Float> cir){
-//
-//    }
 }

@@ -32,7 +32,7 @@ dependencies {
     runtimeOnly("me.djtheredstoner:DevAuth-fabric:${property("devauth_version")}")
     implementation("com.github.stivais:Commodore:${property("commodore_version")}")
     
-    implementation(files("libs/Odin-0.3.6.jar"))
+    implementation(files("libs/${File("libs").listFiles()?.get(0)?.name}"))
     //implementation("com.github.odtheking:odinFabric:${property("odin_version")}")
     //TODO remove explicit jar
 

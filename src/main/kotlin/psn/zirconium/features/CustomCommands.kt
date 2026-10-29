@@ -302,8 +302,5 @@ object CustomCommands: AsyncSave, Module(
     fun unabled() {
         if(!enabled) modMessage("§cCustom Commands Module is disabled, custom keybinds will not function but can be modified","")
     }
-    private val config=ModuleConfig("CustomCommands.json")
-    override fun getConfig(): ModuleConfig {
-        return config
-    }
+    override val config=ModuleConfig("CustomCommands.json")
 }

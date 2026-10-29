@@ -99,10 +99,7 @@ object DropUtils: AsyncSave, Module(
     @JvmStatic fun doDropContainer(slot: Slot?, slotId: Int, clickType: ContainerInput): Boolean{
         if(!enabled)return false
         if(slot==null){
-            if(clickType==ContainerInput.QUICK_CRAFT){
-                return false
-            }
-            return dropWithMsg((mc.gui.screen() as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
+            return clickType!=ContainerInput.QUICK_CRAFT&&dropWithMsg((mc.gui.screen() as? AbstractContainerScreen<*>)?.menu?.carried?:return false)
         }
         if(noClickScreen||clickType==ContainerInput.THROW||slotId<0)return dropWithMsg(slot.item)
         return false
@@ -211,8 +208,5 @@ object DropUtils: AsyncSave, Module(
         //modMessage("Disabling Drop Utils Prevents Using Keybinds To Modify Protected List, But Due To It Relying On A Mixin, It Will Still Function")
         super.onDisable()
     }
-    private val config=ModuleConfig("DropUtils.json")
-    override fun getConfig(): ModuleConfig {
-        return config
-    }
+    override val config=ModuleConfig("DropUtils.json")
 }

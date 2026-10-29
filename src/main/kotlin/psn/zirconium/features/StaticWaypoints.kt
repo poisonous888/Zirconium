@@ -34,7 +34,7 @@ object StaticWaypoints: AsyncSave, Module(
     val storage by MapSetting(
         "Waypoint Storage",
         mutableMapOf(
-            Island.Dungeon to MutableList<Waypoint>(1){
+            Island.Dungeon to MutableList(1){
                 Waypoint("3x3", BlockPos(54, 64, 114), Colors.MINECRAFT_RED)
             }
         )
@@ -176,10 +176,7 @@ object StaticWaypoints: AsyncSave, Module(
         }
         //TODO redo static waypoints better
     }
-    private val config=ModuleConfig("StaticWaypoints.json")
-    override fun getConfig(): ModuleConfig {
-        return config
-    }
+    override val config=ModuleConfig("StaticWaypoints.json")
     private val colorStringMap=mapOf(
         "white" to Colors.WHITE,
         "black" to Colors.BLACK,
