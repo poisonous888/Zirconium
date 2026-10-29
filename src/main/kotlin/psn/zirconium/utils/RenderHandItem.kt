@@ -26,6 +26,13 @@ import psn.zirconium.features.HeldItemRender.itemY
 import psn.zirconium.features.HeldItemRender.itemYrot
 import psn.zirconium.features.HeldItemRender.itemZ
 import psn.zirconium.features.HeldItemRender.itemZrot
+import psn.zirconium.features.HeldItemRender.swingOrot
+import psn.zirconium.features.HeldItemRender.swingX
+import psn.zirconium.features.HeldItemRender.swingXrot
+import psn.zirconium.features.HeldItemRender.swingY
+import psn.zirconium.features.HeldItemRender.swingYrot
+import psn.zirconium.features.HeldItemRender.swingZ
+import psn.zirconium.features.HeldItemRender.swingZrot
 import psn.zirconium.features.HeldItemRender.translateSwing
 import kotlin.math.pow
 
@@ -138,19 +145,20 @@ object RenderHandItem{
     }
     private fun swingTranslate(ps:PoseStack) {
         if(translateSwing){
-            val tx=-0.4f*Mth.sin((Mth.sqrt(attack)*Math.PI.toFloat()).toDouble())
-            val ty=0.2f*Mth.sin((Mth.sqrt(attack)*(Math.PI.toFloat()*2f)).toDouble())
-            val tz=-0.2f*Mth.sin((attack*Math.PI))
+            val attSqrt=Mth.sqrt(attack)*Math.PI
+            val tx=-0.4f*Mth.sin(attSqrt)*swingX
+            val ty= 0.2f*Mth.sin(attSqrt*2)*swingY
+            val tz=-0.2f*Mth.sin(attack*Math.PI)*swingZ
             ps.translate(invert*tx,ty,tz)
         }
         
         val yRot=Mth.sin((attack*attack*Math.PI.toFloat()).toDouble())
         val xzRot=Mth.sin((Mth.sqrt(attack)*Math.PI))
         
-        ps.rotateDegrees(Axis.YP,invert*(45.0f+yRot*-20.0f))
-        ps.rotateDegrees(Axis.ZP,invert*xzRot*-20.0f)
-        ps.rotateDegrees(Axis.XP,xzRot*-80.0f)
-        ps.rotateDegrees(Axis.YP,invert*-45.0f)
+        ps.rotateDegrees(Axis.YP,invert*(45.0f+yRot*swingYrot))
+        ps.rotateDegrees(Axis.ZP,invert*xzRot*swingZrot)
+        ps.rotateDegrees(Axis.XP,xzRot*swingXrot)
+        ps.rotateDegrees(Axis.YP,invert*swingOrot)
     }
     
     private fun block(ps:PoseStack){
