@@ -4,12 +4,11 @@ import com.google.gson.JsonObject
 import com.odtheking.odin.OdinMod
 import com.odtheking.odin.OdinMod.mc
 import com.odtheking.odin.events.LevelEvent
+import com.odtheking.odin.events.MessageEvent
 import com.odtheking.odin.events.ScreenEvent
 import com.odtheking.odin.events.core.EventBus
 import com.odtheking.odin.events.core.on
-import com.odtheking.odin.events.core.onSend
 import com.odtheking.odin.utils.equalsOneOf
-import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.network.WebUtils.fetchJson
 import kotlinx.coroutines.launch
@@ -17,11 +16,10 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
-import net.minecraft.network.protocol.game.ServerboundAcceptTeleportationPacket
 import psn.zirconium.features.MiscFeatures
 import psn.zirconium.zcon
+import java.lang.System.gc
 import java.net.URI
-import kotlin.random.Random
 
 class UpdateCheck {
     init {
@@ -32,22 +30,7 @@ class UpdateCheck {
         on<LevelEvent.Load>{
             EventBus.unsubscribe(this@UpdateCheck)
             MiscFeatures.loaded=true
-            if(mc.player?.name?.string?.lowercase().equalsOneOf("zerostrike92")){EventBus.subscribe(object:Any(){
-                var False:Int?=null
-                var True=mc.options.fov()
-                init{
-                    onSend<ServerboundAcceptTeleportationPacket>{
-                        if(Random.nextFloat()<0.01){
-                            if(null==False)False=True.get()
-                            True.set(30)
-                            schedule(5,true){
-                                True.set(False?:return@schedule)
-                                False=null
-                            }
-                        }
-                    }
-                }
-            })}
+            if(mc.player?.name?.string?.lowercase().equalsOneOf("zerostrike92")){EventBus.subscribe(object:Any(){init{on<MessageEvent>{gc()}}})}
             OdinMod.scope.launch{
                 if(!MiscFeatures.updateNotif)return@launch
                 val curVer=FabricLoader.getInstance().getModContainer("zconaddon").get().metadata.version.friendlyString?:return@launch

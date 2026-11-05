@@ -12,7 +12,7 @@ public class LivingEntitySwingMixin{
     private static int modifySwingTime(int durationTicks){
         if(HeldItemRender.doSwingDur()){
             if(HeldItemRender.doHaste()){
-                durationTicks=HeldItemRender.getSwingDuration() + durationTicks - 7;
+                durationTicks=HeldItemRender.getSwingDuration()+durationTicks-7;
             }
             else{
                 durationTicks=HeldItemRender.getSwingDuration();

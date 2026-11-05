@@ -30,18 +30,16 @@ object ZirconiumEntry: ClientModInitializer {
             Zoom,
             FastFuse,
             CryptAlert,
-            Rift,
+            //Rift,
             Timers,
         )
         println("Zirconium has entered the chat")
-        ModuleManager.registerModules(ModuleConfig("Zirconium.json"),*modules.filter{module->module !is AsyncSave}.toTypedArray())
-        for(module in modules.filter{module->module is AsyncSave}){
-            ModuleManager.registerModules((module as AsyncSave).config,module)
-        }
+        ModuleManager.registerModules(ModuleConfig("Zirconium.json"),*modules.filter{it !is AsyncSave}.toTypedArray())
+        modules.filter{it is AsyncSave}.forEach{ModuleManager.registerModules((it as AsyncSave).config,it)}
         EventBus.subscribe(UpdateCheck())
         EventBus.subscribe(LocationCheck)
     }
-    val zconCat = Category.custom("Zirconium",860,10)
+    val zconCat=Category.custom("Zirconium",860,10)
     @JvmStatic var connection: Connection?=null
 }
 fun modMessageJava(msg:String){

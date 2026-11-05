@@ -13,7 +13,7 @@ import kotlin.math.pow
 object Zoom: Module(
     name = "Zoom",
     description = "Copy Chat, Compact Chat, Etc",
-    category=ZirconiumEntry.zconCat
+    category = ZirconiumEntry.zconCat
 ) {
     private val zoomKey by KeybindSetting("Zoom Key",InputConstants.UNKNOWN.value)
     private val reset by BooleanSetting("Reset To Default After Use",true,"")

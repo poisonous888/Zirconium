@@ -17,9 +17,9 @@ import net.minecraft.world.item.Items
 import psn.zirconium.ZirconiumEntry
 
 object GuiHighlight: Module(
-    name="GUI Highlight",
-    description="Highlights Certain GUI Slots",
-    category=ZirconiumEntry.zconCat
+    name = "GUI Highlight",
+    description = "Highlights Certain GUI Slots",
+    category = ZirconiumEntry.zconCat
 ) {
     private val highlightPet by BooleanSetting(
         "Highlight Active Pet",

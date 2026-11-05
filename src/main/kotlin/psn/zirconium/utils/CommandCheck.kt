@@ -6,11 +6,10 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import psn.zirconium.commands.locationCommand
 import psn.zirconium.commands.modelCommand
-import psn.zirconium.commands.rctaCommand
 
 class CommandCheck {
     init {
-        onCommand { rctaCommand }
+        //onCommand { rctaCommand }
         onCommand { modelCommand }
         onCommand { locationCommand }
     }

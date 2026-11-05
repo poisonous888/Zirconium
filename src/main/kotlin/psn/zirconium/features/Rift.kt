@@ -21,7 +21,7 @@ import psn.zirconium.zcon
 object Rift : Module(
     name = "Rift",
     description = "puffin' and spinnin'",
-    category=ZirconiumEntry.zconCat
+    category = ZirconiumEntry.zconCat
 ) {
     private val announce by BooleanSetting("Kill Timeout",true,"")
     private val puffHud by HUD("HUD","") {

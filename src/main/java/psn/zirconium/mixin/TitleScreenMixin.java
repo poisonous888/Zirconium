@@ -22,14 +22,14 @@ public abstract class TitleScreenMixin extends Screen{
     private void noMicroSlop(CallbackInfo ci){
         if(!MiscFeatures.getNoMicroSlop())return;
         
-        int spacing = 24;
-        int topPos = this.height / 4 + 48;
-        int sidePos = width / 2 - 100;
+        final int spacing = 24;
+        final int topPos = height / 4 + 48;
+        final int sidePos = width / 2 - 100;
         
         addRenderableWidget(
             Button.builder(
                 Component.translatable("menu.singleplayer"),
-                (singlePlayer) ->
+                (_) ->
                     minecraft.gui.setScreen(new SelectWorldScreen(this))
             )
             .bounds(sidePos, topPos, 200, 20)
@@ -39,7 +39,7 @@ public abstract class TitleScreenMixin extends Screen{
         addRenderableWidget(
             Button.builder(
                 Component.translatable("menu.multiplayer"),
-                (multiplayer) -> minecraft.gui.setScreen(new JoinMultiplayerScreen(this))
+                (_) -> minecraft.gui.setScreen(new JoinMultiplayerScreen(this))
             )
             .bounds(sidePos, topPos + spacing, 200, 20)
             .build()
@@ -48,7 +48,7 @@ public abstract class TitleScreenMixin extends Screen{
         addRenderableWidget(
             Button.builder(
                 Component.translatable("menu.options"),
-                (options) ->
+                (_) ->
                     minecraft.gui.setScreen(new OptionsScreen(this, this.minecraft.options))
             )
             .bounds(sidePos, topPos + 2 * spacing + 12, 98, 20)
@@ -58,7 +58,7 @@ public abstract class TitleScreenMixin extends Screen{
         addRenderableWidget(
             Button.builder(
                 Component.translatable("menu.quit"),
-                (quit) ->
+                (_) ->
                     minecraft.stop()
             )
             .bounds(width / 2 + 2, topPos + 2 * spacing + 12, 98, 20)
@@ -75,11 +75,10 @@ public abstract class TitleScreenMixin extends Screen{
                 copyrightWidth,
                 10,
                 text,
-                (nothing) -> {},
+                (_) -> {},
                 this.font
             )
         );
-        
         
         ci.cancel();
     }

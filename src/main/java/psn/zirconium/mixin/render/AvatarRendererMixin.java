@@ -22,7 +22,7 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
         at = @At(value="INVOKE", target="Lnet/minecraft/world/item/ItemStack;getUseAnimation()Lnet/minecraft/world/item/ItemUseAnimation;")
     )
     private static ItemUseAnimation blockFood(ItemStack instance){
-        var anim=instance.getUseAnimation();
+        final var anim=instance.getUseAnimation();
         if(HeldItemRender.doDrink3rd()&&anim==ItemUseAnimation.DRINK||anim==ItemUseAnimation.EAT){
             return ItemUseAnimation.TOOT_HORN;
         }

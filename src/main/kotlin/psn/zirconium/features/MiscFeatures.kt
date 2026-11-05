@@ -11,12 +11,13 @@ import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.Colors
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket
 import net.minecraft.network.protocol.common.ServerboundResourcePackPacket
+import org.joml.Vector3f
 import psn.zirconium.ZirconiumEntry
 
 object MiscFeatures : Module(
     name = "Misc Features",
     description = "Random small stuff that dosent need a dedicated module",
-    category=ZirconiumEntry.zconCat
+    category = ZirconiumEntry.zconCat
 ) {
     val updateNotif by BooleanSetting("Update Notification",true,"")
     
@@ -28,7 +29,7 @@ object MiscFeatures : Module(
     
     var loaded=false
     @JvmStatic fun canRemovePacks():Boolean{return noRequiredPacks&&loaded}
-    val dynamicLoading by BooleanSetting("Dynamic Loading",true,"dynamically loads island specific modules").withDependency { loadCat }
+    val dynamicLoading by BooleanSetting("Dynamic Module Loading",true,"dynamically loads island specific modules").withDependency { loadCat }
     
     val renderCat by DropdownSetting("Render",desc="")
     @JvmStatic val noRecipeBook by BooleanSetting("No Recipe Book",false,"removes recipe book from inv").withDependency { renderCat }
@@ -60,7 +61,11 @@ object MiscFeatures : Module(
     @JvmStatic val customSkyColor by BooleanSetting("Custom Sky/Fog Color",false,"").withDependency { visualCat }
     @JvmStatic val skyColor by ColorSetting("Sky Color",Colors.MINECRAFT_AQUA,false,"").withDependency { visualCat&&customSkyColor }
     @JvmStatic val fullbright by BooleanSetting("Fullbright",false,"").withDependency { visualCat }
-    @JvmStatic val lightColor by ColorSetting("Light Color",Colors.WHITE,false,"").withDependency { visualCat&&fullbright }
+    private val lightColor by ColorSetting("Light Color",Colors.WHITE,false,"").withDependency { visualCat&&fullbright }
+    
+    @JvmStatic fun lightVec():Vector3f {
+        return Vector3f(lightColor.redFloat,lightColor.greenFloat,lightColor.blueFloat)
+    }
 //    @JvmStatic val weather by SelectorSetting("Weather Type","Vanilla",listOf("Vanilla","Clear","Rain","Snow"),"").withDependency { visualCat }
 //    @JvmStatic val setWeatherStats by BooleanSetting("Set Weather Stats",false,"").withDependency { visualCat }
 //    @JvmStatic val weatherIntensity by NumberSetting("Weather Intensity",1f,0,1,0.01,"").withDependency { visualCat, setWeatherStats }

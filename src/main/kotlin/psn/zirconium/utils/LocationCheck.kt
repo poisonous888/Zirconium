@@ -11,32 +11,28 @@ import psn.zirconium.features.MiscFeatures
 import psn.zirconium.zcon
 
 object LocationCheck {
-    fun Any.dynamicLoad(island:Island) {
-        locationList.add(DynamicModule(this as Module,island))
+    fun Any.dynamicLoad(vararg island:Island) {
+        locationList.add(DynamicModule(this as Module,island.toList()))
     }
     private class DynamicModule(
         val module:Module,
-        val location:Island
+        val location:List<Island>
     )
     private val locationList=mutableListOf<DynamicModule>()
-    private val loaded=mutableListOf<DynamicModule>()
     
     init {
         on<LocationChangeEvent> {
-            for(mod in loaded){
-                EventBus.unsubscribe(mod)
-            }
-            loaded.clear()
             if(!MiscFeatures.dynamicLoading){
-                for(mod in locationList){
-                    EventBus.subscribe(mod)
-                }
+                locationList.forEach{EventBus.subscribe(it)}
                 return@on
             }
-            for(mod in locationList){
-                if(mod.module.enabled&&LocationUtils.isCurrentArea(mod.location)) {
-                    EventBus.subscribe(mod.module)
-                    modMessage("Loaded ${mod.module.name} module",zcon)
+            locationList.forEach{
+                if(it.module.enabled&&it.location.any{loc->loc==LocationUtils.currentArea}) {
+                    EventBus.subscribe(it.module)
+                    modMessage("Loaded ${it.module.name} module",zcon)
+                }
+                else{
+                    EventBus.unsubscribe(it)
                 }
             }
         }

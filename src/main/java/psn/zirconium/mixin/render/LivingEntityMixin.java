@@ -32,10 +32,10 @@ public abstract class LivingEntityMixin extends Entity {
     @WrapOperation(method = "tickHeadTurn", at = @At(value = "INVOKE", target = "Ljava/lang/Math;abs(F)F"))
     private float backwardsWalkingHeadRotation(float a, Operation<Float> original) {
         if (MiscFeatures.getDiagonalWalk()) {
-            a= Mth.clamp(a, -75.0F, 75.0F);
-            this.yBodyRot = this.getYRot() - a;
-            if (Math.abs(a) > 50.0F) {
-                this.yBodyRot += a * 0.2F;
+            a=Mth.clamp(a,-75.0F,75.0F);
+            yBodyRot=getYRot()-a;
+            if (Math.abs(a)>50.0F) {
+                yBodyRot+=a*.2F;
             }
             return Float.MIN_VALUE;
         }

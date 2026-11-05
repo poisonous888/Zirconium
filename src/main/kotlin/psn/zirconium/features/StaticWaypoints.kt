@@ -25,7 +25,7 @@ import java.util.Locale.getDefault
 object StaticWaypoints: AsyncSave, Module(
     name = "Static Waypoints",
     description = "static island based waypoints",
-    category=ZirconiumEntry.zconCat
+    category = ZirconiumEntry.zconCat
 ) {
     val defaultColor by ColorSetting("Default Color",Colors.MINECRAFT_AQUA,true,"default color for waypoints without a specified color")
     val add3x3 by ActionSetting("Add 3x3","readds the 3x3 waypoint for f7/m7 in case you clear it"){

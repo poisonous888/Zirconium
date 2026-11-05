@@ -18,6 +18,7 @@ group = property("maven_group") as String
 version = property("mod_version") as String
 
 repositories {
+    google()
     mavenCentral()
     maven("https://jitpack.io")
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
@@ -32,9 +33,9 @@ dependencies {
     runtimeOnly("me.djtheredstoner:DevAuth-fabric:${property("devauth_version")}")
     implementation("com.github.stivais:Commodore:${property("commodore_version")}")
     
-    implementation(files("libs/${File("libs").listFiles()?.get(0)?.name}"))
-    //implementation("com.github.odtheking:odinFabric:${property("odin_version")}")
-    //TODO remove explicit jar
+    implementation("com.github.odtheking:odinFabric:${property("odin_version")}")
+    //implementation(files("libs/${File("libs").listFiles()?.get(0)?.name}"))
+    //swap to local if jitpack breaks again
 
     property("minecraft_lwjgl_version").let { lwjglVersion ->
         implementation("org.lwjgl:lwjgl-nanovg:$lwjglVersion")

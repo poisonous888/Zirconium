@@ -24,7 +24,7 @@ import psn.zirconium.zcon
 object CustomCommands: AsyncSave, Module(
     name = "Custom Commands",
     description = "Command Aliases and Command Keybinds",
-    category=ZirconiumEntry.zconCat
+    category = ZirconiumEntry.zconCat
 ) {
     private val aliasCmd by StringSetting("Alias","",desc="",placeholder="")
     private val keybindKey by KeybindSetting("Key",InputConstants.UNKNOWN.value)

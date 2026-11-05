@@ -21,14 +21,14 @@ import psn.zirconium.zcon
 object ChatRules: AsyncSave, Module(
     name = "Chat Rules",
     description = "Chat Alerts and Hider",
-    category=ZirconiumEntry.zconCat
+    category = ZirconiumEntry.zconCat
 ) {
-    private val addName by StringSetting("Name", "", desc="",placeholder="")
-    private val addTrigger by StringSetting("Regex","",desc="",placeholder="")
-    private val addType by SelectorSetting("Type",RegType.CONTAINS,"")
-    private val addHide by BooleanSetting("Hide",false,"")
-    private val addMessage by StringSetting("Alert (blank for none)","",desc="",placeholder="")
-    private val ruleAdd by ActionSetting("Add Rule", "") {
+    val addName by StringSetting("Name", "", desc="",placeholder="")
+    val addTrigger by StringSetting("Regex","",desc="",placeholder="")
+    val addType by SelectorSetting("Type",RegType.CONTAINS,"")
+    val addHide by BooleanSetting("Hide",false,"")
+    val addMessage by StringSetting("Alert (blank for none)","",desc="",placeholder="")
+    val ruleAdd by ActionSetting("Add Rule", "") {
         addRule(addName,addTrigger,addType,addMessage,addHide)
     }
     enum class RegType{
@@ -48,19 +48,19 @@ object ChatRules: AsyncSave, Module(
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
-    private val presetChatRules by DropdownSetting("Preset Rules",desc="")
-    private val pickAlert by BooleanSetting("Pickaxe ability alert",false,"").withDependency { presetChatRules }
-    private val pickAlertEnd by BooleanSetting("Pickaxe ability done alert",false,"").withDependency { presetChatRules && pickAlert }
-    private val pickReg=Regex("(Mining Speed Boost|Pickobulus|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) is now available!")
-    private val pickEndReg=Regex("Your (Mining Speed Boost|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) has expired!")
-    private val abilityHider by BooleanSetting("Ability damage hider",false,"").withDependency { presetChatRules }
-    private val abilityReg=Regex("^Your [A-Za-z ]+ hit [0-9]+ (enemies|enemy) for [0-9,.]+ damage\\.$")
-    private val blocksInWayHider by BooleanSetting("Blocks in the way hider",false,"").withDependency { presetChatRules }
-    private val blocksInWayReg=Regex("^There are blocks in the way!$")
-    private val grandmaHider by BooleanSetting("Kill combo hider",false,"").withDependency { presetChatRules }
-    private val grandmaReg=Regex("(^\\+[0-9]+ Kill Combo)|(^Your Kill Combo has expired! You reached a [0-9]+ Kill Combo!$)")
-    private val cooldownHider by BooleanSetting("Ability cooldown hider",false,"").withDependency { presetChatRules }
-    private val cooldownReg=Regex("^This ability is on cooldown for [0-9]+s\\.$")
+    val presetChatRules by DropdownSetting("Preset Rules",desc="")
+    val pickAlert by BooleanSetting("Pickaxe ability alert",false,"").withDependency { presetChatRules }
+    val pickAlertEnd by BooleanSetting("Pickaxe ability done alert",false,"").withDependency { presetChatRules && pickAlert }
+    val pickReg=Regex("(Mining Speed Boost|Pickobulus|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) is now available!")
+    val pickEndReg=Regex("Your (Mining Speed Boost|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) has expired!")
+    val abilityHider by BooleanSetting("Ability damage hider",false,"").withDependency { presetChatRules }
+    val abilityReg=Regex("^Your [A-Za-z ]+ hit [0-9]+ (enemies|enemy) for [0-9,.]+ damage\\.$")
+    val blocksInWayHider by BooleanSetting("Blocks in the way hider",false,"").withDependency { presetChatRules }
+    val blocksInWayReg=Regex("^There are blocks in the way!$")
+    val grandmaHider by BooleanSetting("Kill combo hider",false,"").withDependency { presetChatRules }
+    val grandmaReg=Regex("(^\\+[0-9]+ Kill Combo)|(^Your Kill Combo has expired! You reached a [0-9]+ Kill Combo!$)")
+    val cooldownHider by BooleanSetting("Ability cooldown hider",false,"").withDependency { presetChatRules }
+    val cooldownReg=Regex("^This ability is on cooldown for [0-9]+s\\.$")
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
