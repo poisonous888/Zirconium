@@ -23,7 +23,7 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
     )
     private static ItemUseAnimation blockFood(ItemStack instance){
         final var anim=instance.getUseAnimation();
-        if(HeldItemRender.doDrink3rd()&&anim==ItemUseAnimation.DRINK||anim==ItemUseAnimation.EAT){
+        if(HeldItemRender.getDoDrink3rd()&&anim==ItemUseAnimation.DRINK||anim==ItemUseAnimation.EAT){
             return ItemUseAnimation.TOOT_HORN;
         }
         return anim;

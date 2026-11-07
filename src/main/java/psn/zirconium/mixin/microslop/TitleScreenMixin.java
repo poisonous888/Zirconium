@@ -1,4 +1,4 @@
-package psn.zirconium.mixin;
+package psn.zirconium.mixin.microslop;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.PlainTextButton;

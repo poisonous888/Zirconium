@@ -48,19 +48,22 @@ object ChatRules: AsyncSave, Module(
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
-    val presetChatRules by DropdownSetting("Preset Rules",desc="")
-    val pickAlert by BooleanSetting("Pickaxe ability alert",false,"").withDependency { presetChatRules }
-    val pickAlertEnd by BooleanSetting("Pickaxe ability done alert",false,"").withDependency { presetChatRules && pickAlert }
+    val presetCat by DropdownSetting("Preset Rules",desc="")
+    val pickAlert by BooleanSetting("Pickaxe ability alert",false,"").withDependency { presetCat }
+    val pickAlertEnd by BooleanSetting("Pickaxe ability done alert",false,"").withDependency { presetCat && pickAlert }
     val pickReg=Regex("(Mining Speed Boost|Pickobulus|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) is now available!")
     val pickEndReg=Regex("Your (Mining Speed Boost|Anomalous Desire|Maniac Miner|Gemstone Infusion|Sheer Force) has expired!")
-    val abilityHider by BooleanSetting("Ability damage hider",false,"").withDependency { presetChatRules }
+    val abilityHider by BooleanSetting("Ability damage hider",false,"").withDependency { presetCat }
     val abilityReg=Regex("^Your [A-Za-z ]+ hit [0-9]+ (enemies|enemy) for [0-9,.]+ damage\\.$")
-    val blocksInWayHider by BooleanSetting("Blocks in the way hider",false,"").withDependency { presetChatRules }
+    val blocksInWayHider by BooleanSetting("Blocks in the way hider",false,"").withDependency { presetCat }
     val blocksInWayReg=Regex("^There are blocks in the way!$")
-    val grandmaHider by BooleanSetting("Kill combo hider",false,"").withDependency { presetChatRules }
+    val grandmaHider by BooleanSetting("Kill combo hider",false,"").withDependency { presetCat }
     val grandmaReg=Regex("(^\\+[0-9]+ Kill Combo)|(^Your Kill Combo has expired! You reached a [0-9]+ Kill Combo!$)")
-    val cooldownHider by BooleanSetting("Ability cooldown hider",false,"").withDependency { presetChatRules }
+    val cooldownHider by BooleanSetting("Ability cooldown hider",false,"").withDependency { presetCat }
     val cooldownReg=Regex("^This ability is on cooldown for [0-9]+s\\.$")
+    val reload by ActionSetting("Reload Rules",""){
+        load()
+    }.withDependency { presetCat }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     

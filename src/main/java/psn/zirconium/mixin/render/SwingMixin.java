@@ -32,7 +32,7 @@ public abstract class SwingMixin{
     @Shadow @Final public Options options;
     @Shadow @Nullable public LocalPlayer player;
     @Unique private void fakeHit(){
-        if(!HeldItemRender.doUsing()||player==null)return;
+        if(!HeldItemRender.getDoUsing()||player==null)return;
         final var swing=player.swingState;
         final var animation=player.getMainHandItem().getAttackAnimation();
         swing.startIfAble(InteractionHand.MAIN_HAND,animation,player.getModifiedSwingDuration(animation));

@@ -14,7 +14,7 @@ import psn.zirconium.features.HideArmor;
 public class ArmorSkullMixin<T extends LivingEntity, S extends LivingEntityRenderState>{
     @Inject(method="extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at=@At("TAIL"))
     private void noSkull(T entity, S state, float partialTicks, CallbackInfo ci){
-        if(!HideArmor.skullDisabled()||entity instanceof ArmorStand) return;
+        if(!HideArmor.getSkullDisabled()||entity instanceof ArmorStand) return;
         state.headItem.clear();
         state.wornHeadType=null;
     }

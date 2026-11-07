@@ -28,14 +28,14 @@ object MiscFeatures : Module(
     //@JvmStatic val odinDevModules by BooleanSetting("Odin Dev Modules",false,"REQUIRES RESTART enables developer modules in odin WONT SAVE IF YOU TURN OFF").withDependency { loadCat }
     
     var loaded=false
-    @JvmStatic fun canRemovePacks():Boolean{return noRequiredPacks&&loaded}
+    @JvmStatic val canRemovePacks get()= noRequiredPacks&&loaded
     val dynamicLoading by BooleanSetting("Dynamic Module Loading",true,"dynamically loads island specific modules").withDependency { loadCat }
     
     val renderCat by DropdownSetting("Render",desc="")
     @JvmStatic val noRecipeBook by BooleanSetting("No Recipe Book",false,"removes recipe book from inv").withDependency { renderCat }
     @JvmStatic val noPotionEffects by BooleanSetting("No Potion Effects",false,"removes the potion effect display from the inventory and the main hud").withDependency { renderCat }
     @JvmStatic val noLiquidFog by BooleanSetting("No Liquid Fog",false,"removes the fog from being underwater or under lava").withDependency { renderCat }
-    @JvmStatic val noSkyFog by BooleanSetting("No Sky Fog",false,"removes the fog from being far away from something").withDependency { renderCat }
+    //TODO @JvmStatic val noSkyFog by BooleanSetting("No Sky Fog",false,"removes the fog from being far away from something").withDependency { renderCat }
     @JvmStatic val noMicroSlop by BooleanSetting("No Microslop",false,"cleans up the title and pause menu").withDependency { renderCat }
     @JvmStatic val titleText by StringSetting("Title Text","Hello World!",desc="cleans up the title and pause menu", placeholder = "").withDependency { renderCat && noMicroSlop }
     
@@ -62,10 +62,7 @@ object MiscFeatures : Module(
     @JvmStatic val skyColor by ColorSetting("Sky Color",Colors.MINECRAFT_AQUA,false,"").withDependency { visualCat&&customSkyColor }
     @JvmStatic val fullbright by BooleanSetting("Fullbright",false,"").withDependency { visualCat }
     private val lightColor by ColorSetting("Light Color",Colors.WHITE,false,"").withDependency { visualCat&&fullbright }
-    
-    @JvmStatic fun lightVec():Vector3f {
-        return Vector3f(lightColor.redFloat,lightColor.greenFloat,lightColor.blueFloat)
-    }
+    @JvmStatic val lightVec get()=Vector3f(lightColor.redFloat,lightColor.greenFloat,lightColor.blueFloat)
 //    @JvmStatic val weather by SelectorSetting("Weather Type","Vanilla",listOf("Vanilla","Clear","Rain","Snow"),"").withDependency { visualCat }
 //    @JvmStatic val setWeatherStats by BooleanSetting("Set Weather Stats",false,"").withDependency { visualCat }
 //    @JvmStatic val weatherIntensity by NumberSetting("Weather Intensity",1f,0,1,0.01,"").withDependency { visualCat, setWeatherStats }

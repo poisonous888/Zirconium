@@ -16,19 +16,16 @@ object HideArmor:Module(
     private val legs by BooleanSetting("Leggings",false,"")
     private val boots by BooleanSetting("Boots",false,"")
     
-    @JvmStatic fun checkIfRenderable(slot:EquipmentSlot):Boolean {
-        if(!enabled) return false
+    @JvmStatic val skullDisabled get()=enabled&&skull
+    @JvmStatic fun checkIfRenderable(slot:EquipmentSlot):Boolean{
+        if(!enabled)return false
         when(slot) {
-            EquipmentSlot.HEAD->if(helm) return true
-            EquipmentSlot.CHEST->if(chest) return true
-            EquipmentSlot.LEGS->if(legs) return true
-            EquipmentSlot.FEET->if(boots) return true
-            else -> {}
+            EquipmentSlot.HEAD->if(helm)return true
+            EquipmentSlot.CHEST->if(chest)return true
+            EquipmentSlot.LEGS->if(legs)return true
+            EquipmentSlot.FEET->if(boots)return true
+            else->{}
         }
         return false
-    }
-    
-    @JvmStatic fun skullDisabled():Boolean {
-        return enabled&&!skull
     }
 }

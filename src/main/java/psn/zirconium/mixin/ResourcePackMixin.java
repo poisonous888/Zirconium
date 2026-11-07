@@ -19,6 +19,6 @@ public class ResourcePackMixin {
     }
     @Inject(method = "isRequired", at = @At("RETURN"), cancellable=true)
     private void noRequired(CallbackInfoReturnable<Boolean> cir){
-        if(MiscFeatures.canRemovePacks())cir.setReturnValue(false);
+        if(MiscFeatures.getCanRemovePacks())cir.setReturnValue(false);
     }
 }

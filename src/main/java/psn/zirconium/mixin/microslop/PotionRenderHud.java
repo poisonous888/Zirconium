@@ -1,4 +1,4 @@
-package psn.zirconium.mixin;
+package psn.zirconium.mixin.microslop;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

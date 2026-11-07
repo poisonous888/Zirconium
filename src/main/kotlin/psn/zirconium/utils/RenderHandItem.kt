@@ -19,6 +19,7 @@ import net.minecraft.world.item.ShieldItem
 import psn.zirconium.features.HeldItemRender.driftMult
 import psn.zirconium.features.HeldItemRender.itemHeight
 import psn.zirconium.features.HeldItemRender.itemLength
+import psn.zirconium.features.HeldItemRender.itemScale
 import psn.zirconium.features.HeldItemRender.itemWidth
 import psn.zirconium.features.HeldItemRender.itemX
 import psn.zirconium.features.HeldItemRender.itemXrot
@@ -26,6 +27,7 @@ import psn.zirconium.features.HeldItemRender.itemY
 import psn.zirconium.features.HeldItemRender.itemYrot
 import psn.zirconium.features.HeldItemRender.itemZ
 import psn.zirconium.features.HeldItemRender.itemZrot
+import psn.zirconium.features.HeldItemRender.sameScale
 import psn.zirconium.features.HeldItemRender.swingOrot
 import psn.zirconium.features.HeldItemRender.swingX
 import psn.zirconium.features.HeldItemRender.swingXrot
@@ -137,11 +139,12 @@ object RenderHandItem{
         swingTranslate(ps)
     }
     private fun customTranslate(ps:PoseStack){
-        ps.scale(itemWidth, itemHeight, itemLength)
         ps.translate(invert * itemX, itemY, itemZ)
-        ps.rotate(Axis.XP,(itemXrot))
-        ps.rotate(Axis.YP,(invert * itemYrot))
-        ps.rotate(Axis.ZP,(invert * itemZrot))
+        if(sameScale) ps.scale(itemScale, itemScale, itemScale)
+        else ps.scale(itemWidth, itemHeight, itemLength)
+        ps.rotate(Axis.XP,itemXrot)
+        ps.rotate(Axis.YP,invert * itemYrot)
+        ps.rotate(Axis.ZP,invert * itemZrot)
     }
     private fun swingTranslate(ps:PoseStack) {
         if(translateSwing){
@@ -152,8 +155,8 @@ object RenderHandItem{
             ps.translate(invert*tx,ty,tz)
         }
         
-        val yRot=Mth.sin((attack*attack*Math.PI.toFloat()).toDouble())
-        val xzRot=Mth.sin((Mth.sqrt(attack)*Math.PI))
+        val yRot=Mth.sin(attack*attack*Math.PI.toFloat().toDouble())
+        val xzRot=Mth.sin(Mth.sqrt(attack)*Math.PI)
         
         ps.rotateDegrees(Axis.YP,invert*(45.0f+yRot*swingYrot))
         ps.rotateDegrees(Axis.ZP,invert*xzRot*swingZrot)
@@ -173,7 +176,7 @@ object RenderHandItem{
         val eatJiggle=1.0f-scaledUsageTime.toDouble().pow(27.0).toFloat()
         
         if(scaledUsageTime<0.8f) {
-            val extraHeightOffset=Mth.abs(Mth.cos((currUsageTime/4f*Math.PI))*0.1f)
+            val extraHeightOffset=Mth.abs(Mth.cos(currUsageTime/4f*Math.PI)*0.1f)
             ps.translate(0.0f,extraHeightOffset,0.0f)
         }
         
@@ -184,10 +187,10 @@ object RenderHandItem{
     }
     private fun eatBetter(ps:PoseStack,ticks:Int){
         val currUsageTime=ticks-frameInterp+1
-        val scaledUsageTime=currUsageTime/useDur
+        val scaledUsageTime=1-currUsageTime/useDur
         
-        if(scaledUsageTime<0.8f) {
-        
+        if(scaledUsageTime<0.2f) {
+
         }
         ps.translate(-scaledUsageTime,scaledUsageTime/2,0f)
     }

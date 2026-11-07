@@ -1,7 +1,6 @@
 package psn.zirconium.features
 
 import com.github.stivais.commodore.Commodore
-import com.odtheking.odin.clickgui.settings.impl.ActionSetting
 import com.odtheking.odin.clickgui.settings.impl.ColorSetting
 import com.odtheking.odin.clickgui.settings.impl.MapSetting
 import com.odtheking.odin.config.ModuleConfig
@@ -24,13 +23,10 @@ import java.util.Locale.getDefault
 
 object StaticWaypoints: AsyncSave, Module(
     name = "Static Waypoints",
-    description = "static island based waypoints",
+    description = "island based waypoints",
     category = ZirconiumEntry.zconCat
 ) {
     val defaultColor by ColorSetting("Default Color",Colors.MINECRAFT_AQUA,true,"default color for waypoints without a specified color")
-    val add3x3 by ActionSetting("Add 3x3","readds the 3x3 waypoint for f7/m7 in case you clear it"){
-        addWaypoint("3x3",54, 64, 114,Colors.MINECRAFT_RED,Island.Dungeon)
-    }
     val storage by MapSetting(
         "Waypoint Storage",
         mutableMapOf(

@@ -48,7 +48,7 @@ public class LightMixin{
                 renderState.blockLightTint = lightColor;
                 renderState.skyLightColor = lightColor;
                 renderState.nightVisionColor = lightColor;
-                renderState.ambientColor = MiscFeatures.lightVec();
+                renderState.ambientColor = MiscFeatures.getLightVec();
                 //renderState.ambientColor = lightColor;
                 
                 profiler.pop();

@@ -31,7 +31,7 @@ object ZirconiumEntry: ClientModInitializer {
             FastFuse,
             CryptAlert,
             //Rift,
-            Timers,
+            //Timers,
         )
         println("Zirconium has entered the chat")
         ModuleManager.registerModules(ModuleConfig("Zirconium.json"),*modules.filter{it !is AsyncSave}.toTypedArray())

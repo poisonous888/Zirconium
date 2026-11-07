@@ -1,4 +1,4 @@
-package psn.zirconium.mixin;
+package psn.zirconium.mixin.microslop;
 
 import com.odtheking.odin.clickgui.ClickGUI;
 import net.minecraft.client.gui.components.Button;
@@ -23,6 +23,8 @@ public abstract class PauseScreenMixin extends Screen{
     
     @Inject(method = "createPauseMenu",at=@At(value="HEAD"), cancellable=true)
     private void test(CallbackInfo ci){
+        if(!MiscFeatures.getNoMicroSlop())return;
+        
         GridLayout gridLayout = new GridLayout();
         gridLayout.defaultCellSetting().padding(4, 4, 4, 0);
         GridLayout.RowHelper helper = gridLayout.createRowHelper(2);

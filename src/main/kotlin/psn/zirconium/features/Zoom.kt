@@ -44,7 +44,5 @@ object Zoom: Module(
     @JvmStatic fun scroll(yoffset:Double){
         zoomLevel+=yoffset*if(invertScroll) 1 else -1
     }
-    @JvmStatic fun getZoom():Float{
-        return 2.0.pow(zoomLevel*zoomMulti).toFloat()
-    }
+    @JvmStatic val zoom get()=2.0.pow(zoomLevel*zoomMulti).toFloat()
 }
