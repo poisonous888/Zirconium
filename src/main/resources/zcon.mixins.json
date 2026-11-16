@@ -13,6 +13,7 @@
         "ArmorRenderMixin",
         "ArmorSkullMixin",
         "ChatMixin",
+        "ChatScreenMixin",
         "ConnectionSetupMixin",
         "DropHotbarMixin",
         "DropInvMixin",

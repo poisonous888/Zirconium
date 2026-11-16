@@ -17,5 +17,6 @@ accessible field net/minecraft/client/gui/screens/PauseScreen RETURN_TO_GAME Lne
 accessible field net/minecraft/client/gui/screens/PauseScreen OPTIONS Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/options/OptionsScreen RESOURCEPACK Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/screens/options/OptionsScreen SOUNDS Lnet/minecraft/network/chat/Component;
+accessible method net/minecraft/client/gui/components/ChatComponent getWidth ()I
 
 

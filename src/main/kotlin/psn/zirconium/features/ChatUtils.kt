@@ -12,23 +12,23 @@ object ChatUtils: Module(
     description = "Copy Chat, Compact Chat, Etc",
     category = ZirconiumEntry.zconCat
 ) {
-//    @JvmStatic val copyChat by BooleanSetting("Copy Chat",false,"Copy hovered chat message to clipboard when you click it")
-//    @JvmStatic val msgOnCopy by BooleanSetting("Message On Copy",false,"").withDependency { copyChat }
-//    @JvmStatic val copyModifier by SelectorSetting("Copy Chat Modifier",Modifier.CONTROL,"").withDependency { copyChat }
-//    @JvmStatic val formatRegex=Regex("§.")
-//    enum class Modifier{
-//        CONTROL,
-//        SHIFT,
-//        ALT,
-//        NONE
-//    }
+    @JvmStatic val copyChat by BooleanSetting("Copy Chat",false,"Copy hovered chat message to clipboard when you click it")
+    @JvmStatic val msgOnCopy by BooleanSetting("Message On Copy",false,"").withDependency { copyChat }
+    @JvmStatic val copyModifier by SelectorSetting("Copy Chat Modifier",Modifier.CONTROL,"").withDependency { copyChat }
+    @JvmStatic val formatRegex=Regex("§.")
+    enum class Modifier{
+        CONTROL,
+        SHIFT,
+        ALT,
+        NONE
+    }
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
     @JvmStatic val timestamp by BooleanSetting("Include Time",false,"")
     @JvmStatic val noClear by BooleanSetting("Dont Clear Chat",false,"")
     @JvmStatic val infLines by BooleanSetting("No Chat Limit",false,"")
-    //TODO @JvmStatic val noResetScroll by BooleanSetting("Dont Reset Scroll",false,"")
+    @JvmStatic val noResetScroll by BooleanSetting("Dont Reset Scroll",false,"")
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
     
@@ -36,8 +36,7 @@ object ChatUtils: Module(
     @JvmStatic val compactNumbers by BooleanSetting("Compact Numbers",false,"")
     @JvmStatic val numberRegex=Regex("[0-9.,]+")
     @JvmStatic val hideBlank by BooleanSetting("Hide Blank",false,"")
-    @JvmStatic val separators by SelectorSetting("Separator Mode",Seperator.ALL,""
-    )
+    @JvmStatic val separators by SelectorSetting("Separator Mode",Seperator.ALL,"")
     enum class Seperator{
         HIDE,
         COMPACT,

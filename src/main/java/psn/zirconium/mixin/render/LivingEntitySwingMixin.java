@@ -35,8 +35,10 @@ public class LivingEntitySwingMixin{
         if(!HeldItemRender.INSTANCE.getEnabled())return original.call(hand,animation,durationTicks);
         if(
             currentSwing!=null &&
-            ticks > 0 &&
-            ticks/(double)currentSwing.durationTicks()<=HeldItemRender.getReswingPercent()
+            (
+                ticks < 2 ||
+                ticks/(double)currentSwing.durationTicks() <= HeldItemRender.getReswingPercent()
+            )
         ) return false;
         start(hand, animation, durationTicks);
         return true;

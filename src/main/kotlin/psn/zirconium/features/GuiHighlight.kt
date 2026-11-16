@@ -12,9 +12,13 @@ import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.Colors
 import com.odtheking.odin.utils.customData
 import com.odtheking.odin.utils.loreString
+import com.odtheking.odin.utils.modMessage
+import com.odtheking.odin.utils.skyblock.Island
+import com.odtheking.odin.utils.skyblock.LocationUtils
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import psn.zirconium.ZirconiumEntry
+import psn.zirconium.zcon
 
 object GuiHighlight: Module(
     name = "GUI Highlight",
@@ -25,8 +29,9 @@ object GuiHighlight: Module(
     private val petColor by ColorSetting("Active Pet Color",Colors.MINECRAFT_RED,false,"the highlight color").withDependency {highlightPet}
     private val highlightCommission by BooleanSetting("Highlight Completed Comms",false,"displays a colored background behind completed commissions")
     private val commissionColor by ColorSetting("Commission Color",Colors.MINECRAFT_GREEN,false,"the highlight color").withDependency {highlightCommission}
-    private val highlightAnvil by BooleanSetting("Anvil Helper", false, desc="skytils anvil helper")
+    private val highlightAnvil by BooleanSetting("Anvil Helper", false, "skytils anvil helper")
     private val anvilColor by ColorSetting("Anvil Highlight Color",Colors.MINECRAFT_AQUA,false,"the highlight color").withDependency {highlightAnvil}
+    private val debugScreenName by BooleanSetting("Debug Screen Name", false,"")
     private val petRegex=Regex("Pets(?: \\((\\d)/(\\d)\\))?")
     
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -35,6 +40,11 @@ object GuiHighlight: Module(
     
     init {
         on<ScreenEvent.Open> {
+            if(highlightPet&&petRegex.containsMatchIn(screen.title.string)) {
+                EventBus.subscribe(PetHelper)
+                curHelper=PetHelper
+            }
+            if(LocationUtils.isCurrentArea(Island.Dungeon,Island.Kuudra))return@on
             if(highlightCommission&&screen.title.string=="Commissions") {
                 EventBus.subscribe(CommHelper)
                 curHelper=CommHelper
@@ -43,10 +53,7 @@ object GuiHighlight: Module(
                 EventBus.subscribe(BookHelper)
                 curHelper=BookHelper
             }
-            if(highlightPet&&petRegex.containsMatchIn(screen.title.string)) {
-                EventBus.subscribe(PetHelper)
-                curHelper=PetHelper
-            }
+            if(debugScreenName)modMessage(screen.title.string,zcon)
         }
         on<ScreenCloseEvent> {
             EventBus.unsubscribe(curHelper?:return@on)

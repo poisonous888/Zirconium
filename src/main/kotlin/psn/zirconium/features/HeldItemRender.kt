@@ -107,7 +107,7 @@ object HeldItemRender : Module(
     var driftMult by NumberSetting("Drift Multiplier",.1f,0.0..0.4,0.02,"set to 0 to disable drift").withDependency {speedDriftCat}
     @JvmStatic var driftLag by NumberSetting("Drift Lag",.5f,0.0..1.0,0.02,"").withDependency {speedDriftCat&&driftMult>0}
     
-    @JvmStatic var reswingPercent by NumberSetting("Reswing Percentage",0.5, 0..1,0.1,"% that the current swing has to be through before you can start another swing").withDependency {speedDriftCat}
+    @JvmStatic var reswingPercent by NumberSetting("Reswing Percentage",0.5, 0..1,0.05,"% that the current swing has to be through before you can start another swing").withDependency {speedDriftCat}
     
     private val rsSpeedDrift by ActionSetting("Reset Speed And Drift",""){
         setSpeedDrift(customSwingDuration)
@@ -143,7 +143,7 @@ object HeldItemRender : Module(
     //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
     private val presets by DropdownSetting("Presets",desc="")
-    private val vanilla by ActionSetting("Vanilla",""){
+    private val vanillaPres by ActionSetting("Vanilla",""){
         setPos()
         setRot()
         setScale(true)
