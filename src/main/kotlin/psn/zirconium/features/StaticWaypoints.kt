@@ -29,11 +29,7 @@ object StaticWaypoints: AsyncSave, Module(
     val defaultColor by ColorSetting("Default Color",Colors.MINECRAFT_AQUA,true,"default color for waypoints without a specified color")
     val storage by MapSetting(
         "Waypoint Storage",
-        mutableMapOf(
-            Island.Dungeon to MutableList(1){
-                Waypoint("3x3", BlockPos(54, 64, 114), Colors.MINECRAFT_RED)
-            }
-        )
+        mutableMapOf<Island,MutableList<Waypoint>>()
     )
     init {
         onCommand { command }
@@ -170,7 +166,6 @@ object StaticWaypoints: AsyncSave, Module(
                 listAll()
             }
         }
-        //TODO redo static waypoints better
     }
     override val config=ModuleConfig("StaticWaypoints.json")
     private val colorStringMap=mapOf(
