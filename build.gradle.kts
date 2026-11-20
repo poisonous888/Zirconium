@@ -50,14 +50,19 @@ loom {
     accessWidenerPath = rootProject.file("src/main/resources/zcon.accesswidener")
     runConfigs.named("client") {
         isIdeConfigGenerated = true
-        vmArgs.addAll(
-            arrayOf(
-                "-Dmixin.debug.export=true",
-                "-Ddevauth.enabled=true",
-                "-Ddevauth.account=main",
-                "-XX:+AllowEnhancedClassRedefinition"
-            )
-        )
+        vmArg("-Dmixin.debug.export=true")
+        vmArg("-Ddevauth.enabled=true")
+        vmArg("-Ddevauth.account=main")
+        vmArg("-XX:+AllowEnhancedClassRedefinition")
+        
+//        vmArgs.addAll(
+//            arrayOf(
+//                "-Dmixin.debug.export=true",
+//                "-Ddevauth.enabled=true",
+//                "-Ddevauth.account=main",
+//                "-XX:+AllowEnhancedClassRedefinition"
+//            )
+//        )
     }
 
     runConfigs.named("server") {
