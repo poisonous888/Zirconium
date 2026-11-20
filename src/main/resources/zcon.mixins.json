@@ -12,8 +12,7 @@
     "client":[
         "ArmorRenderMixin",
         "ArmorSkullMixin",
-        "ChatMixin",
-        "ChatScreenMixin",
+        "BlockParticleMixin",
         "ConnectionSetupMixin",
         "DropHotbarMixin",
         "DropInvMixin",
@@ -27,6 +26,8 @@
         "SkySunTintMixin",
         "TextFieldMixin",
         "ZoomMixin",
+        "chat.ChatMixin",
+        "chat.ChatScreenMixin",
         "microslop.GuiMixin",
         "microslop.PauseScreenMixin",
         "microslop.PotionRenderGui",

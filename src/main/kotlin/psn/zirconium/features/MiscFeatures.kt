@@ -36,14 +36,15 @@ object MiscFeatures : Module(
     @JvmStatic val noPotionEffects by BooleanSetting("No Potion Effects",false,"removes the potion effect display from the inventory and the main hud").withDependency { renderCat }
     @JvmStatic val noLiquidFog by BooleanSetting("No Liquid Fog",false,"removes the fog from being underwater or under lava").withDependency { renderCat }
     //TODO @JvmStatic val noSkyFog by BooleanSetting("No Sky Fog",false,"removes the fog from being far away from something").withDependency { renderCat }
-    @JvmStatic val noMicroSlop by BooleanSetting("No Microslop",false,"cleans up the title and pause menu").withDependency { renderCat }
-    @JvmStatic val titleText by StringSetting("Title Text","Hello World!",desc="cleans up the title and pause menu", placeholder = "").withDependency { renderCat && noMicroSlop }
+    @JvmStatic val noBreakParticles by BooleanSetting("No Block Break Particles",false,"removes the particles when breaking blocks").withDependency { renderCat }
     
     
     val gameCat by DropdownSetting("Gameplay",desc="")
     @JvmStatic val closeSign by BooleanSetting("Close Sign On Enter", false,"closes Sign GUI's When The Enter Key Is Pressed").withDependency { gameCat }
     @JvmStatic val noRawInput by BooleanSetting("Disable Raw Input", false,"disabled raw input, making mouse movement respect acceleration").withDependency { gameCat }
     @JvmStatic val invertHotbarScroll by BooleanSetting("Invert Hotbar Scroll", false,"flips the scrolling direction of the hotbar with the scroll wheel").withDependency { gameCat }
+    @JvmStatic val noMicroSlop by BooleanSetting("No Microslop",false,"cleans up the title and pause menu").withDependency { gameCat }
+    @JvmStatic val titleText by StringSetting("Title Text","Hello World!",desc="cleans up the title and pause menu", placeholder = "").withDependency { gameCat && noMicroSlop }
 //    private val sbapiFix by BooleanSetting("Sbapi Profile Fix",false,"fixes errors caused by unknown profile in sbapi").withDependency { gameCat }
 //    private val profile by StringSetting("Profile","", desc = "", placeholder = "").withDependency { gameCat }
 //    @JvmStatic val limitHudFps by BooleanSetting("Limit Hud FPS",false,"Exordium").withDependency { gameCat }

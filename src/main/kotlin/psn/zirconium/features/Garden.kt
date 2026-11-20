@@ -5,33 +5,31 @@ import com.odtheking.odin.clickgui.settings.impl.NumberSetting
 import com.odtheking.odin.events.MessageEvent
 import com.odtheking.odin.events.core.on
 import com.odtheking.odin.events.core.onReceive
-import com.odtheking.odin.features.Module
 import com.odtheking.odin.utils.handlers.schedule
 import com.odtheking.odin.utils.modMessage
 import com.odtheking.odin.utils.playSoundAtPlayer
 import com.odtheking.odin.utils.render.textDim
 import com.odtheking.odin.utils.setTitle
 import com.odtheking.odin.utils.skyblock.Island
-import com.odtheking.odin.utils.skyblock.LocationUtils
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import net.minecraft.sounds.SoundEvents
 import psn.zirconium.ZirconiumEntry
-import psn.zirconium.utils.LocationCheck.dynamicLoad
+import psn.zirconium.utils.DynamicModule
 import psn.zirconium.zcon
 
-object Garden : Module(
+object Garden : DynamicModule(
     name = "Garden",
     description = "various garden stuff",
-    category = ZirconiumEntry.zconCat
+    category = ZirconiumEntry.zconCat,
+    islands = listOf(Island.Garden)
 ) {
     private val minTimeChange by NumberSetting("Min Time Change",30,0..120,1,"")
     private val timerRegex = Regex("(Cooldown: )([0-9]+m)? ?([0-9]+s)?")
     private val pestRegex = Regex("^YUCK! [0-9] \uE07F Pest have spawned in Plot - [0-9]+!$")
-    private val pestHud by HUD("Pest HUD","") {
-        example ->
-        if(example) textDim("3m 24s Until Spawn",0,0)
-        else if(LocationUtils.isCurrentArea(Island.Garden))textDim(curString,0,0)
-        else 0 to 0
+    private val pestHud by HUD("Pest HUD","") {example ->
+        if(example)return@HUD textDim("3m 24s Until Spawn",0,0)
+        if(!active)return@HUD 0 to 0
+        textDim(curString,0,0)
     }
     private val test by ActionSetting("Test Alert",""){
         announce()
@@ -99,7 +97,6 @@ object Garden : Module(
         }
     }
     init {
-        dynamicLoad(Island.Garden)
         onReceive<ClientboundPlayerInfoUpdatePacket> {
             val tabListEntries=entries().mapNotNull{it.displayName?.string}.ifEmpty {return@onReceive}
             processTabList(tabListEntries)
